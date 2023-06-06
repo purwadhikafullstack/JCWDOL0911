@@ -2,6 +2,7 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
+const {qnaRoute,usersRoute}=require('./routes')
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -15,6 +16,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(express.static(join(__dirname,  "public")));
 
 //#region API ROUTES
 
@@ -30,6 +32,9 @@ app.get("/api/greetings", (req, res, next) => {
     message: "Hello, Student !",
   });
 });
+app.use('/qna', qnaRoute)
+app.use('/users', usersRoute)
+
 
 // ===========================
 

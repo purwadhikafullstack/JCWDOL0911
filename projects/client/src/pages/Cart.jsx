@@ -34,6 +34,9 @@ function Cart() {
         </div>
       </div>
       <hr className="mx-8 md:mt-20 mt-8 border-slate-400" />
+      <div className="mt-10 ml-7 font-bold font-roboto leading-2 text-xl tracking-wide">
+        Related Product
+      </div>
       <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 xl:grid-cols-6 gap-4 mt-10 mx-6 justify-around">
         <ProductCard />
         <ProductCard />

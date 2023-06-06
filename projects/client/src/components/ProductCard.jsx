@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 
-//import function from cartSlice
-import { getRelatedProduct } from "../features/cart/cartSlice";
+//import assets
+import Discount from "../assets/Discount.svg";
 
 function ProductCard() {
   const myCart = useSelector((state) => state.cart.cart);
+
   //   const dispatch = useDispatch();
   //   const myCartLength = myCart.length;
 
@@ -19,7 +20,7 @@ function ProductCard() {
     <div className=" bg-white border-none shadow-allxl ">
       <img
         className="w-[150px] h-[150px] mx-auto"
-        src="https://www.shutterstock.com/image-vector/3d-icon-pharmacy-on-transparent-600w-2148866261.jpg"
+        src={"" || Discount}
         alt="medicine"
       />
       <div className="px-4">

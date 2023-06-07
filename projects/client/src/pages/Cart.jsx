@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 //importing component for Cart page in here
@@ -23,10 +23,10 @@ function Cart() {
         My Cart
       </div>
       <div className="flex md:flex-row flex-col">
-        <div className="flex flex-col md:w-[60%] w-[100%] justify-center items-center gap-5 mt-5">
+        <div className="flex flex-col md:w-[60%] justify-center mx-8 md:ml-8 gap-0 mt-5 shadow-xl rounded-xl">
           <ProductCart />
         </div>
-        <div className="mt-5 md:w-[40%] w-[100%] flex flex-col items-center">
+        <div className="mt-5 md:pr-4 md:w-[40%] flex flex-col items-center">
           <TotalPriceCart />
         </div>
       </div>

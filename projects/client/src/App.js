@@ -14,10 +14,10 @@ function App() {
   return (
     <div className="">
       <Routes>
-        <Route path="/cart" element={<Cart />} />
         {/* <Route path="/test" element={<Test />} /> */}
-        <Route path="/register" element={<Register />} />
+        {/* <Route path="/register" element={<Register />} /> */}
         <Route element={<LayoutWithNavbar />}>
+          <Route path="/cart" element={<Cart />} />
           <Route path="/" element={<LandingPage />} />
         </Route>
         <Route element={<AuthRoute />}>

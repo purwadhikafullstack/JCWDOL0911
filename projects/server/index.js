@@ -2,12 +2,11 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const { authRoutes } = require("./routes");
 
-const { relatedProductRouter } = require(`./routers/index`);
+const { authRoutes } = require("./routes/index");
+const { relatedProductRouter } = require("./routes/index");
 
 const { db, query } = require("./database/index");
-
 const PORT = process.env.PORT || 8000;
 const app = express();
 app.use(cors());
@@ -36,11 +35,11 @@ app.get("/api", (req, res) => {
 });
 
 app.get("/user", async (req, res) => {
-  userQuery = `select * from user `;
+  const userQuery = "select * from user";
   const user = await query(userQuery);
+  console.log(user);
   return res.status(200).send({
     success: true,
-    user,
     message: "fetching works!",
   });
 });
@@ -86,9 +85,5 @@ app.get("*", (req, res) => {
 //#endregion
 
 app.listen(PORT, (err) => {
-  if (err) {
-    console.log(`ERROR: ${err}`);
-  } else {
-    console.log(`APP RUNNING at ${PORT} ✅`);
-  }
+  console.log(`APP RUNNING at ${PORT} ✅`);
 });

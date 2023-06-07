@@ -3,16 +3,14 @@ const util = require("util");
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
+  user: "root",
+  password: "root",
+  database: "pharmacy_webapp",
   port: 3306,
 });
 
 db.connect((err) => {
-  if (err) {
-    return console.error(`error: ${err.message}`);
-  }
+  if (err) console.error(`Error: ${err.message}`);
   console.log("Connected to mysql server");
 });
 

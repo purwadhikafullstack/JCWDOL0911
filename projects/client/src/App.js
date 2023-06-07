@@ -1,8 +1,9 @@
 import axios from "axios";
+import "./App.css";
 import { useEffect, useState } from "react";
-
-//importing Routes and Route
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import Register from "./pages/Register";
+import Test from "./pages/Test";
 
 //put imported pages here!
 import Cart from "./pages/Cart";
@@ -22,12 +23,13 @@ function App() {
   // }, []);
 
   return (
-    <>
-      {/*put the Navbar here! */}
+    <div className="">
       <Routes>
         <Route path="/cart" element={<Cart />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
-    </>
+    </div>
   );
 }
 

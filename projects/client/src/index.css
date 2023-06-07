@@ -17,3 +17,31 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.shadow-line {
+  box-shadow: -16px 3px 349px -27px rgba(243, 196, 255, 0.83);
+  -webkit-box-shadow: -16px 3px 349px -27px rgba(243, 196, 255, 0.83);
+  -moz-box-shadow: -16px 3px 349px -27px rgba(243, 196, 255, 0.83);
+}
+
+.register-page {
+  background: linear-gradient(
+    142.04deg,
+    rgba(254, 254, 254, 0) -1.93%,
+    #e4f4f8 107.32%
+  );
+  width: 100%;
+}
+
+.text-color-green {
+  color: #009b90;
+}
+
+.button-register:hover {
+  background: #3e8d9e !important;
+}
+
+.button-register {
+  background: #009b90 !important;
+  color: white !important;
+}

@@ -4,17 +4,30 @@ import { useSelector } from "react-redux";
 
 function TotalPriceCart() {
   const totalPrice = useSelector((state) => state.cart.totalPrice);
+  const cartProduct = useSelector((state) => state.cart.cart);
 
   return (
     <div className=" w-[90%] rounded-xl shadow-xl">
-      <div className="ml-6">Total Price</div>
-      <div className="flex flex-row justify-between mx-6">
-        <div>Sub Total</div>
-        <div>Rp 13.000,-</div>
+      <div className="ml-6 font-bold pt-6">Summary</div>
+      <div className="flex flex-col justify-between mx-6 mt-4">
+        {cartProduct.map((val) => {
+          const checkBox = document.getElementById(val.idproduct);
+          // if (checkBox.checked) {
+          return (
+            <div key={val.idproduct} className="flex flex-row justify-between ">
+              <div className="col-span-2">{val.name}</div>
+
+              <div className="text-end whitespace-nowrap">
+                Rp. {val.price * val.quantity},-
+              </div>
+            </div>
+          );
+          // }
+        })}
       </div>
-      <hr />
+      <hr className="border-gray-300 my-4" />
       <div className="flex flex-row justify-between mx-6">
-        <div>Total</div>
+        <div>Total Price</div>
         <div>{`Rp ${totalPrice},-`}</div>
       </div>
 

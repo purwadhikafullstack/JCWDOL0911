@@ -13,12 +13,9 @@ function Cart() {
   const myCart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
 
-  useEffect(
-    (state) => {
-      console.log(myCart);
-    },
-    [myCart.length]
-  );
+  useEffect(() => {
+    console.log(myCart);
+  }, [myCart.length]);
 
   return (
     <div>

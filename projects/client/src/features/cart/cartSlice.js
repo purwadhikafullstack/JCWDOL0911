@@ -12,8 +12,7 @@ const initialState = {
       price: 25000,
       description: "Untuk menurunkan deman, batuk berdahak yg disertai flu",
       stock: 20,
-      product_image:
-        "https://www.shutterstock.com/image-vector/3d-icon-pharmacy-on-transparent-600w-2148866261.jpg",
+      product_image: "",
       quantity: 1,
     },
     {
@@ -25,8 +24,7 @@ const initialState = {
       price: 15000,
       description: "Untuk menurunkan deman, batuk berdahak yg disertai flu",
       stock: 40,
-      product_image:
-        "https://www.shutterstock.com/image-vector/3d-icon-pharmacy-on-transparent-600w-2148866261.jpg",
+      product_image: "",
       quantity: 1,
     },
     {
@@ -57,7 +55,9 @@ export const cartSlice = createSlice({
       // state.cart.push();
     },
     removeProduct: (state, action) => {
-      state.cart = action.payload;
+      state.cart = state.cart.filter((val, index) => {
+        return index !== action.payload;
+      });
     },
     setTotalPrice: (state, action) => {
       state.totalPrice = action.payload;

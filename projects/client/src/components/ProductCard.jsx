@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 //import assets
-import Discount from "../assets/Discount.svg";
+import medicine from "../assets/medicine.png";
 
 function ProductCard() {
   const myCart = useSelector((state) => state.cart.cart);
@@ -20,7 +20,7 @@ function ProductCard() {
     <div className=" bg-white border-none shadow-allxl ">
       <img
         className="w-[150px] h-[150px] mx-auto"
-        src={"" || Discount}
+        src={myCart.product_image || medicine}
         alt="medicine"
       />
       <div className="px-4">

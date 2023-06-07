@@ -76,6 +76,18 @@ export const cartSlice = createSlice({
         state.cart[action.payload].quantity--;
       }
     },
+    addCheckedProduct: (state, action) => {
+      state.cart[action.payload] = {
+        ...state.cart[action.payload],
+        summary: true,
+      };
+    },
+    removeCheckedProduct: (state, action) => {
+      state.cart[action.payload] = {
+        ...state.cart[action.payload],
+        summary: false,
+      };
+    },
   },
 });
 
@@ -94,6 +106,8 @@ export const {
   setTotalPrice,
   addProductQuantity,
   decreaseProductQuantity,
+  addCheckedProduct,
+  removeCheckedProduct,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

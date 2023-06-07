@@ -11,18 +11,22 @@ function TotalPriceCart() {
       <div className="ml-6 font-bold pt-6">Summary</div>
       <div className="flex flex-col justify-between mx-6 mt-4">
         {cartProduct.map((val) => {
-          const checkBox = document.getElementById(val.idproduct);
-          // if (checkBox.checked) {
-          return (
-            <div key={val.idproduct} className="flex flex-row justify-between ">
-              <div className="col-span-2">{val.name}</div>
+          if (val.summary) {
+            // if (checkBox.checked) {
+            return (
+              <div
+                key={val.idproduct}
+                className="flex flex-row justify-between "
+              >
+                <div className="col-span-2">{val.name}</div>
 
-              <div className="text-end whitespace-nowrap">
-                Rp. {val.price * val.quantity},-
+                <div className="text-end whitespace-nowrap">
+                  Rp. {val.price * val.quantity},-
+                </div>
               </div>
-            </div>
-          );
-          // }
+            );
+            // }
+          }
         })}
       </div>
       <hr className="border-gray-300 my-4" />

@@ -11,6 +11,8 @@ import {
   addProduct,
   decreaseProductQuantity,
   removeProduct,
+  addCheckedProduct,
+  removeCheckedProduct,
 } from "../features/cart/cartSlice";
 
 //importing assets
@@ -21,15 +23,20 @@ import medicine from "../assets/medicine.svg";
 
 function ProductCart() {
   const [total, setTotal] = useState(0);
+  const [isChecked, setIsChecked] = useState(true);
   const dispatch = useDispatch();
 
   const myCart = useSelector((state) => state.cart.cart);
 
   const checkHandler = (item, index) => {
     const checkBox = document.getElementById(item.idproduct);
-    checkBox.checked
-      ? setTotal((prev) => prev + myCart[index].quantity * myCart[index].price)
-      : setTotal((prev) => prev - myCart[index].quantity * myCart[index].price);
+    if (checkBox.checked) {
+      dispatch(addCheckedProduct(index));
+      setTotal((prev) => prev + myCart[index].quantity * myCart[index].price);
+    } else {
+      dispatch(removeCheckedProduct(index));
+      setTotal((prev) => prev - myCart[index].quantity * myCart[index].price);
+    }
   };
 
   const addProductButtonHandler = (index, item) => {
@@ -62,17 +69,49 @@ function ProductCart() {
     }
   };
 
+  const allCheckHandler = () => {
+    setIsChecked((prev) => !prev);
+    if (isChecked) {
+      myCart.map((val) => {
+        const checkBox = document.getElementById(val.idproduct);
+        if (!checkBox.checked) {
+          checkBox.click();
+        }
+      });
+    } else {
+      myCart.map((val) => {
+        const checkBox = document.getElementById(val.idproduct);
+        if (checkBox.checked) {
+          checkBox.click();
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     dispatch(setTotalPrice(total));
   }, [total]);
 
   return (
     <>
+      <div className="flex flex-row items-center gap-4 mt-4 w-[100%] pl-6 pt-6">
+        <input
+          onClick={allCheckHandler}
+          id="all_checkBox"
+          type="checkbox"
+          value={isChecked}
+          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+        ></input>
+        <div>Select All</div>
+      </div>
+      <div className=" pt-4 w-full h-[25px]">
+        <hr />
+      </div>
       {myCart.map((item, index) => {
         return (
           <div
             key={item.idproduct}
-            className=" w-[90%] h-[200px] rounded-xl shadow-xl"
+            className=" w-[100%] h-[200px] py-4 border-b-black pl-4"
           >
             <div className="flex flex-row relative h-full">
               <div className="flex">

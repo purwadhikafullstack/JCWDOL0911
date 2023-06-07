@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@chakra-ui/react";
 import CardProduct from "../components/CardProduct";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function LandingPage() {
+  const [products, setProducts] = useState([]);
+
+  const getLatestProduct = async () => {
+    try {
+      let response = await axios.get(
+        `${process.env.REACT_APP_API_BE}/products/latest`
+      );
+
+      setProducts(response.data);
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.message,
+      });
+    }
+  };
+
+  useEffect(() => {
+    getLatestProduct();
+  }, []);
+
   return (
     <>
       <div className="">
@@ -45,12 +70,9 @@ function LandingPage() {
           <p className="font-bold text-2xl">Popular Product</p>
 
           <div className="flex gap-4 justify-between mt-6 overflow-auto">
-            <CardProduct />
-            <CardProduct />
-            <CardProduct />
-            <CardProduct />
-            <CardProduct />
-            <CardProduct />
+            {products.map((product) => (
+              <CardProduct product={product} />
+            ))}
           </div>
         </div>
         <hr className="mx-5 lg:mx-24  m-11" />

@@ -2,7 +2,7 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const { authRoutes } = require("./routes");
+const { authRoutes, productRoutes } = require("./routes");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -22,6 +22,7 @@ app.use(express.json());
 // ===========================
 // NOTE : Add your routes here
 app.use("/", authRoutes);
+app.use("/products", productRoutes);
 
 // ===========================
 app.get("/api", (req, res) => {

@@ -2,7 +2,7 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const { authRoutes } = require("../routes");
+const { authRoutes } = require("./routes");
 
 const { relatedProductRouter } = require(`./routers/index`);
 

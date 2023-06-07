@@ -1,9 +1,9 @@
-import axios from "axios";
 import "./App.css";
-import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Register from "./pages/Register";
-import Test from "./pages/Test";
+import LandingPage from "./pages/LandingPage";
+import LayoutWithNavbar from "./components/LayoutWithNavbar";
+import AuthRoute from "./components/AuthRoute";
 
 //put imported pages here!
 import Cart from "./pages/Cart";
@@ -11,23 +11,18 @@ import Cart from "./pages/Cart";
 //
 
 function App() {
-  // const [message, setMessage] = useState("");
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const { data } = await axios.get(
-  //       `${process.env.REACT_APP_API_BASE_URL}/greetings`
-  //     );
-  //     setMessage(data?.message || "");
-  //   })();
-  // }, []);
-
   return (
     <div className="">
       <Routes>
         <Route path="/cart" element={<Cart />} />
-        <Route path="/test" element={<Test />} />
+        {/* <Route path="/test" element={<Test />} /> */}
         <Route path="/register" element={<Register />} />
+        <Route element={<LayoutWithNavbar />}>
+          <Route path="/" element={<LandingPage />} />
+        </Route>
+        <Route element={<AuthRoute />}>
+          <Route path="/register" element={<Register />} />
+        </Route>
       </Routes>
     </div>
   );

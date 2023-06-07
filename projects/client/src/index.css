@@ -24,6 +24,17 @@ code {
   -moz-box-shadow: -16px 3px 349px -27px rgba(243, 196, 255, 0.83);
 }
 
+.shadow-navbar {
+  box-shadow: 28px 41px 42px -37px rgba(0, 155, 144, 0.75);
+  -webkit-box-shadow: 28px 41px 42px -37px rgba(0, 155, 144, 0.75);
+  -moz-box-shadow: 28px 41px 42px -37px rgba(0, 155, 144, 0.75);
+}
+
+.shadow-card-tagline {
+  box-shadow: -1px -1px 5px 4px rgba(0, 12, 54, 0.01),
+    2px 2px 2px rgba(33, 51, 96, 0.04), 4px 4px 4px 6px rgba(0, 155, 144, 0.04);
+}
+
 .register-page {
   background: linear-gradient(
     142.04deg,
@@ -37,11 +48,56 @@ code {
   color: #009b90;
 }
 
-.button-register:hover {
+.background-color-green {
+  background-color: #009b90;
+}
+
+.background-color-green-2 {
+  background-color: #f3fbfb;
+}
+
+.button-primary:hover {
   background: #3e8d9e !important;
 }
 
-.button-register {
+.button-primary {
   background: #009b90 !important;
   color: white !important;
+  min-width: fit-content !important;
+}
+
+.border-button {
+  background: white !important;
+  color: #009b90 !important;
+  border-color: #009b90;
+  border-style: solid;
+  border-width: 1px;
+  min-width: fit-content !important;
+}
+
+.logo-image {
+  height: 24px !important;
+  width: fit-content;
+}
+
+.logo-bank {
+  max-height: 2rem !important;
+}
+
+.banner-homepage {
+  height: 100% !important;
+}
+
+.banner-homepage-perscription {
+  height: 100% !important;
+  max-height: 150px !important;
+}
+
+@media only screen and (min-width: 992px) {
+  .logo-bank {
+    max-height: 3rem !important;
+  }
+  .logo-image {
+    height: 44px !important;
+  }
 }

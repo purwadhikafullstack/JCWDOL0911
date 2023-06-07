@@ -7,7 +7,6 @@ import axios from "axios";
 import { Button } from "@chakra-ui/react";
 import InputComponent from "../components/Input";
 import { authToken } from "../helpers/constant";
-import Test from "./Test";
 
 function Register() {
   const [isLoading, setIsLoading] = useState(false);
@@ -58,8 +57,7 @@ function Register() {
   };
 
   if (localStorage.getItem(authToken)) {
-    // return redirect("/test");
-    return <Navigate to="/test" replace={true} />;
+    return <Navigate to="/" replace={true} />;
   }
   return (
     <div>
@@ -80,9 +78,13 @@ function Register() {
             <>
               <div className="flex min-h-screen h-full">
                 <div className="w-4/6 hidden lg:flex items-center justify-center register-page relative">
-                  <p className="font-bold text-2xl absolute left-6 top-6 tracking-tighter">
-                    Pharmacy App
-                  </p>
+                  <div className=" absolute left-6 top-6 ">
+                    <img
+                      src="./assets/logo-pharmacy.png"
+                      alt="pharmacy"
+                      className="logo-image"
+                    />
+                  </div>
                   <img src="./assets/register-pict-green.svg" width="70%" />
                 </div>
                 <div className="w-full lg:w-3/6 flex justify-center flex-col p-14">
@@ -274,7 +276,7 @@ function Register() {
                         <Button
                           isLoading={isLoading}
                           type="submit"
-                          className="w-full rounded-md py-6 text-white button-register"
+                          className="w-full rounded-md py-6 text-white button-primary"
                         >
                           <p className="text-lg ">Create account</p>
                         </Button>

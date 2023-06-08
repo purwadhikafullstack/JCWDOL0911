@@ -9,7 +9,6 @@ import Profile from "./pages/Profile";
 import Forum from "./pages/Forum";
 import { useEffect } from "react";
 
-
 //put imported pages here!
 import Cart from "./pages/Cart";
 import { useEffect } from "react";
@@ -21,11 +20,11 @@ function App() {
   const userProfile = {
     name: "Rifqi",
     email: "rifqirafialdy@gmail.com",
-    id:1
-  }
+    id: 1,
+  };
   useEffect(() => {
-    localStorage.setItem('user',JSON.stringify (userProfile))
-  })
+    localStorage.setItem("user", JSON.stringify(userProfile));
+  });
 
   return (
     <div className="">
@@ -33,16 +32,17 @@ function App() {
         {/* <Route path="/test" element={<Test />} /> */}
         {/* <Route path="/register" element={<Register />} /> */}
         <Route element={<LayoutWithNavbar />}>
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/profile" element={<Profile/>}/>
-        <Route path="/forum" element={<Forum/>}/>
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/forum" element={<Forum />} />
         </Route>
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />
         </Route>
       </Routes>
     </div>
+  );
 }
 
 export default App;

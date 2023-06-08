@@ -2,7 +2,7 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const { authRoutes, productRoutes } = require("./routes");
+const { authRoutes, productRoutes, qnaRoute, usersRoute } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
 const { db, query } = require("./database/index");
@@ -19,7 +19,7 @@ app.use(cors());
 // );
 
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static(join(__dirname, "public")));
 
 //#region API ROUTES
 
@@ -43,6 +43,8 @@ app.get("/user", async (req, res) => {
     message: "fetching works!",
   });
 });
+app.use("/qna", qnaRoute);
+app.use("/users", usersRoute);
 
 // app.get("/api/greetings", (req, res, next) => {
 //   res.status(200).json({

@@ -1,35 +1,42 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-
-//importing Routes and Route
-import { Routes, Route } from "react-router-dom";
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import Register from "./pages/Register";
+import LandingPage from "./pages/LandingPage";
+import LayoutWithNavbar from "./components/LayoutWithNavbar";
+import AuthRoute from "./components/AuthRoute";
 
 //put imported pages here!
 import Cart from "./pages/Cart";
+<<<<<<< HEAD
 import ProductList from "./pages/ProductList";
+=======
+import { useEffect } from "react";
+>>>>>>> development
 
 //
-
 function App() {
-  // const [message, setMessage] = useState("");
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const { data } = await axios.get(
-  //       `${process.env.REACT_APP_API_BASE_URL}/greetings`
-  //     );
-  //     setMessage(data?.message || "");
-  //   })();
-  // }, []);
+  //for token check
+  // useEffect(() => console.log("Running First"));
 
   return (
-    <>
-      {/*put the Navbar here! */}
+    <div className="">
       <Routes>
+<<<<<<< HEAD
         <Route path="/cart" element={<Cart />} />
         <Route path="/productlist" element={<ProductList />} />
+=======
+        {/* <Route path="/test" element={<Test />} /> */}
+        {/* <Route path="/register" element={<Register />} /> */}
+        <Route element={<LayoutWithNavbar />}>
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/" element={<LandingPage />} />
+        </Route>
+        <Route element={<AuthRoute />}>
+          <Route path="/register" element={<Register />} />
+        </Route>
+>>>>>>> development
       </Routes>
-    </>
+    </div>
   );
 }
 

@@ -2,12 +2,10 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-
-const { relatedProductRouter } = require(`./routers/index`);
-const { productsRouter } = require("./routers/index")
+const { authRoutes, productRoutes } = require("./routes");
+const { relatedProductRouter } = require("./routes/index");
 
 const { db, query } = require("./database/index");
-
 const PORT = process.env.PORT || 8000;
 const app = express();
 app.use(cors());
@@ -27,20 +25,21 @@ app.use(express.static("public"));
 
 // ===========================
 // NOTE : Add your routes here
+app.use("/", authRoutes);
+app.use("/products", productRoutes);
 
 app.use(`/product`, relatedProductRouter);
-app.use("/products", productsRouter);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
 });
 
 app.get("/user", async (req, res) => {
-  userQuery = `select * from user `;
+  const userQuery = "select * from user";
   const user = await query(userQuery);
+  console.log(user);
   return res.status(200).send({
     success: true,
-    user,
     message: "fetching works!",
   });
 });
@@ -86,9 +85,5 @@ app.get("*", (req, res) => {
 //#endregion
 
 app.listen(PORT, (err) => {
-  if (err) {
-    console.log(`ERROR: ${err}`);
-  } else {
-    console.log(`APP RUNNING at ${PORT} ✅`);
-  }
+  console.log(`APP RUNNING at ${PORT} ✅`);
 });

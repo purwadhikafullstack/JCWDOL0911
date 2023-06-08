@@ -3,17 +3,20 @@ const util = require("util");
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "semlehoy04",
-  database: "pharmacy_app",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
   port: 3306,
+  connectTimeout: 20000,
 });
 
 db.connect((err) => {
-  if (err) console.error(`Error: ${err.message}`);
-  console.log(`Connected to MySQL server`);
+  if (err) {
+    return console.error(err);
+  } else {
+    console.log("Connected to mysql server");
+  }
 });
 
 const query = util.promisify(db.query).bind(db);
-
 module.exports = { db, query };

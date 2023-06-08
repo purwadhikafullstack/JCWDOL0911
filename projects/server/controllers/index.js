@@ -1,7 +1,9 @@
 const relatedProduct = require("./relatedProduct");
-const products = require("./products")
+const authController = require("./authController");
+const productController = require("./productController");
 
 module.exports = {
   relatedProduct,
-  products
+  authController,
+  productController,
 };

@@ -11,6 +11,7 @@ import { useEffect } from "react";
 
 //put imported pages here!
 import Cart from "./pages/Cart";
+import { useEffect } from "react";
 
 //
 function App() {
@@ -31,6 +32,7 @@ function App() {
         {/* <Route path="/test" element={<Test />} /> */}
         {/* <Route path="/register" element={<Register />} /> */}
         <Route element={<LayoutWithNavbar />}>
+          <Route path="/productlist" element={<ProductList />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/profile" element={<Profile />} />

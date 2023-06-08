@@ -13,7 +13,7 @@ function QuestionsCard({ question }) {
 <div class=" max-w-sm max-h-max lg:max-w-md lg: h-96 lg:w-full  p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
     <div className='flex gap-3'>
     <img class="w-10 h-10 rounded" 
-    src={`${process.env.REACT_APP_API_BASE_URL}/users/${question.profile_image}`}
+    src={`${process.env.REACT_APP_API_BE}/users/${question.profile_image}`}
     alt="Default avatar"/>
     <div>   
     <p className=' text-xs'>{dateTime}</p>

@@ -32,14 +32,14 @@ export default questionSlice.reducer
 export function fetchMyQuestion(offset, search, sort) {
     const userId = JSON.parse(localStorage.getItem('user')).id
     return async (dispatch) => {
-    let response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/qna/questions/my-question/${userId}?offset=${offset}&search=${search}&sort=${sort}`)
+    let response = await axios.get(`${process.env.REACT_APP_API_BE}/qna/questions/my-question/${userId}?offset=${offset}&search=${search}&sort=${sort}`)
     dispatch(setMyQuestion(response.data))
 }
 }
 
 export function deleteMyQuestion(id) {
     return async (dispatch) => {
-        let response = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/qna/questions/remove-question/${id}`)
+        let response = await axios.delete(`${process.env.REACT_APP_API_BE}/qna/questions/remove-question/${id}`)
         dispatch(removeMyQuestion(id))
         dispatch(fetchMyQuestion)
          Swal.fire(
@@ -52,7 +52,7 @@ export function deleteMyQuestion(id) {
 
 export function addMyQuestion(userId,question,title,setOpen) {
     return async (dispatch) => {
-        let response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/qna/questions/add-question/${userId}`, { question,title })
+        let response = await axios.post(`${process.env.REACT_APP_API_BE}/qna/questions/add-question/${userId}`, { question,title })
         Swal.fire(
             `${response.data.message}`,
             '',
@@ -65,13 +65,13 @@ export function addMyQuestion(userId,question,title,setOpen) {
 
 export function fetchAllQuestions(offset, search, sort) {
     return async (dispatch) => {
-        let response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/qna/questions/all-questions?offset=${offset}&search=${search}&sort=${sort}`)
+        let response = await axios.get(`${process.env.REACT_APP_API_BE}/qna/questions/all-questions?offset=${offset}&search=${search}&sort=${sort}`)
         dispatch(setAllQuestion(response.data))
     }
 }
 export function loadMoreQuestion(offset, search,sort) {
     return async (dispatch) => {
-        let response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/qna/questions/all-questions?offset=${offset}&search=${search}&sort=${sort}`)
+        let response = await axios.get(`${process.env.REACT_APP_API_BE}/qna/questions/all-questions?offset=${offset}&search=${search}&sort=${sort}`)
         dispatch(setMore(response.data))
 
     }

@@ -19,7 +19,7 @@ function Profile() {
 
           <div className='relative max-w-lg lg:h-40 group'>
             <img
-            src={`${process.env.REACT_APP_API_BASE_URL}/users/${user.profile_image}`}
+            src={`${process.env.REACT_APP_API_BE}/users/${user.profile_image}`}
             className='rounded-lg shadow-xl group-hover:opacity-50'
             alt="Avatar"
             />

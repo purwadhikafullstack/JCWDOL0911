@@ -11,7 +11,6 @@ import { useEffect } from "react";
 
 //put imported pages here!
 import Cart from "./pages/Cart";
-import { useEffect } from "react";
 
 //
 function App() {

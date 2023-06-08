@@ -3,11 +3,6 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-<<<<<<< HEAD
-import { ChakraProvider } from "@chakra-ui/react"
-import { Provider } from "react-redux";
-=======
->>>>>>> development
 import { BrowserRouter } from "react-router-dom";
 import store from "./app/store";
 import { Provider } from "react-redux";
@@ -17,19 +12,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-<<<<<<< HEAD
-      <ChakraProvider>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </ChakraProvider>
-=======
       <Provider store={store}>
         <ChakraProvider>
           <App />
         </ChakraProvider>
       </Provider>
->>>>>>> development
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -10,8 +10,8 @@ import Forum from "./pages/Forum";
 import { useEffect } from "react";
 
 //put imported pages here!
+import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
-import { useEffect } from "react";
 
 //
 function App() {

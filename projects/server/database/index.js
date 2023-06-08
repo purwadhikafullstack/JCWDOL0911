@@ -7,11 +7,12 @@ const db = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   port: 3306,
+  connectTimeout: 20000,
 });
 
 db.connect((err) => {
   if (err) {
-    return console.error(`Error: ${err}`);
+    return console.error(err);
   } else {
     console.log("Connected to mysql server");
   }

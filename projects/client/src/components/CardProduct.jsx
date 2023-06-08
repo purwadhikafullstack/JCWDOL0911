@@ -1,8 +1,16 @@
 import React from "react";
 import { Button, Tooltip } from "@chakra-ui/react";
 import { currency } from "../helpers/currency";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+//importing cartSlice function here
+import { addProductToCart } from "../features/cart/cartSlice";
 
 function CardProduct({ product }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const getName = (name) => {
     if (name.length > 20) {
       return name.slice(0, 20) + "...";
@@ -26,7 +34,12 @@ function CardProduct({ product }) {
       <div className="flex gap-1 items-center mb-6">
         <p className="text-sm text-slate-600">{currency(product.price)}</p>
       </div>
-      <Button className="border-button">Add to Cart</Button>
+      <Button
+        className="border-button"
+        onClick={() => dispatch(addProductToCart(product))}
+      >
+        Add to Cart
+      </Button>
     </div>
   );
 }

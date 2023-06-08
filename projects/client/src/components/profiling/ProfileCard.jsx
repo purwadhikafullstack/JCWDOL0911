@@ -27,7 +27,7 @@ function ProfileCard({user}) {
       </p>
       </div>
       <div className='  invisible group-hover:visible'>
-        <button className=' bg-blue-400 text-white text-center py-2 w-64' > Edit</button>
+        <button className=' bg-blue-400 text-white text-center py-2 w-full' > Edit</button>
       </div>
     </div>
 

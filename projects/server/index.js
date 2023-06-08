@@ -2,8 +2,7 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-
-const { authRoutes } = require("./routes/index");
+const { authRoutes, productRoutes } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
 const { db, query } = require("./database/index");
@@ -27,6 +26,7 @@ app.use(express.static("public"));
 // ===========================
 // NOTE : Add your routes here
 app.use("/", authRoutes);
+app.use("/products", productRoutes);
 
 app.use(`/product`, relatedProductRouter);
 

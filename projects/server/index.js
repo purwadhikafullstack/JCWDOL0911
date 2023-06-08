@@ -4,6 +4,7 @@ const cors = require("cors");
 const { join } = require("path");
 
 const { relatedProductRouter } = require(`./routers/index`);
+const { productsRouter } = require("./routers/index")
 
 const { db, query } = require("./database/index");
 
@@ -28,6 +29,7 @@ app.use(express.static("public"));
 // NOTE : Add your routes here
 
 app.use(`/product`, relatedProductRouter);
+app.use("/products", productsRouter);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

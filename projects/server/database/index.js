@@ -4,8 +4,8 @@ const util = require("util");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "root",
-  database: "pharmacy_webapp",
+  password: "semlehoy04",
+  database: "pharmacy_app",
   port: 3306,
 });
 

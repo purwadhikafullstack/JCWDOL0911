@@ -6,6 +6,7 @@ import { Routes, Route } from "react-router-dom";
 
 //put imported pages here!
 import Cart from "./pages/Cart";
+import ProductList from "./pages/ProductList";
 
 //
 
@@ -26,6 +27,7 @@ function App() {
       {/*put the Navbar here! */}
       <Routes>
         <Route path="/cart" element={<Cart />} />
+        <Route path="/productlist" element={<ProductList />} />
       </Routes>
     </>
   );

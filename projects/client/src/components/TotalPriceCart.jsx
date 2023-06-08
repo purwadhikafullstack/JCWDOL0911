@@ -2,6 +2,8 @@ import React from "react";
 
 import { useSelector } from "react-redux";
 
+import { currency } from "../helpers/currency";
+
 function TotalPriceCart() {
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const cartProduct = useSelector((state) => state.cart.cart);
@@ -21,7 +23,7 @@ function TotalPriceCart() {
                 <div className="col-span-2">{val.name}</div>
 
                 <div className="text-end whitespace-nowrap">
-                  Rp. {val.price * val.quantity},-
+                  {currency(val.price * val.quantity)}
                 </div>
               </div>
             );
@@ -32,7 +34,7 @@ function TotalPriceCart() {
       <hr className="border-gray-300 my-4" />
       <div className="flex flex-row justify-between mx-6">
         <div>Total Price</div>
-        <div>{`Rp ${totalPrice},-`}</div>
+        <div>{currency(totalPrice)}</div>
       </div>
 
       <div className="w-full flex items-center my-10">

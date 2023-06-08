@@ -7,10 +7,13 @@ import AuthRoute from "./components/AuthRoute";
 
 //put imported pages here!
 import Cart from "./pages/Cart";
+import { useEffect } from "react";
 
 //
-
 function App() {
+  //for token check
+  // useEffect(() => console.log("Running First"));
+
   return (
     <div className="">
       <Routes>

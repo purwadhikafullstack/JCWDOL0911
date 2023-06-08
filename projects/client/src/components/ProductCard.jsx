@@ -36,8 +36,8 @@ function ProductCard() {
           </p>
         </div>
         <div className="max-w-ful flex flex-row justify-center my-6">
-          <button className="items-center w-[50%] h-8 text-sm text-green-700 font-medium font-roboto rounded-md hover:bg-green-700 hover:text-white border-2 border-green-600 tracking-widest">
-            Cart
+          <button className="items-center w-[70%] h-8 text-sm text-green-700 font-medium font-roboto rounded-md hover:bg-green-700 hover:text-white border-2 border-green-600 tracking-widest">
+            Add to Cart
           </button>
         </div>
       </div>

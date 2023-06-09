@@ -13,7 +13,6 @@ module.exports = {
         ("00" + date.getHours()).slice(-2) + ":" +
         ("00" + date.getMinutes()).slice(-2) + ":" +
         ("00" + date.getSeconds()).slice(-2);
-        console.log(dateTime);
         const expiredDate = date.getHours() === 23
         ? date.getFullYear() + "/" +
           ("00" + (date.getMonth() + 1)).slice(-2) + "/" +
@@ -35,18 +34,19 @@ module.exports = {
 
     },
     deleteQuestion: async (req, res) => {
+        console.log("delete");
         const questionId = parseInt(req.params.id)
         await query(`DELETE FROM question WHERE idquestion= ${db.escape(questionId)}`)
         res.status(200).send({message:"Delete succes"})
     },
     fetchUserQuestion: async (req, res) => {
         const userId = parseInt(req.params.id)
-        const offset = parseInt(req.query.offset)
+        const offset = parseInt(req.query.offset)?parseInt(req.query.offset):0
         const search = req.query.search
         const sort = req.query.sort
         const questionQuery = await query(`SELECT * FROM question WHERE iduser = ${db.escape(userId)}
         ${search ? `AND (question.title LIKE ${db.escape(`%${search}%`)} OR question.question LIKE ${db.escape(`%${search}%`)})` : ''}
-        ORDER BY idquestion ${sort} LIMIT 3 OFFSET ${db.escape(offset)}`)
+        ORDER BY idquestion ${sort} LIMIT 4 OFFSET ${db.escape(offset)}`)
         const countData = await query(`SELECT COUNT(*) as count FROM question WHERE iduser = ${db.escape(userId)}
         ${search ? `AND (question.title LIKE ${db.escape(`%${search}%`)} OR question.question LIKE ${db.escape(`%${search}%`)})` : ''}`)
         res.status(200).send({ questionQuery, countData })
@@ -55,10 +55,10 @@ module.exports = {
         const offset = parseInt(req.query.offset)
         const search = req.query.search
         let sort = req.query.sort 
-        console.log(req.query);
         const questionQuery = await query(`SELECT question.*,user.username,user.profile_image FROM question INNER JOIN user ON question.iduser = user.iduser WHERE question.is_answer=true   
         ${search ? `AND (question.title LIKE ${db.escape(`%${search}%`)} OR question.question LIKE ${db.escape(`%${search}%`)})` : ''}
         ORDER BY idquestion ${sort} LIMIT 6 OFFSET ${db.escape(offset)};`)
-        res.status(200).send(questionQuery)
+        const countData = await query(`SELECT COUNT(*) as count FROM question WHERE is_answer = true`)
+        res.status(200).send({ questionQuery, countData })
     }
 }

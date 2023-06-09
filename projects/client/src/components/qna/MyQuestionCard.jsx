@@ -33,7 +33,7 @@ function MyQuestionCard({ question }) {
     }
     
   return (
-      <div className='flex border-b-2 py-2 gap-2 border-blue-300 w-full items-center '>
+      <div className='flex border-b-2 py-2 gap-2 border-emerald-500 w-full items-center '>
           <div className=' w-28'>
           <p>{dateTime}</p>
           </div>

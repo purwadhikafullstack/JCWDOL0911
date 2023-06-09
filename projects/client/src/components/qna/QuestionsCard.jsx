@@ -4,30 +4,35 @@ function QuestionsCard({ question }) {
     const date = new Date(question.date)
     const dateTime = date.getFullYear() + "/" +
     ("00" + (date.getMonth() + 1)).slice(-2) + "/" +
-    ("00" + date.getDate()).slice(-2) + " " +
-    ("00" + date.getHours()).slice(-2) + ":" +
-    ("00" + date.getMinutes()).slice(-2) + ":" +
-    ("00" + date.getSeconds()).slice(-2);
+    ("00" + date.getDate()).slice(-2) + " " 
     return (
-<div className='flex items-center justify-center '>            
-<div class=" max-w-sm max-h-max lg:max-w-md lg: h-96 lg:w-full  p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-    <div className='flex gap-3'>
-    <img class="w-10 h-10 rounded" 
-    src={`${process.env.REACT_APP_API_BE}/users/${question.profile_image}`}
-    alt="Default avatar"/>
-    <div>   
-    <p className=' text-xs'>{dateTime}</p>
-    <p>by:{question.username}</p>
+      <div class=" flex flex-col w-96 lg:w-[44rem] px-8 py-4 mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800" >
+      <div class="flex items-center justify-between">
+          <span class="text-sm font-light text-gray-600 dark:text-gray-400">{dateTime }</span> 
+      </div> 
+      <div class="mt-2">
+          <h1 class="text-2xl font-bold text-gray-700 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 hover:underline">{question.title}</h1>
+          <div className=' max-h-16 lg:max-h-30 py-2 break-normal mb-5'>
+          <p class="mt-2 text-gray-600 dark:text-gray-300 break-normal line-clamp-2 ">{question.question }</p>
+          </div>
+        </div> 
+      
+        <div className="mt-auto">
+        <div className="flex items-center justify-between">
+          <a className="text-emerald-500 hover:underline">Read More ⟶</a>
+          <div className="flex items-center">
+            <img
+              src={`${process.env.REACT_APP_API_BE}/users/${question.profile_image}`}
+              alt="Author Photo"
+              className="hidden object-cover w-10 h-10 mx-4 rounded-full sm:block"
+            />
+            <a className="font-bold text-gray-700 cursor-pointer dark:text-gray-200">
+              {question.username}
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-
-    </div>
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{ question.title}</h5>
-
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 overflow-hidden overflow-ellipsis ">{ question.question}</p>
-        <button className=' border-2 border-blue-300 py-2 px-5 rounded-xl hover:bg-blue-300 hover:text-white'> See Answer </button>
-</div>
-
-</div>
   )
 }
 

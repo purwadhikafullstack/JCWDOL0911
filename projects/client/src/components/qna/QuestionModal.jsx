@@ -28,28 +28,29 @@ const isFormValid = title.trim() !== '' && question.trim() !== '';
   return (
       <div>
           {!open ? <button onClick={() => setOpen(true)}
-              className='border-2 border-blue-300  font-bold py-2 px-4 rounded-md hover:bg-blue-300 text-white'>ASK QUESTION</button>
-              : <div className='fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
-                  <div className=' bg-white p-2 rounded gap-2 flex flex-col shadow-lg w-80 items-center'>
-                      <h1 className=' text-center text-2xl'>Ask Your Question</h1>
+              className='border-2 border-green-300  font-bold py-2 px-4 rounded-md hover:bg-green-300 text-white'>ASK QUESTION</button>
+              : <div className='fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center '>
+                  <div className=' bg-white p-2 rounded-xl gap-2 flex flex-col shadow-lg w-80  lg:w-[40rem]'>
+                      <div className='bg-emerald-800'>
+                          <h1 className='text-2xl text-white'>Ask Question</h1>
+                      </div>
                       <div>
                       <div className="relative mb-3" data-te-input-wrapper-init>
-                        <p>Title</p>
                         <input
                             type="text"
-                            class="peer block min-h-[auto] w-full rounded border-2 border-blue-300 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                            id="exampleFormControlInput1"
-                            placeholder="title" 
+                            className=" border-4 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg  border-emerald-800 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"                            id="exampleFormControlInput1"
+                            placeholder="Title" 
                             onChange={(e)=>inputTitle(e)}
                             required/>
                         </div>
                          <textarea onChange={(e)=>inputQuestion(e)}
-                          className=' h-44 w-72 border-2 border-blue-400 rounded-lg'
+                          className=' h-44 bg-gray-50  w-full border-4 border-emerald-500 rounded-lg'
                           required></textarea>
                       </div>
                       <div className='flex justify-center gap-3'>
-                          <button onClick={() => saveHandler(question, title,setOpen)}  disabled={!isFormValid}>Save</button>
-                          <button onClick={() => setOpen(false)}>Cancel</button>
+                          <button onClick={() => saveHandler(question, title, setOpen)} disabled={!isFormValid}
+                          className=' border-2 border-emerald-800 px-3 py-1 rounded-lg'>Save</button>
+                          <button onClick={() => setOpen(false)} className='border-2 border-emerald-800 px-3 py-1 rounded-lg'>Cancel</button>
                       </div>
                   </div>
               </div>}

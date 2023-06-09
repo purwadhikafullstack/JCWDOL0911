@@ -4,7 +4,6 @@ import Register from "./pages/Register";
 import LandingPage from "./pages/LandingPage";
 import LayoutWithNavbar from "./components/LayoutWithNavbar";
 import AuthRoute from "./components/AuthRoute";
-import axios from "axios";
 import Profile from "./pages/Profile";
 import Forum from "./pages/Forum";
 import { useEffect } from "react";
@@ -12,6 +11,7 @@ import { useEffect } from "react";
 //put imported pages here!
 import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
+import Verification from "./pages/Verification";
 
 //
 function App() {
@@ -40,6 +40,7 @@ function App() {
         </Route>
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />
+          <Route path="/verification/:token" element={<Verification />} />
         </Route>
       </Routes>
     </div>

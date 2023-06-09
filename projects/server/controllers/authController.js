@@ -54,7 +54,24 @@ module.exports = {
         message: "Success register! Please verify your email",
       });
     } catch (error) {
-      console.log(error);
+      return res.status(500).send({ message: error });
+    }
+  },
+  verification: async (req, res) => {
+    try {
+      const iduser = req.user.id;
+
+      const isUserExistQuery = `SELECT * FROM user WHERE iduser=${iduser};`;
+      const isUserExist = await query(isUserExistQuery);
+
+      if (isUserExist.lengt === 0) {
+        return res.status(400).send({ message: "User tidak ditemukan" });
+      }
+
+      const verificationUserQuery = `UPDATE user SET is_verified=true WHERE iduser=${iduser};`;
+      const verificationUser = await query(verificationUserQuery);
+      res.status(200).send({ success: true, message: "Account is verified" });
+    } catch (error) {
       return res.status(500).send({ message: error });
     }
   },

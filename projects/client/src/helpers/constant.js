@@ -1,1 +1,2 @@
-export const authToken = "authToken";
+export const AUTH_TOKEN = "authToken";
+export const USER = "user";

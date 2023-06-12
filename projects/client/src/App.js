@@ -12,25 +12,24 @@ import { useEffect } from "react";
 import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
 import Verification from "./pages/Verification";
+import Login from "./pages/Login";
 
 //
 function App() {
   //for token check
   // useEffect(() => console.log("Running First"));
-  const userProfile = {
-    name: "Rifqi",
-    email: "rifqirafialdy@gmail.com",
-    id: 1,
-  };
-  useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(userProfile));
-  });
+  // const userProfile = {
+  //   name: "Rifqi",
+  //   email: "rifqirafialdy@gmail.com",
+  //   id: 1,
+  // };
+  // useEffect(() => {
+  //   localStorage.setItem("user", JSON.stringify(userProfile));
+  // });
 
   return (
     <div className="">
       <Routes>
-        {/* <Route path="/test" element={<Test />} /> */}
-        {/* <Route path="/register" element={<Register />} /> */}
         <Route element={<LayoutWithNavbar />}>
           <Route path="/productlist" element={<ProductList />} />
           <Route path="/cart" element={<Cart />} />
@@ -40,6 +39,7 @@ function App() {
         </Route>
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/verification/:token" element={<Verification />} />
         </Route>
       </Routes>

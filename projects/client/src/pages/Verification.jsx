@@ -11,7 +11,7 @@ function Verification() {
     try {
       if (token) {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_BE}/verification`,
+          `${process.env.REACT_APP_API_BE}/auth/verification`,
           {},
           { headers: { authorization: `Bearer ${token}` } }
         );

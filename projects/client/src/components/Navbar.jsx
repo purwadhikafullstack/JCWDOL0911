@@ -2,17 +2,26 @@ import { Button } from "@chakra-ui/react";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { hover } from "@testing-library/user-event/dist/hover";
+import { AUTH_TOKEN, USER } from "../helpers/constant";
+import { Avatar } from "@chakra-ui/react";
+import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 
 function Navbar() {
-  //define navigate
   const navigate = useNavigate();
-
+  const token = localStorage.getItem(AUTH_TOKEN);
   const myCart = useSelector((state) => state.cart.cart);
+  const user = JSON.parse(localStorage.getItem(USER)) || {};
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   return (
     <div className="w-full h-20 bg-white flex justify-between px-5 lg:px-24 items-center text-color-green shadow-navbar border-b-gray-100 border-b-2">
-      <img src="./assets/logo-pharmacy.png" alt="" className="logo-image" />
-
+      <Link to="/">
+        <img src="./assets/logo-pharmacy.png" alt="" className="logo-image" />
+      </Link>
       <div className="flex gap-7 items-center">
         <div className="w-8 hidden lg:block">
           <div
@@ -41,16 +50,48 @@ function Navbar() {
             </svg>
           </div>
         </div>
-        <Button className="border-button">
-          <p>Login</p>
-        </Button>
-        <div className="hidden lg:block">
-          <Link to={"/register"}>
-            <Button className="button-primary">
-              <p className="text-sm">Register</p>
-            </Button>
-          </Link>
-        </div>
+        {token && (
+          <>
+            <Menu>
+              <MenuButton>
+                <div className="flex items-center gap-4 ">
+                  <Avatar
+                    size="sm"
+                    src={
+                      user.profile_image
+                        ? `${process.env.REACT_APP_API_BE}/${user.profile_image}`
+                        : "https://bit.ly/broken-link"
+                    }
+                  />
+                  <p className="font-bold">
+                    {user.username ? user.username : ""}
+                  </p>
+                </div>
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={handleLogout}>
+                  <p className="text-black">Logout</p>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </>
+        )}
+        {!token && (
+          <>
+            <Link to={"/login"}>
+              <Button className="border-button">
+                <p>Login</p>
+              </Button>
+            </Link>
+            <div className="hidden lg:block">
+              <Link to={"/register"}>
+                <Button className="button-primary">
+                  <p className="text-sm">Register</p>
+                </Button>
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

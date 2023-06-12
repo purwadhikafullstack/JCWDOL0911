@@ -25,7 +25,7 @@ app.use(express.static(join(__dirname, "public")));
 
 // ===========================
 // NOTE : Add your routes here
-app.use("/", authRoutes);
+app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 
 app.use(`/product`, relatedProductRouter);

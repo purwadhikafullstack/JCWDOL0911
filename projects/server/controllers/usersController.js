@@ -10,7 +10,8 @@ module.exports = {
             phone_number : userQuery[0].phone_number,
             fullname : userQuery[0].full_name,
             gender : userQuery[0].gender,
-            profile_image : userQuery[0].profile_image,
+            profile_image: userQuery[0].profile_image,
+            birthdate : userQuery[0].birthdate
         }
         res.status(200).send(user)
     },

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export const userSlice = createSlice({
     name: 'user',
@@ -47,7 +48,21 @@ export function uploadPicture(image, setOpen) {
         }
       }
     };
+}
+
+export function editProfile(username, fullname, email, gender, birthdate) {
+  const userId = JSON.parse(localStorage.getItem('user')).id
+  alert(birthdate)
+  return async (dispatch) => {
+    let response = await axios.post(`${process.env.REACT_APP_API_BE}/users/profiles/edit-profiles/${userId}`,{username,fullname,email,gender,birthdate});
+    Swal.fire(
+      `${response.data.message}`,
+      '',
+      'success'
+    )
+    dispatch(fetchUser())
   }
+}
   
   
   

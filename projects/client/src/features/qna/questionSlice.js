@@ -60,9 +60,6 @@ export function deleteMyQuestion(id) {
 }
 
 export function addMyQuestion(userId, question, title, setOpen) {
-    let offset = 0
-    let search = ''
-    let sort="DESC"
     return async (dispatch) => {
         let response = await axios.post(`${process.env.REACT_APP_API_BE}/qna/questions/add-question/${userId}`, { question,title })
         Swal.fire(
@@ -71,7 +68,6 @@ export function addMyQuestion(userId, question, title, setOpen) {
             'success'
           )
         setOpen(false)
-        dispatch(fetchMyQuestion(offset,search,sort))
     }
 }
 

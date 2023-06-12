@@ -1,10 +1,10 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { authToken } from "../helpers/constant";
+import { AUTH_TOKEN } from "../helpers/constant";
 
 function AuthRoute() {
-  if (localStorage.getItem(authToken)) {
-    return <Navigate to="/test" replace={true} />;
+  if (localStorage.getItem(AUTH_TOKEN)) {
+    return <Navigate to="/" replace={true} />;
   }
   return (
     <div>

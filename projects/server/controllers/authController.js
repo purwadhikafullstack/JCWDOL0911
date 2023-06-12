@@ -54,6 +54,73 @@ module.exports = {
         message: "Success register! Please verify your email",
       });
     } catch (error) {
+      return res.status(500).send({ message: error });
+    }
+  },
+  verification: async (req, res) => {
+    try {
+      const iduser = req.user.id;
+
+      const isUserExistQuery = `SELECT * FROM user WHERE iduser=${iduser};`;
+      const isUserExist = await query(isUserExistQuery);
+
+      if (isUserExist.lengt === 0) {
+        return res.status(400).send({ message: "User tidak ditemukan" });
+      }
+
+      const verificationUserQuery = `UPDATE user SET is_verified=true WHERE iduser=${iduser};`;
+      const verificationUser = await query(verificationUserQuery);
+      res.status(200).send({ success: true, message: "Account is verified" });
+    } catch (error) {
+      return res.status(500).send({ message: error });
+    }
+  },
+  login: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      const isUserExistQuery = `SELECT * FROM user WHERE email=${db.escape(
+        email
+      )};`;
+      const isUserExist = await query(isUserExistQuery);
+
+      if (isUserExist.lenght === 0) {
+        return res
+          .status(400)
+          .send({ message: "Email or password is invalid" });
+      }
+
+      const isPasswordValid = await bcrypt.compare(
+        password,
+        isUserExist[0].password
+      );
+
+      if (!isPasswordValid) {
+        return res
+          .status(400)
+          .send({ message: "Email or password is invalid" });
+      }
+
+      let payload = {
+        id: isUserExist[0].iduser,
+      };
+
+      const token = jwt.sign(payload, process.env.JWT_KEY);
+
+      return res.status(200).send({
+        message: "login success!",
+        token,
+        data: {
+          iduser: isUserExist[0].iduser,
+          username: isUserExist[0].username,
+          profile_image: isUserExist[0].profile_image,
+          phone_number: isUserExist[0].phone_number,
+          full_name: isUserExist[0].full_name,
+          gender: isUserExist[0].gender,
+          birthdate: isUserExist[0].birthdate,
+        },
+      });
+    } catch (error) {
       console.log(error);
       return res.status(500).send({ message: error });
     }

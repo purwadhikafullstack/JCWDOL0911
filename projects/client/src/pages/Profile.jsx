@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { fetchUser } from '../features/users/userSlice'
+import { fetchProvince, fetchUser } from '../features/users/userSlice'
 import { useSelector } from 'react-redux'
 import UploadModal from '../components/profiling/UploadModal'
 import ProfileCard from '../components/profiling/ProfileCard'
@@ -11,10 +11,14 @@ import { useState } from 'react'
 function Profile() {
   const dispatch = useDispatch()
   const user = useSelector(state => state.user.user)
-  const[edit,setEdit]=useState(false)
+  const [edit, setEdit] = useState(false)
+  
   useEffect(() => {
     dispatch(fetchUser())
-  },[])
+    dispatch(fetchProvince())
+  }, [])
+  
+  const profilePic = user.profile_image?`${process.env.REACT_APP_API_BE}/users/${user.profile_image}`:'/default.jpg'
   return (
     <div className=' my-14 px-9 flex flex-col justify-center items-center'>
       <h1 className=' font-extrabold text-emerald-500 text-4xl'>MY PROFILE</h1>
@@ -22,7 +26,7 @@ function Profile() {
 
           <div className='relative max-w-lg lg:h-40 group'>
             <img
-            src={`${process.env.REACT_APP_API_BE}/users/${user.profile_image}`}
+            src={profilePic}
             className='rounded-lg shadow-xl group-hover:opacity-50 max-w-sm lg: max-h-64'
             alt="Avatar"
             />

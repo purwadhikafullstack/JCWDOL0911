@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { uploadPicture } from '../../features/users/userSlice'
+import Swal from 'sweetalert2'
 
 function UploadModal() {
     const dispatch = useDispatch()
@@ -14,8 +15,20 @@ function UploadModal() {
       console.log(file);
       
     }
-    const saveHandler = (image) => {
-        dispatch(uploadPicture(image,setOpen))
+  const saveHandler = async (image) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You want to change your profile picture",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, change it!'
+    })
+    if (result.isConfirmed) { 
+
+      dispatch(uploadPicture(image,setOpen))
+    }
     }
   return (
     <div>

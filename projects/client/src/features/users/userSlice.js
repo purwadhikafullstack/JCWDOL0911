@@ -35,16 +35,32 @@ export function uploadPicture(image, setOpen) {
         file.append('file', image);
   
         let response = await axios.post(`${process.env.REACT_APP_API_BE}/users/profiles/upload-picture/${userId}`, file);
-        alert(response.data.message)
+        Swal.fire(
+          `${response.data.message}`,
+          '',
+          'success'
+        )
         setOpen(false)
         dispatch(fetchUser());
       } catch (error) {
         if (error.response) {
-          alert(error.response.data.error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: `${error.response.data.error}`,
+          })
         } else if (error.message) {
-          alert(error.message);
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: `${error.message}`,
+          })
         } else {
-          alert('An error occurred while uploading the picture.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'An error occurred while uploading the picture.',
+          })
         }
       }
     };
@@ -52,7 +68,6 @@ export function uploadPicture(image, setOpen) {
 
 export function editProfile(username, fullname, email, gender, birthdate) {
   const userId = JSON.parse(localStorage.getItem('user')).id
-  alert(birthdate)
   return async (dispatch) => {
     let response = await axios.post(`${process.env.REACT_APP_API_BE}/users/profiles/edit-profiles/${userId}`,{username,fullname,email,gender,birthdate});
     Swal.fire(
@@ -61,6 +76,12 @@ export function editProfile(username, fullname, email, gender, birthdate) {
       'success'
     )
     dispatch(fetchUser())
+  }
+}
+export function fetchProvince() {
+  return async (dispatch) => {
+    let response = await axios.get(`${process.env.REACT_APP_API_BE}/province`);
+    console.log(response.data);
   }
 }
   

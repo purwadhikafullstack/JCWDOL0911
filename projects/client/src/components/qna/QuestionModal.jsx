@@ -17,7 +17,7 @@ const inputQuestion =(e)=>{
     setQuestion(e.target.value)
 }
     const saveHandler = async (question,title,setOpen) => {
-        const userId = JSON.parse(localStorage.getItem('user')).id
+        const userId = JSON.parse(localStorage.getItem('user')).iduser
         dispatch(addMyQuestion(userId,question,title,setOpen))
         
 }

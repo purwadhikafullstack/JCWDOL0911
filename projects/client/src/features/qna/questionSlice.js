@@ -36,7 +36,7 @@ export const {setMyQuestion,removeMyQuestion,setAllQuestion,setMore,setCount} = 
 export default questionSlice.reducer
 
 export function fetchMyQuestion(offset, search, sort) {
-    const userId = JSON.parse(localStorage.getItem('user')).id
+    const userId = JSON.parse(localStorage.getItem('user')).iduser
     return async (dispatch) => {
     let response = await axios.get(`${process.env.REACT_APP_API_BE}/qna/questions/my-question/${userId}?offset=${offset}&search=${search}&sort=${sort}`)
     dispatch(setMyQuestion(response.data))

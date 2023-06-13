@@ -23,7 +23,7 @@ export const { setUser } = userSlice.actions;
 export default userSlice.reducer;
 
 export function fetchUser() {
-  const userId = JSON.parse(localStorage.getItem("user")).id;
+  const userId = JSON.parse(localStorage.getItem("user")).iduser;
   return async (dispatch) => {
     let response = await axios.get(
       `${process.env.REACT_APP_API_BE}/users/profiles/${userId}`
@@ -33,7 +33,7 @@ export function fetchUser() {
 }
 
 export function uploadPicture(image, setOpen) {
-  const userId = JSON.parse(localStorage.getItem('user')).id
+  const userId = JSON.parse(localStorage.getItem('user')).iduser
     return async (dispatch) => {
       try {
         const file = new FormData();
@@ -72,7 +72,7 @@ export function uploadPicture(image, setOpen) {
 }
 
 export function editProfile(username, fullname, email, gender, birthdate) {
-  const userId = JSON.parse(localStorage.getItem('user')).id
+  const userId = JSON.parse(localStorage.getItem('user')).iduser
   return async (dispatch) => {
     let response = await axios.post(`${process.env.REACT_APP_API_BE}/users/profiles/edit-profiles/${userId}`,{username,fullname,email,gender,birthdate});
     Swal.fire(

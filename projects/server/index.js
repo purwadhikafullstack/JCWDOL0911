@@ -8,6 +8,10 @@ const { relatedProductRouter } = require("./routes/index");
 const { db, query } = require("./database/index");
 const PORT = process.env.PORT || 8000;
 const app = express();
+
+// API RajaOngkir
+const { rajaOngkirRouter } = require("./routes/index");
+
 app.use(cors());
 // app.use(
 //   cors({
@@ -22,6 +26,7 @@ app.use(express.json());
 app.use(express.static(join(__dirname, "public")));
 
 //#region API ROUTES
+app.use("/rajaongkir", rajaOngkirRouter);
 
 // ===========================
 // NOTE : Add your routes here
@@ -29,10 +34,6 @@ app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 
 app.use(`/product`, relatedProductRouter);
-
-app.get("/api", (req, res) => {
-  res.send(`Hello, this is my API`);
-});
 
 app.get("/user", async (req, res) => {
   const userQuery = "select * from user";

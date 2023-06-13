@@ -13,6 +13,7 @@ import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
 import Verification from "./pages/Verification";
 import Login from "./pages/Login";
+import Address from "./pages/Address";
 
 //
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/forum" element={<Forum />} />
+          <Route path="/address" element={<Address />} />
         </Route>
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />

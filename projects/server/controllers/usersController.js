@@ -50,7 +50,7 @@ module.exports = {
   
         }
         res.status(200).send({message:'Update succes'})
-        
+      },
   fetchUser: async (req, res) => {
     const user_id = parseInt(req.params.id);
     const userQuery = await query(

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { currency } from "../helpers/currency";
@@ -7,6 +7,7 @@ import { currency } from "../helpers/currency";
 function TotalPriceCart() {
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const cartProduct = useSelector((state) => state.cart.cart);
+  const navigate = useNavigate();
 
   return (
     <div className=" w-[90%] rounded-xl shadow-xl">
@@ -38,9 +39,22 @@ function TotalPriceCart() {
       </div>
 
       <div className="w-full flex items-center my-10">
-        <button className=" hover:bg-green-500 hover:shadow-xl w-[80%] mx-auto rounded-md border-none text-white bg-green-700 h-[40px]">
-          Pay
-        </button>
+        {cartProduct.length ? (
+          <button
+            className=" disabled:bg-gray-300 disabled:hover:shadow-none hover:bg-green-500 hover:shadow-xl w-[80%] mx-auto rounded-md border-none text-white bg-green-700 h-[40px]"
+            onClick={() => navigate("/address")}
+          >
+            Pay
+          </button>
+        ) : (
+          <button
+            disabled
+            className=" disabled:bg-gray-300 disabled:hover:shadow-none hover:bg-green-500 hover:shadow-xl w-[80%] mx-auto rounded-md border-none text-white bg-green-700 h-[40px]"
+            onClick={() => navigate("/address")}
+          >
+            Pay
+          </button>
+        )}
       </div>
     </div>
   );

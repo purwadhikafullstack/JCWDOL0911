@@ -6,6 +6,8 @@ import ProductCart from "../components/ProductCart";
 import TotalPriceCart from "../components/TotalPriceCart";
 import ProductCard from "../components/ProductCard";
 
+import { fetchUser } from "../features/users/userSlice";
+
 //import function from cartSlice
 import { getRelatedProduct } from "../features/cart/cartSlice";
 
@@ -16,6 +18,10 @@ function Cart() {
   useEffect(() => {
     console.log(myCart);
   }, [myCart.length]);
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  });
 
   return (
     <div>

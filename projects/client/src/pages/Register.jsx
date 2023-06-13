@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { Button } from "@chakra-ui/react";
 import InputComponent from "../components/Input";
-import { authToken } from "../helpers/constant";
+import { AUTH_TOKEN } from "../helpers/constant";
 
 function Register() {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,7 @@ function Register() {
     try {
       setIsLoading(true);
       let response = await axios.post(
-        `${process.env.REACT_APP_API_BE}/register`,
+        `${process.env.REACT_APP_API_BE}/auth/register`,
         value
       );
 
@@ -56,7 +56,7 @@ function Register() {
     }
   };
 
-  if (localStorage.getItem(authToken)) {
+  if (localStorage.getItem(AUTH_TOKEN)) {
     return <Navigate to="/" replace={true} />;
   }
   return (
@@ -79,11 +79,13 @@ function Register() {
               <div className="flex min-h-screen h-full">
                 <div className="w-4/6 hidden lg:flex items-center justify-center register-page relative">
                   <div className=" absolute left-6 top-6 ">
-                    <img
-                      src="./assets/logo-pharmacy.png"
-                      alt="pharmacy"
-                      className="logo-image"
-                    />
+                    <Link to={"/"}>
+                      <img
+                        src="./assets/logo-pharmacy.png"
+                        alt="pharmacy"
+                        className="logo-image"
+                      />
+                    </Link>
                   </div>
                   <img src="./assets/register-pict-green.svg" width="70%" />
                 </div>

@@ -3,6 +3,7 @@ const authController = require("./authController");
 const productController = require("./productController");
 const qnaController = require("./qnaController");
 const usersController = require("./usersController");
+const rajaOngkirController = require("./rajaOngkirController");
 
 module.exports = {
   relatedProduct,
@@ -10,4 +11,5 @@ module.exports = {
   productController,
   qnaController,
   usersController,
+  rajaOngkirController,
 };

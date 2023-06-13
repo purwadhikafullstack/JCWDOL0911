@@ -57,13 +57,18 @@ code {
 }
 
 .button-primary:hover {
-  background: #3e8d9e !important;
+  background: #448c9c !important;
 }
 
 .button-primary {
   background: #009b90 !important;
   color: white !important;
   min-width: fit-content !important;
+}
+
+.border-button:hover {
+  background: #3e8d9e !important;
+  color: white !important;
 }
 
 .border-button {

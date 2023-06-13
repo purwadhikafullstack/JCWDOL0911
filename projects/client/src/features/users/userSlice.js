@@ -3,28 +3,33 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 export const userSlice = createSlice({
-    name: 'user',
-    initialState: {
-        user: {
-            
-        }
+  name: "user",
+  initialState: {
+    user: {
+      id_user: "",
+      username: "",
+      email: "",
+      phone_number: "",
     },
-    reducers: {
-        setUser: (state, action) => {
-            state.user=action.payload
-        }
-    }
-})
+  },
+  reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+  },
+});
 
-export const { setUser } = userSlice.actions
-export default userSlice.reducer
+export const { setUser } = userSlice.actions;
+export default userSlice.reducer;
 
 export function fetchUser() {
-  const userId = JSON.parse(localStorage.getItem('user')).id
-    return async (dispatch) => {
-        let response = await axios.get(`${process.env.REACT_APP_API_BE}/users/profiles/${userId}`)
-        dispatch(setUser(response.data))
-    }
+  const userId = JSON.parse(localStorage.getItem("user")).id;
+  return async (dispatch) => {
+    let response = await axios.get(
+      `${process.env.REACT_APP_API_BE}/users/profiles/${userId}`
+    );
+    dispatch(setUser(response.data));
+  };
 }
 
 export function uploadPicture(image, setOpen) {

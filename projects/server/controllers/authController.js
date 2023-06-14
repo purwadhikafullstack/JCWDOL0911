@@ -125,4 +125,50 @@ module.exports = {
       return res.status(500).send({ message: error });
     }
   },
+  changePassword: async (req, res) => {
+    try {
+      const { password, newPassword } = req.body;
+      const idUser = req.user.id;
+
+      const isUserExistQuery = `SELECT * FROM user WHERE iduser=${idUser};`;
+      const isUserExist = await query(isUserExistQuery);
+
+      if (isUserExist.lenght === 0) {
+        return res.status(400).send({ message: "User not found" });
+      }
+
+      const isPasswordValid = await bcrypt.compare(
+        password,
+        isUserExist[0].password
+      );
+
+      if (!isPasswordValid) {
+        return res.status(400).send({ message: "Current password is invalid" });
+      }
+
+      const isNewPasswordSame = await bcrypt.compare(
+        newPassword,
+        isUserExist[0].password
+      );
+
+      if (isNewPasswordSame) {
+        return res.status(400).send({
+          message: "New password must not same with previous password",
+        });
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(newPassword, salt);
+
+      const changePasswordQuery = `UPDATE user SET password=${db.escape(
+        hashPassword
+      )} WHERE iduser=${idUser};`;
+      const changePassword = await query(changePasswordQuery);
+
+      return res.status(200).send({ message: "Please login again" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error });
+    }
+  },
 };

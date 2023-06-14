@@ -105,7 +105,7 @@ function Register() {
                         name="remember"
                         defaultValue="true"
                       />
-                      <div className="rounded-md shadow-sm">
+                      <div className="rounded-md">
                         <div className="my-6">
                           <label
                             htmlFor="username"
@@ -119,7 +119,7 @@ function Register() {
                               name="username"
                               type="text"
                               required
-                              className="pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
+                              className="shadow-sm pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
                               placeholder="Username"
                               autoComplete="username"
                               component={InputComponent}
@@ -162,7 +162,7 @@ function Register() {
                               type="email"
                               autoComplete="email"
                               required
-                              className="pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
+                              className="shadow-sm pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
                               placeholder="Email"
                               component={InputComponent}
                               icon={
@@ -203,7 +203,7 @@ function Register() {
                               name="phone_number"
                               type="text"
                               required
-                              className="pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
+                              className="shadow-sm pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
                               placeholder="Phone Number"
                               component={InputComponent}
                               icon={
@@ -244,7 +244,7 @@ function Register() {
                               name="password"
                               type="password"
                               required
-                              className="pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
+                              className="shadow-sm pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
                               placeholder="Password"
                               autoComplete="new-password"
                               component={InputComponent}

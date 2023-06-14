@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { Button } from "@chakra-ui/react";
+import { Button, Checkbox } from "@chakra-ui/react";
 import InputComponent from "../components/Input";
 import { AUTH_TOKEN, USER } from "../helpers/constant";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
 
   const loginSchema = Yup.object().shape({
     email: Yup.string()
@@ -101,7 +102,7 @@ function Login() {
                           name="remember"
                           defaultValue="true"
                         />
-                        <div className="rounded-md shadow-sm">
+                        <div className="rounded-md">
                           <div className="my-6">
                             <label
                               htmlFor="email-address"
@@ -116,7 +117,7 @@ function Login() {
                                 type="email"
                                 autoComplete="email"
                                 required
-                                className="pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
+                                className="pl-4 shadow-sm relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6 "
                                 placeholder="Email"
                                 component={InputComponent}
                                 icon={
@@ -145,7 +146,7 @@ function Login() {
                             />
                           </div>
 
-                          <div className="my-6">
+                          <div className="mt-6 mb-2">
                             <label
                               htmlFor="password"
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -156,9 +157,9 @@ function Login() {
                               <Field
                                 id="password"
                                 name="password"
-                                type="password"
+                                type={show ? "text" : "password"}
                                 required
-                                className="pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
+                                className="pl-4 shadow-sm relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
                                 placeholder="Password"
                                 autoComplete="new-password"
                                 component={InputComponent}
@@ -188,6 +189,16 @@ function Login() {
                             />
                           </div>
                         </div>
+                        <Checkbox
+                          style={{
+                            background: "transparent",
+                            color: "black",
+                            marginTop: "0px",
+                          }}
+                          onChange={(event) => setShow(event.target.checked)}
+                        >
+                          <p style={{ fontSize: "14px" }}>Show Password</p>
+                        </Checkbox>
                         <div>
                           <Button
                             isLoading={isLoading}

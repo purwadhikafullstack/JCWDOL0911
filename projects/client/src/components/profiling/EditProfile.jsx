@@ -78,7 +78,8 @@ function EditProfile({ user, setEdit }) {
             {emailError && <p className="text-red-500">{emailError}</p>}
                 <label htmlFor="gender">Gender:</label>
       <select name="gender" id="gender"
-    className=' bg-gray-50 border-green-300 rounded-md border-2 h-10'>
+    className=' bg-gray-50 border-green-300 rounded-md border-2 h-10'
+    onChange={(e)=>setGender(e.target.value)}>
         <option value="">{user.gender}</option>
         <option value="Male">Male</option>
         <option value="Female">Female</option>

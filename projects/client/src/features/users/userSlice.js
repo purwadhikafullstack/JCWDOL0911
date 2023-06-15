@@ -16,10 +16,11 @@ export const userSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+   
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser,setProvinces } = userSlice.actions;
 export default userSlice.reducer;
 
 export function fetchUser() {
@@ -83,12 +84,7 @@ export function editProfile(username, fullname, email, gender, birthdate) {
     dispatch(fetchUser())
   }
 }
-export function fetchProvince() {
-  return async (dispatch) => {
-    let response = await axios.get(`${process.env.REACT_APP_API_BE}/province`);
-    console.log(response.data);
-  }
-}
+
   
   
   

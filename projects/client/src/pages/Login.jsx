@@ -4,16 +4,30 @@ import * as Yup from "yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { Button } from "@chakra-ui/react";
+import { Button, Checkbox } from "@chakra-ui/react";
 import InputComponent from "../components/Input";
 import { AUTH_TOKEN, USER } from "../helpers/constant";
 import { useDispatch } from "react-redux";
 import { setUser } from "../features/users/userSlice";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Input,
+  FormErrorMessage,
+} from "@chakra-ui/react";
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+  const [formResetPassword, setFormResetPassword] = useState({ email: "" });
+  const [modalResetPassword, setModalResetPassword] = useState(false);
 
   const loginSchema = Yup.object().shape({
     email: Yup.string()
@@ -55,9 +69,48 @@ function Login() {
     }
   };
 
+  const handleResetPasswordForm = async (event) => {
+    const key = event.target.name;
+    setFormResetPassword({ ...formResetPassword, [key]: event.target.value });
+  };
+
+  const sendLinkToEmail = async (event) => {
+    try {
+      setIsLoading(true);
+      event.preventDefault();
+
+      let response = await axios.post(
+        `${process.env.REACT_APP_API_BE}/auth/reset-password`,
+        formResetPassword
+      );
+
+      setIsLoading(false);
+      setModalResetPassword(false);
+      navigate("/login");
+
+      setFormResetPassword({ email: "" });
+
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: response.data?.message,
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.message || "Something went wrong!!",
+      });
+      setIsLoading(false);
+      setModalResetPassword(false);
+      navigate("/login");
+    }
+  };
+
   if (localStorage.getItem(AUTH_TOKEN)) {
     return <Navigate to="/" replace={true} />;
   }
+
   return (
     <div>
       <div>
@@ -85,10 +138,35 @@ function Login() {
                         />
                       </Link>
                     </div>
-                    <img src="./assets/register-pict-green.svg" width="70%" />
+                    <img
+                      src="./assets/register-pict-green.svg"
+                      width="70%"
+                      alt=""
+                    />
                   </div>
                   <div className="w-full lg:w-3/6 flex justify-center flex-col p-14">
                     <div>
+                      <Link to={"/"}>
+                        <div className="flex items-center gap-2 text-color-green mb-9">
+                          <div className="w-7">
+                            <svg
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="1.5"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                              aria-hidden="true"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+                              ></path>
+                            </svg>
+                          </div>
+                          <p>Back to home</p>
+                        </div>
+                      </Link>
                       <p className="text-3xl font-bold mb-2">Hello again!</p>
                       <p className="text-xl text-slate-500">
                         Log in to your account
@@ -101,7 +179,7 @@ function Login() {
                           name="remember"
                           defaultValue="true"
                         />
-                        <div className="rounded-md shadow-sm">
+                        <div className="rounded-md">
                           <div className="my-6">
                             <label
                               htmlFor="email-address"
@@ -116,7 +194,7 @@ function Login() {
                                 type="email"
                                 autoComplete="email"
                                 required
-                                className="pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
+                                className="pl-4 shadow-sm relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6 "
                                 placeholder="Email"
                                 component={InputComponent}
                                 icon={
@@ -145,7 +223,7 @@ function Login() {
                             />
                           </div>
 
-                          <div className="my-6">
+                          <div className="mt-6 mb-2">
                             <label
                               htmlFor="password"
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -156,9 +234,9 @@ function Login() {
                               <Field
                                 id="password"
                                 name="password"
-                                type="password"
+                                type={show ? "text" : "password"}
                                 required
-                                className="pl-4 relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
+                                className="pl-4 shadow-sm relative block w-full rounded-md border-0 py-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
                                 placeholder="Password"
                                 autoComplete="new-password"
                                 component={InputComponent}
@@ -188,6 +266,16 @@ function Login() {
                             />
                           </div>
                         </div>
+                        <Checkbox
+                          style={{
+                            background: "transparent",
+                            color: "black",
+                            marginTop: "0px",
+                          }}
+                          onChange={(event) => setShow(event.target.checked)}
+                        >
+                          <p style={{ fontSize: "14px" }}>Show Password</p>
+                        </Checkbox>
                         <div>
                           <Button
                             isLoading={isLoading}
@@ -196,7 +284,14 @@ function Login() {
                           >
                             <p className="text-lg ">Login</p>
                           </Button>
-
+                          <div className="flex flex-wrap gap-2 items-end justify-end my-4">
+                            <p
+                              onClick={() => setModalResetPassword(true)}
+                              className="cursor-pointer text-color-green text-end font-bold text-base lg:text-md hover:text-cyan-900"
+                            >
+                              Forgot Password?
+                            </p>
+                          </div>
                           <div className="flex flex-wrap gap-2 items-end justify-end my-4">
                             <p className="text-color-green text-end text-base lg:text-md">
                               Don't have an account?
@@ -217,6 +312,49 @@ function Login() {
           }}
         </Formik>
       </div>
+      <Modal
+        isOpen={modalResetPassword}
+        onClose={() => setModalResetPassword(false)}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <form onSubmit={sendLinkToEmail} validationSchema={loginSchema}>
+            <ModalHeader>Reset password</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <div className="">
+                <label htmlFor="email" className="sr-only" />
+                <p className="text-slate-400">
+                  Please input your registered email! We will send you a link to
+                  your email
+                </p>
+                <div>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="text"
+                    placeholder="email"
+                    className="shadow-sm mt-4"
+                    value={formResetPassword.email}
+                    onChange={handleResetPasswordForm}
+                  />
+                </div>
+              </div>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                className="button-primary"
+                colorScheme="blue"
+                mr={3}
+                type="submit"
+                isLoading={isLoading}
+              >
+                Send
+              </Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

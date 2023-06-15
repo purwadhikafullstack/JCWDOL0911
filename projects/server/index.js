@@ -2,7 +2,13 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const { authRoutes, productRoutes, qnaRoute, usersRoute } = require("./routes");
+const {
+  authRoutes,
+  productRoutes,
+  qnaRoute,
+  usersRoute,
+  addressRoutes,
+} = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
 const { db, query } = require("./database/index");
@@ -13,14 +19,14 @@ const app = express();
 const { rajaOngkirRouter } = require("./routes/index");
 
 app.use(cors());
-// app.use(
-//   cors({
-//     origin: [
-//       process.env.WHITELISTED_DOMAIN &&
-//         process.env.WHITELISTED_DOMAIN.split(","),
-//     ],
-//   })
-// );
+app.use(
+  cors({
+    origin: [
+      process.env.WHITELISTED_DOMAIN &&
+        process.env.WHITELISTED_DOMAIN.split(","),
+    ],
+  })
+);
 
 app.use(express.json());
 app.use(express.static(join(__dirname, "public")));
@@ -32,18 +38,10 @@ app.use("/rajaongkir", rajaOngkirRouter);
 // NOTE : Add your routes here
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
+app.use("/address", addressRoutes);
 
 app.use(`/product`, relatedProductRouter);
 
-app.get("/user", async (req, res) => {
-  const userQuery = "select * from user";
-  const user = await query(userQuery);
-  console.log(user);
-  return res.status(200).send({
-    success: true,
-    message: "fetching works!",
-  });
-});
 app.use("/qna", qnaRoute);
 app.use("/users", usersRoute);
 

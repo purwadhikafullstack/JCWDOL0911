@@ -14,6 +14,7 @@ import Cart from "./pages/Cart";
 import Verification from "./pages/Verification";
 import Login from "./pages/Login";
 import Address from "./pages/Address";
+import Order from "./pages/Order";
 
 //
 function App() {
@@ -38,6 +39,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/forum" element={<Forum />} />
           <Route path="/address" element={<Address />} />
+          <Route path="/order" element={<Order />} />
         </Route>
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />

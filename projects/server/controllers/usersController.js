@@ -12,13 +12,14 @@ module.exports = {
         .send({ success: false, message: "User Not Found" });
     }
 
-    const userAddressQuery = `select address.address, address.isprimary from address inner join user on address.iduser = user.iduser where user.iduser=${db.escape(
+    const userAddressQuery = `select address.idaddress, address.first_name, address.last_name, address.phone_number, address.idprovince, address.idcity, address.label_address, address.postal_code, address.address, address.isprimary from address inner join user on address.iduser = user.iduser where user.iduser=${db.escape(
       user_id
     )} order by address.isprimary desc`;
 
     const userAddress = await query(userAddressQuery);
 
     const user = {
+      iduser: userQuery[0].iduser,
       username: userQuery[0].username,
       email: userQuery[0].email,
       phone_number: userQuery[0].phone_number,

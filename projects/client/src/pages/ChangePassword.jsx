@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { Button, Checkbox } from "@chakra-ui/react";
 import { AUTH_TOKEN } from "../helpers/constant";
 
 function ChangePassword() {
+  const params = useParams();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const token = localStorage.getItem(AUTH_TOKEN);
   const [show, setShow] = useState(false);
+  let authToken = localStorage.getItem(AUTH_TOKEN);
 
-  const newPasswordSchema = Yup.object().shape({
+  const shapeYup = {
     password: Yup.string()
       .required("This field is required")
       .min(8, "Password too short"),
@@ -26,7 +28,14 @@ function ChangePassword() {
         [Yup.ref("newPassword"), null],
         "Password must match with new password"
       ),
-  });
+  };
+
+  if (location.pathname.includes("/reset-password")) {
+    delete shapeYup.password;
+    authToken = params.token;
+  }
+
+  const newPasswordSchema = Yup.object().shape(shapeYup);
 
   const changePassword = async (value, actions) => {
     try {
@@ -36,7 +45,7 @@ function ChangePassword() {
         value,
         {
           headers: {
-            authorization: `Bearer ${token}`,
+            authorization: `Bearer ${authToken}`,
           },
         }
       );
@@ -91,30 +100,32 @@ function ChangePassword() {
                           name="remember"
                           defaultValue="true"
                         />
-                        <div className="rounded-md">
-                          <div className="my-6">
-                            <label
-                              htmlFor="Current Password"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
-                              Current Password
-                            </label>
-                            <div className="mt-2">
-                              <Field
-                                id="password"
+                        {location.pathname.includes("/change-password") && (
+                          <div className="rounded-md">
+                            <div className="my-6">
+                              <label
+                                htmlFor="Current Password"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >
+                                Current Password
+                              </label>
+                              <div className="mt-2">
+                                <Field
+                                  id="password"
+                                  name="password"
+                                  type={show ? "text" : "password"}
+                                  required
+                                  className="shadow-sm relative block w-full rounded-md border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
+                                />
+                              </div>
+                              <ErrorMessage
+                                component="div"
                                 name="password"
-                                type={show ? "text" : "password"}
-                                required
-                                className="shadow-sm relative block w-full rounded-md border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
+                                style={{ color: "red", fontSize: "12px" }}
                               />
                             </div>
-                            <ErrorMessage
-                              component="div"
-                              name="password"
-                              style={{ color: "red", fontSize: "12px" }}
-                            />
                           </div>
-                        </div>
+                        )}
                         <div className="rounded-md">
                           <div className="my-6">
                             <label

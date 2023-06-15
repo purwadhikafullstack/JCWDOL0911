@@ -15,6 +15,7 @@ import Verification from "./pages/Verification";
 import Login from "./pages/Login";
 import Address from "./pages/Address";
 import ChangePassword from "./pages/ChangePassword";
+import PageNotFound from "./pages/PageNotFound";
 
 //
 function App() {
@@ -45,6 +46,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verification/:token" element={<Verification />} />
+          <Route path="/reset-password/:token" element={<ChangePassword />} />
+          <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>
     </div>

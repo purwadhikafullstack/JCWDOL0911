@@ -2,6 +2,7 @@ const { db, query } = require("../database");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("../helpers/nodemailer");
+const e = require("express");
 
 module.exports = {
   register: async (req, res) => {
@@ -64,7 +65,7 @@ module.exports = {
       const isUserExistQuery = `SELECT * FROM user WHERE iduser=${iduser};`;
       const isUserExist = await query(isUserExistQuery);
 
-      if (isUserExist.lengt === 0) {
+      if (isUserExist.length === 0) {
         return res.status(400).send({ message: "User tidak ditemukan" });
       }
 
@@ -84,7 +85,7 @@ module.exports = {
       )};`;
       const isUserExist = await query(isUserExistQuery);
 
-      if (isUserExist.lenght === 0) {
+      if (isUserExist.length === 0) {
         return res
           .status(400)
           .send({ message: "Email or password is invalid" });
@@ -133,17 +134,21 @@ module.exports = {
       const isUserExistQuery = `SELECT * FROM user WHERE iduser=${idUser};`;
       const isUserExist = await query(isUserExistQuery);
 
-      if (isUserExist.lenght === 0) {
+      if (isUserExist.length === 0) {
         return res.status(400).send({ message: "User not found" });
       }
 
-      const isPasswordValid = await bcrypt.compare(
-        password,
-        isUserExist[0].password
-      );
+      if (password) {
+        const isPasswordValid = await bcrypt.compare(
+          password,
+          isUserExist[0].password
+        );
 
-      if (!isPasswordValid) {
-        return res.status(400).send({ message: "Current password is invalid" });
+        if (!isPasswordValid) {
+          return res
+            .status(400)
+            .send({ message: "Current password is invalid" });
+        }
       }
 
       const isNewPasswordSame = await bcrypt.compare(
@@ -166,6 +171,46 @@ module.exports = {
       const changePassword = await query(changePasswordQuery);
 
       return res.status(200).send({ message: "Please login again" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error });
+    }
+  },
+  sendLinkResetPassword: async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      const getUserQuery = `SELECT * FROM user WHERE email=${db.escape(
+        email
+      )};`;
+      const getUser = await query(getUserQuery);
+
+      if (getUser.length === 0) {
+        return res.status(400).send({
+          message: "Email is invalid",
+        });
+      }
+
+      const payload = { id: getUser[0].iduser };
+      const token = jwt.sign(payload, process.env.JWT_KEY, {
+        expiresIn: "1m",
+      });
+
+      let mail = {
+        from: `Admin <yuanhar123@gmail.com>`,
+        to: `${email}`,
+        subject: `Reset password!`,
+        html: `
+        <div>
+        <p>Click link below to reset your password</p>
+        <a href="${process.env.LINK_RESET_PASSWORD}${token}">Reset Password</a>
+        </div>`,
+      };
+
+      let response = await nodemailer.sendMail(mail);
+      return res
+        .status(200)
+        .send({ message: "Link reset password has been sent!" });
     } catch (error) {
       console.log(error);
       return res.status(500).send({ message: error });

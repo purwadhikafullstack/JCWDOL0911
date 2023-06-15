@@ -19,9 +19,26 @@ function Navbar() {
 
   return (
     <div className="w-full h-20 bg-white flex justify-between px-5 lg:px-24 items-center text-color-green shadow-navbar border-b-gray-100 border-b-2">
-      <Link to="/">
-        <img src="./assets/logo-pharmacy.png" alt="" className="logo-image" />
-      </Link>
+      <div className="flex justify-start items-center gap-7">
+        <Link to="/">
+          <img
+            src="./assets/logo-pharmacy.png"
+            alt=""
+            className="logo-image mr-6"
+          />
+        </Link>
+        <p>|</p>
+        <Link to="/">
+          <p className="text-lg hover:text-green-800 font-bold cursor-pointer">
+            Home
+          </p>
+        </Link>
+        <Link to="/forum">
+          <p className="text-lg hover:text-green-800 font-bold cursor-pointer">
+            Ask Question
+          </p>
+        </Link>
+      </div>
       <div className="flex gap-7 items-center">
         <div className="w-8 hidden lg:block">
           <div

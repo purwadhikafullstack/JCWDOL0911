@@ -14,6 +14,8 @@ import Cart from "./pages/Cart";
 import Verification from "./pages/Verification";
 import Login from "./pages/Login";
 import Address from "./pages/Address";
+import ChangePassword from "./pages/ChangePassword";
+import PageNotFound from "./pages/PageNotFound";
 
 //
 function App() {
@@ -38,11 +40,14 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/forum" element={<Forum />} />
           <Route path="/address" element={<Address />} />
+          <Route path="/change-password" element={<ChangePassword />} />
         </Route>
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verification/:token" element={<Verification />} />
+          <Route path="/reset-password/:token" element={<ChangePassword />} />
+          <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>
     </div>

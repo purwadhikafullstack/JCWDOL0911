@@ -2,7 +2,7 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const { authRoutes, productRoutes, qnaRoute, usersRoute } = require("./routes");
+const { authRoutes, productRoutes, qnaRoute, usersRoute,addressRoute } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
 const { db, query } = require("./database/index");
@@ -46,6 +46,7 @@ app.get("/user", async (req, res) => {
 });
 app.use("/qna", qnaRoute);
 app.use("/users", usersRoute);
+app.use("/addresses",addressRoute)
 
 // app.get("/api/greetings", (req, res, next) => {
 //   res.status(200).json({

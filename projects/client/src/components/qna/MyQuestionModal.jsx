@@ -47,7 +47,7 @@ const [sort,setSort]=useState('DESC')
   }
     useEffect(() => {
      dispatch(fetchMyQuestion(offset,search,sort))
- },[offset,search,sort,myQuestion])
+ },[offset,search,sort])
   return (
     <div>
     {!open ? <button onClick={() => setOpen(true)}

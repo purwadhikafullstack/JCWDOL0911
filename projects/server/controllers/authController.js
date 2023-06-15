@@ -19,16 +19,18 @@ module.exports = {
 
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
+      console.log(hashPassword);
 
-      const addUserQuery = `INSERT INTO user VALUES(null, ${db.escape(
+      const addUserQuery = await query(`INSERT INTO user VALUES(null, ${db.escape(
         username
       )}, null, null, null, ${db.escape(email)} ,${phone_number}, ${db.escape(
         hashPassword
-      )}, 0, null, null);`;
+      )}, 0, null, null);`);
       const addUser = await query(addUserQuery);
 
       const payload = { id: addUser.insertId };
       const token = jwt.sign(payload, process.env.JWT_KEY);
+      console.log(token);
 
       const insertTokenQuery = `UPDATE user SET token=${db.escape(
         token

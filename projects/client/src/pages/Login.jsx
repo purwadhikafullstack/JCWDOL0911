@@ -107,10 +107,6 @@ function Login() {
     }
   };
 
-  if (localStorage.getItem(AUTH_TOKEN)) {
-    return <Navigate to="/" replace={true} />;
-  }
-
   return (
     <div>
       <div>
@@ -332,7 +328,7 @@ function Login() {
                   <Input
                     id="email"
                     name="email"
-                    type="text"
+                    type="email"
                     placeholder="email"
                     className="shadow-sm mt-4"
                     value={formResetPassword.email}

@@ -8,6 +8,7 @@ const {
   qnaRoute,
   usersRoute,
   addressRoute,
+  addressRoutes,
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 

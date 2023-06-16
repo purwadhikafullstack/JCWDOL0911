@@ -17,6 +17,7 @@ import Address from "./pages/Address";
 import Order from "./pages/Order";
 import ChangePassword from "./pages/ChangePassword";
 import PageNotFound from "./pages/PageNotFound";
+import PrivateRoute from "./components/PrivateRoute";
 
 //
 function App() {
@@ -36,21 +37,23 @@ function App() {
       <Routes>
         <Route element={<LayoutWithNavbar />}>
           <Route path="/productlist" element={<ProductList />} />
-          <Route path="/cart" element={<Cart />} />
           <Route path="/" element={<LandingPage />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/forum" element={<Forum />} />
-          <Route path="/address" element={<Address />} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/change-password" element={<ChangePassword />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/forum" element={<Forum />} />
+            <Route path="/address" element={<Address />} />
+            <Route path="/order" element={<Order />} />
+            <Route path="/change-password" element={<ChangePassword />} />
+          </Route>
         </Route>
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verification/:token" element={<Verification />} />
           <Route path="/reset-password/:token" element={<ChangePassword />} />
-          <Route path="*" element={<PageNotFound />} />
         </Route>
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
   );

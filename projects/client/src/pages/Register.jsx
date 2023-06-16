@@ -56,9 +56,6 @@ function Register() {
     }
   };
 
-  if (localStorage.getItem(AUTH_TOKEN)) {
-    return <Navigate to="/" replace={true} />;
-  }
   return (
     <div>
       <Formik

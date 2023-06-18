@@ -13,17 +13,11 @@ export const userSlice = createSlice({
       fullname: "",
       gender: "",
       profile_image: "",
-      address: [],
     },
-    chosenAddress: {},
   },
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-    },
-
-    addNewAddress: (state, action) => {
-      state.user.address.push(action.payload);
     },
 
     setChosenAddress: (state, action) => {
@@ -38,13 +32,8 @@ export const userSlice = createSlice({
   },
 });
 
-export const {
-  setUser,
-  setProvinces,
-  setChosenAddress,
-  addNewAddress,
-  resetPrimary,
-} = userSlice.actions;
+export const { setUser, setProvinces, setChosenAddress, resetPrimary } =
+  userSlice.actions;
 export default userSlice.reducer;
 
 export function fetchUser() {
@@ -56,27 +45,6 @@ export function fetchUser() {
     dispatch(setUser(response.data));
   };
 }
-
-export const newAddress = (userNewAddress) => {
-  return async (dispatch) => {
-    console.log(userNewAddress);
-
-    const response = await axios.post(
-      "http://localhost:8000/address/new",
-      userNewAddress
-    );
-    if (response.data.success) {
-      if (userNewAddress.isprimary) {
-        dispatch(resetPrimary());
-      }
-      alert(response.data.message);
-      dispatch(addNewAddress(userNewAddress));
-      dispatch(setChosenAddress(userNewAddress));
-    } else {
-      alert(response.data.message);
-    }
-  };
-};
 
 export function uploadPicture(image, setOpen) {
   const userId = JSON.parse(localStorage.getItem("user")).iduser;

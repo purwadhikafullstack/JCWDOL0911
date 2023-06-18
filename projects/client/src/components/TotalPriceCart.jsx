@@ -1,62 +1,102 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { currency } from "../helpers/currency";
+import { getProvince } from "../features/rajaongkir/rajaongkirSlice";
+import { setTotalPrice } from "../features/cart/cartSlice";
+import { removeCheckedProduct } from "../features/cart/cartSlice";
+import NewAddressModal from "./NewAddressModal";
 
 function TotalPriceCart() {
+  const dispatch = useDispatch();
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const cartProduct = useSelector((state) => state.cart.cart);
+  const addressData = useSelector(
+    (state) => state.address.addressList.allAddress
+  );
   const navigate = useNavigate();
 
+  const [total, setTotal] = useState(0);
+  //when user doesn't have any address, below is hook to show address modal
+  const [isHiddenAddress, setIsHiddenAddress] = useState(false);
+
+  //modalHandler
+  const isHiddenAddressHandler = () => {
+    setIsHiddenAddress((prev) => !prev);
+  };
+
+  //clikhandle for pay, when address not available, show the address component modal on screen
+  const payClickHandler = async () => {
+    if (addressData.length === 0) {
+      setIsHiddenAddress((prev) => !prev);
+    } else {
+      setTotal(0);
+      await cartProduct.map(async (product, index) => {
+        setTotal((prev) => prev + product.price * product.quantity);
+      });
+      navigate("/order");
+    }
+  };
+
+  //when the page started, fetch province from rajaongkir
+  useEffect(() => {
+    cartProduct.map((val, index) => {
+      return dispatch(removeCheckedProduct(index));
+    });
+    dispatch(getProvince());
+  }, []);
+
+  useEffect(() => {
+    dispatch(setTotalPrice(total));
+  }, [total, dispatch]);
+
   return (
-    <div className=" w-[90%] rounded-xl shadow-xl">
-      <div className="ml-6 font-bold pt-6">Summary</div>
-      <div className="flex flex-col justify-between mx-6 mt-4">
-        {cartProduct.map((val) => {
-          if (val.summary) {
-            // if (checkBox.checked) {
-            return (
-              <div
-                key={val.idproduct}
-                className="flex flex-row justify-between "
-              >
-                <div className="col-span-2">{val.name}</div>
+    <>
+      <div className=" w-[90%] rounded-xl shadow-xl">
+        <div className="ml-6 font-bold pt-6">Summary</div>
+        <div className="flex flex-col justify-between mx-6 mt-4">
+          {cartProduct.forEach((val) => {
+            if (val.summary) {
+              // if (checkBox.checked) {
+              return (
+                <div
+                  key={val.idproduct}
+                  className="flex flex-row justify-between "
+                >
+                  <div className="col-span-2">{val.name}</div>
 
-                <div className="text-end whitespace-nowrap">
-                  {currency(val.price * val.quantity)}
+                  <div className="text-end whitespace-nowrap">
+                    {currency(val.price * val.quantity)}
+                  </div>
                 </div>
-              </div>
-            );
-            // }
-          }
-        })}
-      </div>
-      <hr className="border-gray-300 my-4" />
-      <div className="flex flex-row justify-between mx-6">
-        <div>Total Price</div>
-        <div>{currency(totalPrice)}</div>
-      </div>
+              );
+              // }
+            }
+          })}
+        </div>
+        <hr className="border-gray-300 my-4" />
+        <div className="flex flex-row justify-between mx-6">
+          <div>Total Price</div>
+          <div>{currency(totalPrice)}</div>
+        </div>
 
-      <div className="w-full flex items-center my-10">
-        {cartProduct.length ? (
-          <button
-            className=" disabled:bg-gray-300 disabled:hover:shadow-none hover:bg-green-500 hover:shadow-xl w-[80%] mx-auto rounded-md border-none text-white bg-green-700 h-[40px]"
-            onClick={() => navigate("/address")}
-          >
-            Pay
-          </button>
+        {isHiddenAddress ? (
+          <NewAddressModal modalHandler={isHiddenAddressHandler} />
         ) : (
-          <button
-            disabled
-            className=" disabled:bg-gray-300 disabled:hover:shadow-none hover:bg-green-500 hover:shadow-xl w-[80%] mx-auto rounded-md border-none text-white bg-green-700 h-[40px]"
-            onClick={() => navigate("/address")}
-          >
-            Pay
-          </button>
+          <div className="w-full flex items-center my-10">
+            <button
+              id="payButton"
+              disabled={cartProduct.length === 0 ? true : false}
+              className=" disabled:bg-gray-300 disabled:hover:shadow-none hover:bg-green-500 hover:shadow-xl w-[80%] mx-auto rounded-md border-none text-white bg-green-700 h-[40px]"
+              onClick={payClickHandler}
+            >
+              Pay
+            </button>
+          </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
 

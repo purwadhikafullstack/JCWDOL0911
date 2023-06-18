@@ -1,41 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { currency } from "../helpers/currency";
 
 function OrderTotalPriceCart() {
-  const totalPrice = useSelector((state) => state.cart.totalPrice);
   const cartProduct = useSelector((state) => state.cart.cart);
+  const totalPrice = useSelector((state) => state.cart);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <div className=" w-[90%] rounded-xl shadow-xl">
-      <div className="ml-6 font-bold pt-6">Summary</div>
-      <div className="flex flex-col justify-between mx-6 mt-4">
-        {cartProduct.map((val) => {
-          if (val.summary) {
-            // if (checkBox.checked) {
-            return (
-              <div
-                key={val.idproduct}
-                className="flex flex-row justify-between "
-              >
-                <div className="col-span-2">{val.name}</div>
-
-                <div className="text-end whitespace-nowrap">
-                  {currency(val.price * val.quantity)}
-                </div>
-              </div>
-            );
-            // }
-          }
-        })}
+      <div className="text-xl ml-6 font-bold pt-6">Payment Summary</div>
+      <div className="flex flex-col gap-4 justify-between mx-6 mt-4">
+        <div className="flex flex-row justify-between ">
+          <div>Total Price</div>
+          <div>{currency(totalPrice.totalPrice)}</div>
+        </div>
+        <div className="flex flex-row justify-between ">
+          <div>Freight Cost</div>
+          <div>{currency(totalPrice.totalPrice)}</div>
+        </div>
       </div>
       <hr className="border-gray-300 my-4" />
       <div className="flex flex-row justify-between mx-6">
-        <div>Total Price</div>
-        <div>{currency(totalPrice)}</div>
+        <div className="font-bold">Total Payment</div>
+        <div>{currency(totalPrice.totalPrice)}</div>
       </div>
 
       <div className="w-full flex items-center my-10">

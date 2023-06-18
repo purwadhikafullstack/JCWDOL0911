@@ -1,55 +1,91 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+
+//import assets
+import newAddress from "../assets/new_address.svg";
+import medicine from "../assets/medicine.svg";
+
+//import component
+import NewAddressModal from "./NewAddressModal";
 
 //take cart globalstate
 import { useSelector } from "react-redux";
 
 //import helper
 import { currency } from "../helpers/currency";
-
-//import actions from cartSlice
-import {
-  setTotalPrice,
-  addProductQuantity,
-  addProduct,
-  decreaseProductQuantity,
-  removeProduct,
-  addCheckedProduct,
-  removeCheckedProduct,
-} from "../features/cart/cartSlice";
-
-//importing assets
-
-import medicine from "../assets/medicine.svg";
+import ChangeAddressModal from "./ChangeAddressModal";
 
 function OrderProductCart() {
-  const [total, setTotal] = useState(0);
-  const dispatch = useDispatch();
+  //control if user want to add new address
+  const [isHidden, setIsHidden] = useState(false);
+  const [isAddressModalHidden, setAddressModalHidden] = useState(false);
 
-  const myCart = useSelector((state) => state.cart.cart);
-
-  const addProductButtonHandler = (index, item) => {
-    const checkBox = document.getElementById(item.idproduct);
-    if (checkBox.checked) {
-      setTotal((prev) => prev + item.price);
-      dispatch(addProductQuantity(index));
-    } else {
-      dispatch(addProductQuantity(index));
-    }
+  const newAddressModalHandler = () => {
+    setIsHidden((prev) => !prev);
   };
 
-  useEffect(() => {
-    dispatch(setTotalPrice(total));
-  }, [total]);
+  const changeAddressModalHandler = () => {
+    setAddressModalHidden((prev) => !prev);
+  };
+
+  const myCart = useSelector((state) => state.cart.cart);
+  const userData = useSelector((state) => state.user.user);
+  const userAddresses = useSelector(
+    (state) => state.address.addressList.allAddress
+  );
+  const userPrimaryAddress = useSelector((state) => {
+    return state.address.primaryAddress[0] || userAddresses[0];
+  });
 
   return (
     <>
       {myCart.length !== 0 ? (
         <div>
-          <div className="shadow-xl rounded-xl">
-            <div className=" w-[100%] h-[200px] py-4 border-b-black pl-4">
-              lorem
+          <div className="shadow-xl rounded-xl relative">
+            <div className="text-2xl font-roboto font-bold px-6 pt-8">
+              Customer Address
             </div>
+            <hr className="mt-4" />
+            <div className="flex sm:flex-row flex-col px-6 pt-4 sm:items-center justify-between">
+              <div className=" font-bold whitespace-nowrap">
+                {userPrimaryAddress.full_name || userData.username}
+                <span>, {userData.phone_number}</span>
+              </div>
+              <button
+                onClick={changeAddressModalHandler}
+                className="cursor-pointer sm:relative sm:bottom-0 absolute bottom-20  font-bold text-green-600"
+              >
+                Change Address
+              </button>
+            </div>
+            <div className=" w-[90%] ml-6 py-4 border-b-black sm:pb-4 pb-9">
+              <div>
+                {userPrimaryAddress.full_name.split(" ")[0]}
+                <span>{`'s ${userPrimaryAddress.address_type}`}</span>
+              </div>
+              <div>{userPrimaryAddress.street}</div>
+              <div>
+                <span>
+                  {userPrimaryAddress.district
+                    ? `${userPrimaryAddress.district}, `
+                    : null}
+                </span>
+                <span>
+                  {userPrimaryAddress.city_name
+                    ? `${userPrimaryAddress.city_name}, `
+                    : null}
+                </span>
+                <span>{null || `${userPrimaryAddress.province}, `}</span>
+                <span>{null || userPrimaryAddress.postal_code}</span>
+              </div>
+            </div>
+            <hr />
+            <button
+              onClick={newAddressModalHandler}
+              className="flex flex-row gap-4 py-4 ml-6 items-center"
+            >
+              <img src={newAddress} alt="plus" className="w-[40px] h-[40px]" />
+              <div className="font-bold tracking-wide">Add New Address</div>
+            </button>
           </div>
           <div className="shadow-xl rounded-xl mt-10">
             {myCart.map((item, index) => {
@@ -68,7 +104,7 @@ function OrderProductCart() {
                       </div>
                       <img
                         src={item.product_image || medicine}
-                        className=" object-contain w-[200px] h-[200px] h-full"
+                        className=" object-contain w-[200px] h-full"
                         alt="testing"
                       />
                     </div>
@@ -83,12 +119,9 @@ function OrderProductCart() {
                         </p>
                       </div>
                       <div className="flex flex-row mx-4 items-center">
-                        <button
-                          onClick={() => addProductButtonHandler(index, item)}
-                          className=" sm:absolute w-[80px] h-[25px] sm:bottom-4 sm:right-[125px] rounded-tl-sm rounded-bl-sm hover:bg-green-500"
-                        >
+                        <div className=" sm:absolute w-[80px] h-[25px] sm:bottom-4 sm:right-[125px] rounded-tl-sm rounded-bl-sm hover:bg-green-500">
                           Quantity :
-                        </button>
+                        </div>
                         <span className="sm:absolute sm:bottom-4 sm:right-[75px] text-center w-[50px] h-[25px]">
                           {item.quantity}
                         </span>
@@ -99,6 +132,12 @@ function OrderProductCart() {
               );
             })}
           </div>
+          {isHidden ? (
+            <NewAddressModal modalHandler={newAddressModalHandler} />
+          ) : null}
+          {isAddressModalHidden ? (
+            <ChangeAddressModal modalHandler={changeAddressModalHandler} />
+          ) : null}
         </div>
       ) : (
         <>

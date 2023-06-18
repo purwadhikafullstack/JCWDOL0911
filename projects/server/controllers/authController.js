@@ -22,11 +22,13 @@ module.exports = {
       const hashPassword = await bcrypt.hash(password, salt);
       console.log(hashPassword);
 
-      const addUserQuery = await query(`INSERT INTO user VALUES(null, ${db.escape(
-        username
-      )}, null, null, null, ${db.escape(email)} ,${phone_number}, ${db.escape(
-        hashPassword
-      )}, 0, null, null);`);
+      const addUserQuery = await query(
+        `INSERT INTO user VALUES(null, ${db.escape(
+          username
+        )}, null, null, null, ${db.escape(email)} ,${phone_number}, ${db.escape(
+          hashPassword
+        )}, 0, null, null);`
+      );
       const addUser = await query(addUserQuery);
 
       const payload = { id: addUser.insertId };

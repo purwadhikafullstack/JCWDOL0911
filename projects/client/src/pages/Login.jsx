@@ -20,6 +20,10 @@ import {
   Input,
   FormErrorMessage,
 } from "@chakra-ui/react";
+import {
+  fetchAddresses,
+  fetchPrimaryAddress,
+} from "../features/users/addressSlice";
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,6 +61,8 @@ function Login() {
         localStorage.setItem(AUTH_TOKEN, response.data?.token);
         localStorage.setItem(USER, JSON.stringify(response.data.data));
         dispatch(setUser(response.data?.data));
+        dispatch(fetchAddresses(0));
+        dispatch(fetchPrimaryAddress());
         navigate("/");
       }
     } catch (error) {

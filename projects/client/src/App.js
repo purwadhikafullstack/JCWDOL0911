@@ -13,7 +13,7 @@ import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
 import Verification from "./pages/Verification";
 import Login from "./pages/Login";
-import Address from "./pages/Address";
+
 import Order from "./pages/Order";
 import ChangePassword from "./pages/ChangePassword";
 import PageNotFound from "./pages/PageNotFound";
@@ -28,9 +28,6 @@ function App() {
   //   email: "rifqirafialdy@gmail.com",
   //   id: 1,
   // };
-  // useEffect(() => {
-  //   localStorage.setItem("user", JSON.stringify(userProfile));
-  // });
 
   return (
     <div className="">

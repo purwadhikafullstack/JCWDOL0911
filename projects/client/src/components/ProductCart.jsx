@@ -11,7 +11,6 @@ import { currency } from "../helpers/currency";
 import {
   setTotalPrice,
   addProductQuantity,
-  addProduct,
   decreaseProductQuantity,
   removeProduct,
   addCheckedProduct,
@@ -80,6 +79,7 @@ function ProductCart() {
         if (!checkBox.checked) {
           checkBox.click();
         }
+        return null;
       });
     } else {
       myCart.map((val) => {
@@ -87,6 +87,7 @@ function ProductCart() {
         if (checkBox.checked) {
           checkBox.click();
         }
+        return null;
       });
     }
   };
@@ -138,7 +139,7 @@ function ProductCart() {
                       </div>
                       <img
                         src={item.product_image || medicine}
-                        className=" object-contain w-[200px] h-[200px] h-full"
+                        className=" object-contain w-[200px] h-full"
                         alt="testing"
                       />
                     </div>

@@ -53,7 +53,6 @@ export const cartSlice = createSlice({
       let indexProduct = state.cart.findIndex(
         (val) => val.idproduct === action.payload.idproduct
       );
-      console.log(indexProduct);
       if (indexProduct < 0) {
         state.cart.push(action.payload);
       } else {
@@ -94,6 +93,14 @@ export const cartSlice = createSlice({
         summary: false,
       };
     },
+    setEachTotalPrice: (state, action) => {
+      state.cart[action.payload] = {
+        ...state.cart[action.payload],
+        totalPrice:
+          state.cart[action.payload].quantity *
+          state.cart[action.payload].price,
+      };
+    },
   },
 });
 
@@ -120,6 +127,7 @@ export const {
   decreaseProductQuantity,
   addCheckedProduct,
   removeCheckedProduct,
+  setEachTotalPrice,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

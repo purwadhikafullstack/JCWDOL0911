@@ -39,7 +39,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/forum" element={<Forum />} />
-            <Route path="/address" element={<Address />} />
+
             <Route path="/order" element={<Order />} />
             <Route path="/change-password" element={<ChangePassword />} />
           </Route>

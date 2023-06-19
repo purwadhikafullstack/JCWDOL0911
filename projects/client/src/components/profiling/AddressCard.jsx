@@ -16,27 +16,25 @@ function AddressCard() {
     dispatch(fetchPrimaryAddress())
   },[])
   return (
-    <div>
-        
-        <div class="max-w-sm rounded overflow-hidden shadow-lg group lg:w-[40rem] ">
-    <div class=" flex flex-col gap-3">
-        <div className=' py-2 bg-emerald-500'>
-            
-      <h1 class="font-bold text-xl mb-2 text-white text-center  ">Address</h1>
-          </div>{primaryAddress ?<div className=' px-4'>
-            <MyAddressCard address={primaryAddress}/> 
-            </div>
-            : <></>}
-         
-          <div className='flex items-center justify-center py-2 gap-3'>
-            <ManageAddressModal/>
-            <AddressModal/>
-        </div>
-     
+    <div className="flex flex-col ">
+          <h1 className=" px-4 font-bold text-xl mb-2 lg:text-2xl">
+      Address
+    </h1>
+    
+    {primaryAddress ? (
+      <div className="px-4">
+        <MyAddressCard address={primaryAddress}/> 
+      </div>
+    ) : (
+      <h1 className=' font-extrabold px-4'>Please Add Address or Set Your Primary Addres</h1>
+    )}
+    
+    <div className="flex items-center justify-center py-2 gap-3">
+      <ManageAddressModal/>
+      <AddressModal/>
     </div>
-
   </div>
-    </div>
+
   )
 }
 

@@ -2,7 +2,17 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
+<<<<<<< Updated upstream
 const { authRoutes, productRoutes, qnaRoute, usersRoute,addressRoute } = require("./routes");
+=======
+const {
+  authRoutes,
+  productRoutes,
+  qnaRoute,
+  usersRoute,
+  addressRoute,addressRoutes
+} = require("./routes");
+>>>>>>> Stashed changes
 const { relatedProductRouter } = require("./routes/index");
 
 const { db, query } = require("./database/index");

@@ -5,6 +5,8 @@ function QuestionsCard({ question }) {
     const dateTime = date.getFullYear() + "/" +
     ("00" + (date.getMonth() + 1)).slice(-2) + "/" +
     ("00" + date.getDate()).slice(-2) + " " 
+    const profilePic = question.profile_image?`${process.env.REACT_APP_API_BE}/users/${question.profile_image}`:'/default.jpg'
+
     return (
       <div class=" flex flex-col w-96 lg:w-[44rem] px-8 py-4 mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800" >
       <div class="flex items-center justify-between">
@@ -22,7 +24,7 @@ function QuestionsCard({ question }) {
           <a className="text-emerald-500 hover:underline">Read More ⟶</a>
           <div className="flex items-center">
             <img
-              src={`${process.env.REACT_APP_API_BE}/users/${question.profile_image}`}
+              src={profilePic}
               alt="Author Photo"
               className="hidden object-cover w-10 h-10 mx-4 rounded-full sm:block"
             />

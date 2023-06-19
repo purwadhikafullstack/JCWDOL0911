@@ -14,6 +14,14 @@ import Cart from "./pages/Cart";
 import Verification from "./pages/Verification";
 import Login from "./pages/Login";
 import Address from "./pages/Address";
+<<<<<<< Updated upstream
+=======
+import Order from "./pages/Order";
+import ChangePassword from "./pages/ChangePassword";
+import PageNotFound from "./pages/PageNotFound";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "./features/users/userSlice";
+>>>>>>> Stashed changes
 
 //
 function App() {
@@ -27,6 +35,15 @@ function App() {
   // useEffect(() => {
   //   localStorage.setItem("user", JSON.stringify(userProfile));
   // });
+  const token = localStorage.getItem('authToken')
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchUser())
+      
+    }
+    
+  })
 
   return (
     <div className="">

@@ -12,10 +12,10 @@ import Swal from 'sweetalert2'
 function EditProfile({ user, setEdit }) {
     const dispatch = useDispatch()
     const [startDate, setStartDate] = useState(new Date(user.birthdate));
-    const [username, setUsername] = useState('')
-    const [fullname, setFullname] = useState('')
-    const [email, setEmail] = useState('')
-    const [gender, setGender] = useState('')
+    const [username, setUsername] = useState(user.username)
+    const [fullname, setFullname] = useState(user.fullname)
+    const [email, setEmail] = useState(user.email)
+    const [gender, setGender] = useState(user.gender)
     const [emailError, setEmailError] = useState('')
 
     
@@ -47,54 +47,60 @@ function EditProfile({ user, setEdit }) {
       }
   return (
     <div>
-        
-    <div class="max-w-sm rounded overflow-hidden shadow-lg group lg:w-64 ">
-    <div class="flex flex-col gap-3">
-        <div className='  py-2 bg-emerald-500'>    
-      <h1 class="font-bold text-xl mb-2 text-white text-center">Profile Info</h1>
+      <div className='flex flex-col lg:flex-row lg:gap-20 lg:border-b'>
+      <div className="border-b pb-4 mb-4 lg:border-b-0">
+        <div>
+            <h1 className="font-bold text-xl mb-2">
+              User Name</h1>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="bg-gray-50 border-green-300 rounded-md border-2 h-10"
+          />
         </div>
-      <div className=' px-4  flex flex-col gap-1'>
-    <label htmlFor="username">User Name :</label>
-      <input type="text" name="username" id="username"
-        className=' bg-gray-50 border-green-300 rounded-md border-2 h-10'
-        placeholder={user.username}
-        onChange={(e)=>setUsername(e.target.value)}/>
-      <label htmlFor="fullname">Full Name :</label>
-      <input type="text" name="fullname" id="fullname" 
-        className=' bg-gray-50 border-green-300 rounded-md border-2 h-10'
-        placeholder={user.fullname}
-        onChange={(e)=>setFullname(e.target.value)}/>
-    <label htmlFor="email">E-Mail :</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              className=' bg-gray-50 border-green-300 rounded-md border-2 h-10'
-              placeholder={user.email}
-              onChange={handleEmailChange}
-              onBlur={handleEmailBlur}
-
+      </div>
+      <div className="border-b pb-4 mb-4 lg:border-b-0">
+        <div>
+          <h1 className="font-bold text-xl mb-2">Full Name</h1>
+          <input
+            type="text"
+            value={fullname}
+            onChange={(e) => setFullname(e.target.value)}
+            className="bg-gray-50 border-green-300 rounded-md border-2 h-10"
             />
-            {emailError && <p className="text-red-500">{emailError}</p>}
-                <label htmlFor="gender">Gender:</label>
-      <select name="gender" id="gender"
-    className=' bg-gray-50 border-green-300 rounded-md border-2 h-10'
-    onChange={(e)=>setGender(e.target.value)}>
-        <option value="">{user.gender}</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-      </select>
-      <label htmlFor="birthdate">Birth Date :</label>
-      <DatePicker
-      className=' bg-gray-50 border-green-300 rounded-md border-2 h-10'
-      selected={startDate}
-      onChange={(date) => setStartDate(date)}
-      peekNextMonth
-      showMonthDropdown
-      showYearDropdown
-      dropdownMode="select"
-    />
-       
+        </div>
+        </div>
+      </div>
+      <div className='flex flex-col lg:flex-row lg:gap-36 lg:border-b lg:pt-2'>
+      <div className="border-b pb-4 mb-4 lg:border-b-0">
+        <div>
+          <h1 className="font-bold text-xl mb-2">Gender</h1>
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            className="bg-gray-50 border-green-300 rounded-md border-2 h-10"
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+      </div>
+      <div className="border-b pb-4 mb-4 lg:border-b-0">
+        <div>
+          <h1 className="font-bold text-xl mb-2">Birth Date</h1>
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            peekNextMonth
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+            className="bg-gray-50 border-green-300 rounded-md border-2 h-10"
+          />
+        </div>
+        </div>
         </div>
         <div className='flex gap-3 items-center justify-center py-3'>
         <button 
@@ -107,9 +113,8 @@ function EditProfile({ user, setEdit }) {
         Cancel
         </button>
     </div>  
-        </div>
-  </div>
-    </div>
+      </div>
+  
 
   )
 }

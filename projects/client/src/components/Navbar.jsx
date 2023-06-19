@@ -10,7 +10,9 @@ function Navbar() {
   const navigate = useNavigate();
   const token = localStorage.getItem(AUTH_TOKEN);
   const myCart = useSelector((state) => state.cart.cart);
-  const user = JSON.parse(localStorage.getItem(USER)) || {};
+  const user = useSelector((state=>state.user.user))
+  const profilePic = user.profile_image?`${process.env.REACT_APP_API_BE}/users/${user.profile_image}`:'/default.jpg'
+
 
   const handleLogout = () => {
     localStorage.clear();
@@ -57,11 +59,7 @@ function Navbar() {
                 <div className="flex items-center gap-4 ">
                   <Avatar
                     size="sm"
-                    src={
-                      user.profile_image
-                        ? `${process.env.REACT_APP_API_BE}/${user.profile_image}`
-                        : "https://bit.ly/broken-link"
-                    }
+                    src={profilePic}
                   />
                   <p className="font-bold">
                     {user.username ? user.username : ""}
@@ -69,6 +67,9 @@ function Navbar() {
                 </div>
               </MenuButton>
               <MenuList>
+                <MenuItem onClick={()=>navigate('/profile')}>
+                  <p className="text-black">Profile Info's</p>
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <p className="text-black">Logout</p>
                 </MenuItem>

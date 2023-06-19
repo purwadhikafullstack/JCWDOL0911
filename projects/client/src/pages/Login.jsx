@@ -8,7 +8,22 @@ import { Button } from "@chakra-ui/react";
 import InputComponent from "../components/Input";
 import { AUTH_TOKEN, USER } from "../helpers/constant";
 import { useDispatch } from "react-redux";
+<<<<<<< Updated upstream
 import { setUser } from "../features/users/userSlice";
+=======
+import { fetchUser, setUser } from "../features/users/userSlice";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Input,
+  FormErrorMessage,
+} from "@chakra-ui/react";
+>>>>>>> Stashed changes
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +57,7 @@ function Login() {
       if (response.data?.token) {
         localStorage.setItem(AUTH_TOKEN, response.data?.token);
         localStorage.setItem(USER, JSON.stringify(response.data.data));
-        dispatch(setUser(response.data?.data));
+        dispatch(fetchUser());
         navigate("/");
       }
     } catch (error) {

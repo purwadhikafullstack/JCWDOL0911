@@ -13,5 +13,10 @@ module.exports = {
   qnaRoute,
   usersRoute,
   rajaOngkirRouter,
+<<<<<<< Updated upstream
   addressRoute
+=======
+  addressRoute,
+  addressRoutes,
+>>>>>>> Stashed changes
 };

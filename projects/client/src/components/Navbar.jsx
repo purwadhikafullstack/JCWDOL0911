@@ -10,7 +10,9 @@ function Navbar() {
   const navigate = useNavigate();
   const token = localStorage.getItem(AUTH_TOKEN);
   const myCart = useSelector((state) => state.cart.cart);
-  const user = JSON.parse(localStorage.getItem(USER)) || {};
+  const user = useSelector((state=>state.user.user))
+  const profilePic = user.profile_image?`${process.env.REACT_APP_API_BE}/users/${user.profile_image}`:'/default.jpg'
+
 
   const handleLogout = () => {
     localStorage.clear();
@@ -74,39 +76,17 @@ function Navbar() {
                 <div className="flex items-center gap-4 ">
                   <Avatar
                     size="sm"
-                    src={
-                      user.profile_image
-                        ? `${process.env.REACT_APP_API_BE}/${user.profile_image}`
-                        : "https://bit.ly/broken-link"
-                    }
+                    src={profilePic}
                   />
                   <p className="font-bold">
                     {user.username ? user.username : ""}
                   </p>
                 </div>
               </MenuButton>
-              <MenuList className="p-6">
-                <Link to={"/profile"}>
-                  <MenuItem>
-                    <div className="w-6 mr-4">
-                      <svg
-                        fill="none"
-                        stroke="gray"
-                        stroke-width="1.5"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <p className="text-black">My Profile</p>
-                  </MenuItem>
-                </Link>
+              <MenuList>
+                <MenuItem onClick={()=>navigate('/profile')}>
+                  <p className="text-black">Profile Info's</p>
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <div className="w-6 mr-4">
                     <svg

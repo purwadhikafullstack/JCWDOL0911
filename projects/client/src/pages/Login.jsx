@@ -63,6 +63,7 @@ function Login() {
         dispatch(setUser(response.data?.data));
         dispatch(fetchAddresses(0));
         dispatch(fetchPrimaryAddress());
+
         navigate("/");
       }
     } catch (error) {

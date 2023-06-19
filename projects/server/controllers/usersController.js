@@ -29,52 +29,18 @@ module.exports = {
     res.status(200).send({ message: "Upload Succes" });
   },
   editProfiles: async (req, res) => {
+    
     const user_id = parseInt(req.params.id);
     const { username, fullname, gender, birthdate, email } = req.body;
-    console.log(username);
     const date = new Date(birthdate);
-    const dateTime =
-      date.getFullYear() +
-      "/" +
-      ("00" + (date.getMonth() + 1)).slice(-2) +
-      "/" +
-      ("00" + date.getDate()).slice(-2);
-
-    if (username) {
-      await query(
-        `UPDATE user SET username = ${db.escape(
-          username
-        )} WHERE iduser =${db.escape(user_id)}`
-      );
-    }
-    if (fullname) {
-      await query(
-        `UPDATE user SET full_name = ${db.escape(
-          fullname
-        )} WHERE iduser =${db.escape(user_id)}`
-      );
-    }
-    if (gender) {
-      await query(
-        `UPDATE user SET gender = ${db.escape(
-          gender
-        )} WHERE iduser =${db.escape(user_id)}`
-      );
-    }
-    if (birthdate) {
-      await query(
-        `UPDATE user SET birthdate = ${db.escape(
-          dateTime
-        )} WHERE iduser =${db.escape(user_id)}`
-      );
-    }
-    if (email) {
-      await query(
-        `UPDATE user SET email = ${db.escape(email)} WHERE iduser =${db.escape(
-          user_id
-        )}`
-      );
-    }
+    const dateTime =date.getFullYear() +"/" +("00" + (date.getMonth() + 1)).slice(-2) +"/" +("00" + date.getDate()).slice(-2);
+      await query (`UPDATE user SET
+    username = ${db.escape(username)},
+    full_name = ${db.escape(fullname)},
+    gender = ${db.escape(gender)},
+    birthdate = ${db.escape(dateTime)},
+    email = ${db.escape(email)}
+    WHERE iduser = ${db.escape(user_id)}`)
     res.status(200).send({ message: "Update succes" });
 
     // const userAddressQuery = `select address.idaddress, address.first_name, address.last_name, address.phone_number, address.idprovince, address.idcity, address.label_address, address.postal_code, address.address, address.isprimary from address inner join user on address.iduser = user.iduser where user.iduser=${db.escape(

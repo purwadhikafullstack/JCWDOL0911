@@ -13,5 +13,6 @@ module.exports = {
   qnaRoute,
   usersRoute,
   rajaOngkirRouter,
-  addressRoute,
+  addressRoute
+
 };

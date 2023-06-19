@@ -1,8 +1,8 @@
 const { db, query } = require("../database");
 
 module.exports = {
+ 
   ProvinceList: async (req, res) => {
-    console.log("im called");
     const provincesQuery = await query("SELECT * FROM province");
     res.status(200).send(provincesQuery);
   },
@@ -59,7 +59,7 @@ module.exports = {
         INNER JOIN user ON address.iduser = user.iduser
         WHERE address.iduser = ${db.escape(idUser)}
         ORDER BY address.isprimary DESC
-        LIMIT 3 OFFSET ${db.escape(offset)};
+        LIMIT 2 OFFSET ${db.escape(offset)};
         `);
     const counData = await query(
       `SELECT COUNT(*) as count FROM address WHERE iduser = ${db.escape(
@@ -85,22 +85,19 @@ module.exports = {
     );
     res.status(200).send({ message: "New Primary Address Has Been Set" });
   },
-  addNewAddress: async (req, res) => {
+  addAddress: async (req, res) => {
     try {
       const {
-        labelAddress,
-        firstName,
-        lastName,
-        phoneNumber,
-        userAddress,
-        postalCode,
-        primary,
-        idcity,
-        district,
-        city_name,
+        iduser,
+        first_name,
+        last_name,
         idprovince,
-        province,
-        userId,
+        idcity,
+        phone_number,
+        label_address,
+        postal_code,
+        address,
+        isprimary,
       } = req.body;
 
       if (primary) {

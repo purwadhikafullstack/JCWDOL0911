@@ -18,6 +18,11 @@ import Order from "./pages/Order";
 import ChangePassword from "./pages/ChangePassword";
 import PageNotFound from "./pages/PageNotFound";
 import PrivateRoute from "./components/PrivateRoute";
+import LoginAdmin from "./pages/admin/LoginAdmin";
+import DashboardAdmin from "./pages/admin/DashboardAdmin";
+import AnswerQuestion from "./pages/admin/AnswerQuestion";
+import AuthRouteAdmin from "./components/admin/AuthRouteAdmin";
+import PrivateRouteAdmin from "./components/admin/PrivateRouteAdmin";
 
 //
 function App() {
@@ -52,6 +57,13 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/verification/:token" element={<Verification />} />
           <Route path="/reset-password/:token" element={<ChangePassword />} />
+        </Route>
+        <Route element={<PrivateRouteAdmin />}>
+          <Route path="/admin/dashboard" element={<DashboardAdmin />} />
+          <Route path="/admin/answer-question" element={<AnswerQuestion />} />
+        </Route>
+        <Route element={<AuthRouteAdmin />}>
+          <Route path="/admin/login" element={<LoginAdmin />} />
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Axios from "axios";
+import Swal from "sweetalert2";
 
 export const productsSlice = createSlice({
     name: "products",
@@ -32,8 +33,25 @@ export default productsSlice.reducer;
 
 export function fetchProducts() {
     return async (dispatch) => {
-        const response = await Axios.get(process.env.development.REACT_APP_API_BE + "/products");
-        dispatch(setProducts(response.data.products))
-        return response.data
+        const response = await Axios.get(`http://localhost:8000/products`);
+        dispatch(setProducts(response.data))
+    }
+}
+export function updateStock(id, stock, setEdit, updatedStock) {
+    if (updatedStock == '0') {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: `You didn't update anything`,
+          });
+        setEdit(false)
+     }else{
+
+         return async (dispatch) => {
+             let response = await Axios.put(`http://localhost:8000/products/stock/${id}?`,{stock,updatedStock})
+             Swal.fire(`${response.data.message}`, "", "success");
+             dispatch(fetchProducts())
+             setEdit(false)
+            }
     }
 }

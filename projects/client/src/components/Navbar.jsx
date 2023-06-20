@@ -8,7 +8,7 @@ import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 
 function Navbar() {
   const navigate = useNavigate();
-  const token = localStorage.getItem(AUTH_TOKEN);
+  const token = localStorage.getItem('authToken');
   const myCart = useSelector((state) => state.cart.cart);
   const user = useSelector((state=>state.user.user))
   const profilePic = user.profile_image?`${process.env.REACT_APP_API_BE}/users/${user.profile_image}`:'/default.jpg'
@@ -69,7 +69,7 @@ function Navbar() {
             </svg>
           </div>
         </div>
-        {token && user.iduser ? (
+        {token && user ? (
           <>
             <Menu>
               <MenuButton>

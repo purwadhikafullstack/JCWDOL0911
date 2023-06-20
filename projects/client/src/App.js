@@ -13,12 +13,13 @@ import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
 import Verification from "./pages/Verification";
 import Login from "./pages/Login";
-import Address from "./pages/Address";
+// import Address from "./pages/Address";
 import Order from "./pages/Order";
 import ChangePassword from "./pages/ChangePassword";
 import PageNotFound from "./pages/PageNotFound";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./features/users/userSlice";
+import Products from "./pages/admin/Products";
 
 //
 function App() {
@@ -49,7 +50,7 @@ function App() {
         <Route element={<LayoutWithNavbar />}>
           <Route path="/productlist" element={<ProductList />} />
           <Route path="/" element={<LandingPage />} />
-          <Route element={<PrivateRoute />}>
+          {/* <Route element={<PrivateRoute />}> */}
             <Route path="/cart" element={<Cart />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/forum" element={<Forum />} />
@@ -57,7 +58,8 @@ function App() {
             <Route path="/order" element={<Order />} />
             <Route path="/change-password" element={<ChangePassword />} />
           </Route>
-        </Route>
+            <Route path="/admin/products" element={<Products />} />
+        {/* </Route> */}
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

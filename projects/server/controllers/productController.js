@@ -3,6 +3,7 @@ const { query, db } = require("../database");
 module.exports = {
   getLatestProduct: async (req, res) => {
     try {
+      console.log('im called');
       const getLatestProductQuery = `SELECT * FROM product ORDER BY idproduct DESC LIMIT 10;`;
       const latestProduct = await query(getLatestProductQuery);
 
@@ -50,4 +51,26 @@ module.exports = {
       return res.status(200).send({ products: results, totalPage })
     })
   },
-};
+  adminProduct: async (req, res) => {
+    const productQuery =await query (`SELECT product.*,category.name as category_name
+    FROM product
+    INNER JOIN category ON product.idcategory=category.idcategory
+    `)
+    res.status(200).send(productQuery)
+  },
+  updateStock : async (req, res) => {
+    const idProduct = parseInt(req.params.idProduct) 
+    let {stock,updatedStock}= req.body
+    console.log(updatedStock);
+    const type = 'Update Stock'
+    const status = updatedStock > 0 ? 'penambahan' : 'pengurangan'
+    updatedStock = Math.abs(updatedStock)
+    const date = new Date()
+    const dateTime = date.getFullYear() + "/" + ("00" + (date.getMonth() + 1)).slice(-2) + "/" + ("00" + date.getDate()).slice(-2);
+    stock= parseInt(stock)
+
+    await query(`UPDATE product SET stock = ${db.escape(stock)} WHERE idproduct =${db.escape(idProduct)}`)
+    await query (`INSERT INTO restock VALUES(null,${db.escape(idProduct)},${db.escape(dateTime)},${db.escape(updatedStock)},'Update Stock',${db.escape(status)})`)
+    res.status(200).send({message:'Update stock succes'})
+  }
+}

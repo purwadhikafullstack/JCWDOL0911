@@ -42,7 +42,7 @@ export function fetchProducts() {
         dispatch(setProducts(response.data.productQuery))
     }
 }
-export function updateStock(id, stock, setEdit, updatedStock) {
+export function updateStock(id, stock, setEdit, updatedStock,unit) {
     if (updatedStock == '0') {
         Swal.fire({
             icon: "error",
@@ -53,7 +53,7 @@ export function updateStock(id, stock, setEdit, updatedStock) {
      }else{
 
          return async (dispatch) => {
-             let response = await Axios.put(`http://localhost:8000/products/stock/${id}?`,{stock,updatedStock})
+             let response = await Axios.put(`${process.env.REACT_APP_API_BE}/products/stock/${id}`,{stock,updatedStock,unit})
              Swal.fire(`${response.data.message}`, "", "success");
              dispatch(fetchProducts())
              setEdit(false)

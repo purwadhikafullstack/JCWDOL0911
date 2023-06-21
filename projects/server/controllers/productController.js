@@ -61,17 +61,15 @@ module.exports = {
   },
   updateStock : async (req, res) => {
     const idProduct = parseInt(req.params.idProduct) 
-    let {stock,updatedStock}= req.body
-    console.log(updatedStock);
-    const type = 'Update Stock'
-    const status = updatedStock > 0 ? 'penambahan' : 'pengurangan'
+    let {stock,updatedStock,unit}= req.body
+    const status = updatedStock > 0 ? 'Penambahan' : 'Pengurangan'
     updatedStock = Math.abs(updatedStock)
     const date = new Date()
     const dateTime = date.getFullYear() + "/" + ("00" + (date.getMonth() + 1)).slice(-2) + "/" + ("00" + date.getDate()).slice(-2);
     stock= parseInt(stock)
 
     await query(`UPDATE product SET stock = ${db.escape(stock)} WHERE idproduct =${db.escape(idProduct)}`)
-    await query (`INSERT INTO restock VALUES(null,${db.escape(idProduct)},${db.escape(dateTime)},${db.escape(updatedStock)},'Update Stock',${db.escape(status)})`)
+    await query (`INSERT INTO restock VALUES(null,${db.escape(idProduct)},${db.escape(unit)},${db.escape(dateTime)},${db.escape(updatedStock)},'Update Stock',${db.escape(status)})`)
     res.status(200).send({message:'Update stock succes'})
   }
 }

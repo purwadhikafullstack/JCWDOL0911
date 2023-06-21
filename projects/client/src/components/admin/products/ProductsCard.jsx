@@ -14,7 +14,7 @@ function ProductsCard({ product }) {
   const categories = useSelector(state=>state.product.categories)
     const dispatch = useDispatch()
     let updatedStock = stock - product.stock
-    const saveHandler = async (id) => {
+    const saveHandler = async (id,unit) => {
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: "You want to Update Product Stock",
@@ -25,10 +25,10 @@ function ProductsCard({ product }) {
             confirmButtonText: 'Yes, changen it!'
         })
         if (result.isConfirmed) {
-           dispatch(updateStock(id,stock,setEdit,updatedStock))
+           dispatch(updateStock(id,stock,setEdit,updatedStock,unit))
         }
     }
-    const deleteHandler = async (id) => {
+    const deleteHandler = async (id,unit) => {
         const deletedStock = 0
         updatedStock = deletedStock - product.stock
         
@@ -43,7 +43,7 @@ function ProductsCard({ product }) {
         })
         if (result.isConfirmed) {
             setStock(0)
-           dispatch(updateStock(id,deletedStock,setEdit,updatedStock))
+           dispatch(updateStock(id,deletedStock,setEdit,updatedStock,unit))
         }
     }
 
@@ -102,13 +102,13 @@ function ProductsCard({ product }) {
       <div className="flex gap-3">          
       <Button
         className="border-button"
-        onClick={()=>saveHandler(product.idproduct)}
+        onClick={()=>saveHandler(product.idproduct,product.unit_product)}
         >
         Save
       </Button>
       <Button
         className="border-button"
-        onClick={() => {deleteHandler(product.idproduct);
+        onClick={() => {deleteHandler(product.idproduct,product.unit_product);
           }}
         >
         Delete

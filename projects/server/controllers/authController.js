@@ -2,7 +2,6 @@ const { db, query } = require("../database");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("../helpers/nodemailer");
-const e = require("express");
 
 module.exports = {
   register: async (req, res) => {
@@ -83,7 +82,6 @@ module.exports = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
-
       const isUserExistQuery = `SELECT * FROM user WHERE email=${db.escape(
         email
       )};`;
@@ -108,6 +106,7 @@ module.exports = {
 
       let payload = {
         id: isUserExist[0].iduser,
+        type: "user",
       };
 
       const token = jwt.sign(payload, process.env.JWT_KEY);
@@ -134,6 +133,9 @@ module.exports = {
     try {
       const { password, newPassword } = req.body;
       const idUser = req.user.id;
+
+      console.log("req user", req.user);
+      console.log("iduser", req.user.id);
 
       const isUserExistQuery = `SELECT * FROM user WHERE iduser=${idUser};`;
       const isUserExist = await query(isUserExistQuery);
@@ -215,6 +217,43 @@ module.exports = {
       return res
         .status(200)
         .send({ message: "Link reset password has been sent!" });
+    } catch (error) {
+      return res.status(500).send({ message: error });
+    }
+  },
+  loginAdmin: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const isAdminExistQuery = `SELECT * FROM admin WHERE email=${db.escape(
+        email
+      )};`;
+      const isAdminExist = await query(isAdminExistQuery);
+
+      if (isAdminExist.length === 0) {
+        return res.status(400).send({ message: "User admin is not found" });
+      }
+
+      if (password !== isAdminExist[0].password) {
+        return res.status(400).send({ message: "User admin is not found" });
+      }
+
+      let payload = {
+        id: isAdminExist[0].idadmin,
+        type: "admin",
+      };
+
+      const token = jwt.sign(payload, process.env.JWT_KEY);
+
+      return res.status(200).send({
+        message: "login success!",
+        token,
+        data: {
+          idadmin: isAdminExist[0].idadmin,
+          email: isAdminExist[0].email,
+          profile_image: isAdminExist[0].profile_image,
+          fullname: isAdminExist[0].fullname,
+        },
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).send({ message: error });

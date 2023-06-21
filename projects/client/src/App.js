@@ -21,6 +21,12 @@ import { useDispatch } from "react-redux";
 import { fetchUser } from "./features/users/userSlice";
 import Products from "./pages/admin/Products";
 import PrivateRoute from "./components/PrivateRoute";
+import LoginAdmin from "./pages/admin/LoginAdmin";
+import DashboardAdmin from "./pages/admin/DashboardAdmin";
+import AnswerQuestion from "./pages/admin/AnswerQuestion";
+import AuthRouteAdmin from "./components/admin/AuthRouteAdmin";
+import PrivateRouteAdmin from "./components/admin/PrivateRouteAdmin";
+import DetailUserQuestion from "./pages/admin/DetailUserQuestion";
 
 //
 function App() {
@@ -47,6 +53,17 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/verification/:token" element={<Verification />} />
           <Route path="/reset-password/:token" element={<ChangePassword />} />
+        </Route>
+        <Route element={<PrivateRouteAdmin />}>
+          <Route path="/admin/dashboard" element={<DashboardAdmin />} />
+          <Route path="/admin/answer-question" element={<AnswerQuestion />} />
+          <Route
+            path="/admin/answer-question/:idquestion"
+            element={<DetailUserQuestion />}
+          />
+        </Route>
+        <Route element={<AuthRouteAdmin />}>
+          <Route path="/admin/login" element={<LoginAdmin />} />
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>

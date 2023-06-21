@@ -5,34 +5,18 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { Button, Checkbox } from "@chakra-ui/react";
-import InputComponent from "../components/Input";
-import { AUTH_TOKEN, USER } from "../helpers/constant";
+import InputComponent from "../../components/Input";
+import { ADMIN, AUTH_TOKEN } from "../../helpers/constant";
 import { useDispatch } from "react-redux";
-import { setUser } from "../features/users/userSlice";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Input,
-} from "@chakra-ui/react";
-import {
-  fetchAddresses,
-  fetchPrimaryAddress,
-} from "../features/users/addressSlice";
+import { setAdmin } from "../../features/admin/adminSlice";
 
-function Login() {
+function LoginAdmin() {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const [formResetPassword, setFormResetPassword] = useState({ email: "" });
-  const [modalResetPassword, setModalResetPassword] = useState(false);
 
-  const loginSchema = Yup.object().shape({
+  const loginAdminSchema = Yup.object().shape({
     email: Yup.string()
       .email("Wrong email format")
       .required("This field is required"),
@@ -41,11 +25,11 @@ function Login() {
       .min(8, "Password too short"),
   });
 
-  const loginUser = async (value, actions) => {
+  const loginUserAdmin = async (value, actions) => {
     try {
       setIsLoading(true);
       let response = await axios.post(
-        `${process.env.REACT_APP_API_BE}/auth/login`,
+        `${process.env.REACT_APP_API_BE}/auth/admin/login`,
         value
       );
 
@@ -58,12 +42,9 @@ function Login() {
       setIsLoading(false);
       if (response.data?.token) {
         localStorage.setItem(AUTH_TOKEN, response.data?.token);
-        localStorage.setItem(USER, JSON.stringify(response.data.data));
-        dispatch(setUser(response.data?.data));
-        dispatch(fetchAddresses(0));
-        dispatch(fetchPrimaryAddress());
-
-        navigate("/");
+        localStorage.setItem(ADMIN, JSON.stringify(response.data?.data));
+        dispatch(setAdmin(response.data?.data));
+        navigate("/admin/dashboard");
       }
     } catch (error) {
       Swal.fire({
@@ -75,44 +56,6 @@ function Login() {
     }
   };
 
-  const handleResetPasswordForm = async (event) => {
-    const key = event.target.name;
-    setFormResetPassword({ ...formResetPassword, [key]: event.target.value });
-  };
-
-  const sendLinkToEmail = async (event) => {
-    try {
-      setIsLoading(true);
-      event.preventDefault();
-
-      let response = await axios.post(
-        `${process.env.REACT_APP_API_BE}/auth/reset-password`,
-        formResetPassword
-      );
-
-      setIsLoading(false);
-      setModalResetPassword(false);
-      navigate("/login");
-
-      setFormResetPassword({ email: "" });
-
-      Swal.fire({
-        icon: "success",
-        title: "Success!",
-        text: response.data?.message,
-      });
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: error.response?.data?.message || "Something went wrong!!",
-      });
-      setIsLoading(false);
-      setModalResetPassword(false);
-      navigate("/login");
-    }
-  };
-
   return (
     <div>
       <div>
@@ -121,9 +64,9 @@ function Login() {
             email: "",
             password: "",
           }}
-          validationSchema={loginSchema}
+          validationSchema={loginAdminSchema}
           onSubmit={(value, actions) => {
-            loginUser(value, actions);
+            loginUserAdmin(value, actions);
           }}
         >
           {(props) => {
@@ -132,48 +75,19 @@ function Login() {
                 <div className="flex min-h-screen h-full">
                   <div className="w-4/6 hidden lg:flex items-center justify-center register-page relative">
                     <div className=" absolute left-6 top-6 ">
-                      <Link to={"/"}>
-                        <img
-                          src="./assets/logo-pharmacy.png"
-                          alt="pharmacy"
-                          className="logo-image"
-                        />
-                      </Link>
+                      {/* <Link to={"/"}> */}
+                      <img
+                        src="../assets/logo-pharmacy.png"
+                        alt="pharmacy"
+                        className="logo-image"
+                      />
+                      {/* </Link> */}
                     </div>
-                    <img
-                      src="./assets/register-pict-green.svg"
-                      width="70%"
-                      alt=""
-                    />
+                    <img src="../assets/admin-picture.svg" width="70%" alt="" />
                   </div>
                   <div className="w-full lg:w-3/6 flex justify-center flex-col p-14">
-                    <div>
-                      <Link to={"/"}>
-                        <div className="flex items-center gap-2 text-color-green mb-9">
-                          <div className="w-7">
-                            <svg
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="1.5"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
-                              aria-hidden="true"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-                              ></path>
-                            </svg>
-                          </div>
-                          <p>Back to home</p>
-                        </div>
-                      </Link>
-                      <p className="text-3xl font-bold mb-2">Hello again!</p>
-                      <p className="text-xl text-slate-500">
-                        Log in to your account
-                      </p>
-                    </div>
+                    <p className="text-3xl font-bold mb-2">Log in as admin</p>
+
                     <div>
                       <Form className="mt-8 space-y-6" action="#" method="POST">
                         <input
@@ -284,26 +198,8 @@ function Login() {
                             type="submit"
                             className="w-full rounded-md py-6 text-white button-primary"
                           >
-                            <p className="text-lg ">Login</p>
+                            <p className="text-lg ">Login as admin</p>
                           </Button>
-                          <div className="flex flex-wrap gap-2 items-end justify-end my-4">
-                            <p
-                              onClick={() => setModalResetPassword(true)}
-                              className="cursor-pointer text-color-green text-end font-bold text-base lg:text-md hover:text-cyan-900"
-                            >
-                              Forgot Password?
-                            </p>
-                          </div>
-                          <div className="flex flex-wrap gap-2 items-end justify-end my-4">
-                            <p className="text-color-green text-end text-base lg:text-md">
-                              Don't have an account?
-                            </p>
-                            <Link to={"/register"}>
-                              <p className="text-color-green text-end font-bold text-md lg:text-lg hover:text-cyan-900">
-                                Register
-                              </p>
-                            </Link>
-                          </div>
                         </div>
                       </Form>
                     </div>
@@ -314,51 +210,8 @@ function Login() {
           }}
         </Formik>
       </div>
-      <Modal
-        isOpen={modalResetPassword}
-        onClose={() => setModalResetPassword(false)}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <form onSubmit={sendLinkToEmail} validationSchema={loginSchema}>
-            <ModalHeader>Reset password</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <div className="">
-                <label htmlFor="email" className="sr-only" />
-                <p className="text-slate-400">
-                  Please input your registered email! We will send you a link to
-                  your email
-                </p>
-                <div>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="email"
-                    className="shadow-sm mt-4"
-                    value={formResetPassword.email}
-                    onChange={handleResetPasswordForm}
-                  />
-                </div>
-              </div>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                className="button-primary"
-                colorScheme="blue"
-                mr={3}
-                type="submit"
-                isLoading={isLoading}
-              >
-                Send
-              </Button>
-            </ModalFooter>
-          </form>
-        </ModalContent>
-      </Modal>
     </div>
   );
 }
 
-export default Login;
+export default LoginAdmin;

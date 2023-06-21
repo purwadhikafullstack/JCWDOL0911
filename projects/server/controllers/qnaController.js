@@ -52,9 +52,9 @@ module.exports = {
         res.status(200).send({ questionQuery, countData })
     },
     fetchAllQuestion: async (req, res) => {
-        const offset = parseInt(req.query.offset)
+        const offset = parseInt(req.query.offset || 10) //ada opsi kalau ternyata datanya kosong
         const search = req.query.search
-        let sort = req.query.sort 
+        let sort = req.query.sort || 'DESC'
         const questionQuery = await query(`SELECT question.*,user.username,user.profile_image FROM question INNER JOIN user ON question.iduser = user.iduser WHERE question.is_answer=true   
         ${search ? `AND (question.title LIKE ${db.escape(`%${search}%`)} OR question.question LIKE ${db.escape(`%${search}%`)})` : ''}
         ORDER BY idquestion ${sort} LIMIT 6 OFFSET ${db.escape(offset)};`)

@@ -5,6 +5,7 @@ import adminReduces from "../features/admin/adminSlice";
 import questionReducer from "../features/qna/questionSlice";
 import rajaongkirReducer from "../features/rajaongkir/rajaongkirSlice";
 import addressReducer from "../features/users/addressSlice";
+import answerReducer from "../features/admin/answerSlice";
 
 //Global state
 
@@ -16,5 +17,6 @@ export default configureStore({
     questions: questionReducer,
     rajaongkir: rajaongkirReducer,
     address: addressReducer,
+    answers: answerReducer,
   },
 });

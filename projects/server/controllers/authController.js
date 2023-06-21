@@ -2,7 +2,6 @@ const { db, query } = require("../database");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("../helpers/nodemailer");
-const e = require("express");
 
 module.exports = {
   register: async (req, res) => {
@@ -107,6 +106,7 @@ module.exports = {
 
       let payload = {
         id: isUserExist[0].iduser,
+        type: "user",
       };
 
       const token = jwt.sign(payload, process.env.JWT_KEY);
@@ -239,6 +239,7 @@ module.exports = {
 
       let payload = {
         id: isAdminExist[0].idadmin,
+        type: "admin",
       };
 
       const token = jwt.sign(payload, process.env.JWT_KEY);

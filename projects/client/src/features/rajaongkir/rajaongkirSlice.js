@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Axios from "axios";
+import Swal from "sweetalert2";
 
 const initialState = {
   province: [],
   city: [],
+  services: [],
 };
 
 export const rajaongkirSlice = createSlice({
@@ -18,6 +20,12 @@ export const rajaongkirSlice = createSlice({
     },
     resetCity: (state, action) => {
       state.city = [];
+    },
+    addServices: (state, action) => {
+      state.services = action.payload;
+    },
+    resetServices: (state, action) => {
+      state.services = [];
     },
   },
 });
@@ -46,6 +54,23 @@ export const getCity = (provID) => {
   };
 };
 
-export const { addProvince, addCity, resetCity } = rajaongkirSlice.actions;
+export const getCost = (origin, destination, weight, courier) => {
+  return async (dispatch) => {
+    const response = await Axios.post(`http://localhost:8000/rajaongkir/cost`, {
+      origin,
+      destination,
+      weight,
+      courier,
+    });
+    if (!response.data.success) {
+      Swal.fire(`${response.data.message}`, "", "error");
+    } else {
+      dispatch(addServices(response.data.services));
+    }
+  };
+};
+
+export const { addProvince, addCity, resetCity, addServices, resetServices } =
+  rajaongkirSlice.actions;
 
 export default rajaongkirSlice.reducer;

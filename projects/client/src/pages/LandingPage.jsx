@@ -3,9 +3,38 @@ import { Button } from "@chakra-ui/react";
 import CardProduct from "../components/CardProduct";
 import axios from "axios";
 import Swal from "sweetalert2";
+import ChangeAddressModal from "../components/ChangeAddressModal";
+import { useSelector } from "react-redux";
+import NewAddressModal from "../components/NewAddressModal";
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [isChangeAddressModalHidden, setIsChangeAddressModalHidden] =
+    useState(false);
+  const [isNewAddressModalHidden, setIsNewAddressModalHidden] = useState(false);
+  const userLogin = useSelector((state) => state.user.user.username);
+  const userAddresses = useSelector(
+    (state) => state.address.addressList.allAddress
+  );
+
+  const userId = JSON.parse(localStorage.getItem("user"))?.iduser;
+
+  const onClickUploadPrescriptionHandler = () => {
+    if (!userId && userLogin !== "") {
+      Swal.fire({
+        icon: "info",
+        title: "You have to login/register first",
+        text: "Please login / register your username",
+      });
+      navigate("/login");
+    } else if (userAddresses.length !== 0) {
+      setIsChangeAddressModalHidden((prev) => !prev);
+    } else {
+      setIsNewAddressModalHidden((prev) => !prev);
+    }
+  };
 
   const getLatestProduct = async () => {
     try {
@@ -62,7 +91,12 @@ function LandingPage() {
             </p>
           </div>
           <div>
-            <Button className="button-primary">Upload prescription</Button>
+            <Button
+              onClick={onClickUploadPrescriptionHandler}
+              className="button-primary"
+            >
+              Upload prescription
+            </Button>
           </div>
         </div>
         <hr className="mx-5 lg:mx-24  m-11" />
@@ -70,8 +104,8 @@ function LandingPage() {
           <p className="font-bold text-2xl">Popular Product</p>
 
           <div className="flex gap-4 justify-between mt-6 overflow-auto">
-            {products.map((product) => (
-              <CardProduct product={product} />
+            {products.map((product, index) => (
+              <CardProduct key={index} product={product} />
             ))}
           </div>
         </div>
@@ -125,6 +159,12 @@ function LandingPage() {
           </div>
         </div>
       </div>
+      {isNewAddressModalHidden ? (
+        <NewAddressModal modalHandler={onClickUploadPrescriptionHandler} />
+      ) : null}
+      {isChangeAddressModalHidden ? (
+        <ChangeAddressModal modalHandler={onClickUploadPrescriptionHandler} />
+      ) : null}
     </>
   );
 }

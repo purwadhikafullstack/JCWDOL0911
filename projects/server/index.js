@@ -8,7 +8,7 @@ const {
   qnaRoute,
   usersRoute,
   addressRoute,
-  addressRoutes,
+  prescriptionRouter,
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -41,7 +41,7 @@ app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 
 app.use(`/product`, relatedProductRouter);
-
+app.use(`/prescription`, prescriptionRouter);
 app.use("/qna", qnaRoute);
 app.use("/users", usersRoute);
 app.use("/addresses", addressRoute);

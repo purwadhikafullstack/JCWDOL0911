@@ -16,4 +16,6 @@ module.exports = {
   rajaOngkirRouter,
   prescriptionRouter,
   addressRoute,
+  // addressRoutes,
+  qnaAdminRoutes,
 };

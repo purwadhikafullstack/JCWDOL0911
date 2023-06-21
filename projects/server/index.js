@@ -8,7 +8,6 @@ const {
   qnaRoute,
   usersRoute,
   addressRoute,
-  addressRoutes,
   qnaAdminRoutes,
   prescriptionRouter,
 } = require("./routes");
@@ -41,7 +40,6 @@ app.use("/rajaongkir", rajaOngkirRouter);
 // NOTE : Add your routes here
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
-app.use("/address", addressRoutes);
 app.use("/admin/qna", qnaAdminRoutes);
 
 app.use(`/product`, relatedProductRouter);

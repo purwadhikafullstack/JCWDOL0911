@@ -6,7 +6,6 @@ import LayoutWithNavbar from "./components/LayoutWithNavbar";
 import AuthRoute from "./components/AuthRoute";
 import Profile from "./pages/Profile";
 import Forum from "./pages/Forum";
-import { useEffect } from "react";
 
 //put imported pages here!
 import ProductList from "./pages/ProductList";
@@ -42,7 +41,6 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/forum" element={<Forum />} />
-
             <Route path="/order" element={<Order />} />
             <Route path="/change-password" element={<ChangePassword />} />
           </Route>

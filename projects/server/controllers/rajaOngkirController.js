@@ -42,4 +42,32 @@ module.exports = {
       return res.status(400).send(error);
     }
   },
+  cost: async (req, res) => {
+    try {
+      const { origin, destination, weight, courier } = req.body;
+      const cost = await axios.post(`/cost`, {
+        origin,
+        destination,
+        weight,
+        courier,
+      });
+      if (cost.data.rajaongkir.status.code === 200) {
+        return res.status(200).send({
+          success: true,
+          message: "fetching success",
+          services: cost.data.rajaongkir.results[0].costs,
+        });
+      } else {
+        return res.status(200).send({
+          success: false,
+          message: cost.data.rajaongkir.status.description,
+        });
+      }
+      // console.log(cost.data);
+      // console.log(cost.data.rajaongkir.results);
+      // console.log(cost.data.rajaongkir.results[0].costs);
+    } catch (error) {
+      return res.status(400).send(error);
+    }
+  },
 };

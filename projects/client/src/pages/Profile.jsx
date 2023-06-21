@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import {  fetchUser } from '../features/users/userSlice'
-import { useSelector } from 'react-redux'
-import UploadModal from '../components/profiling/UploadModal'
-import ProfileCard from '../components/profiling/ProfileCard'
-import AddressCard from '../components/profiling/AddressCard'
-import EditProfile from '../components/profiling/EditProfile'
-import { useState } from 'react'
-import { getCity, getProvince } from '../features/rajaongkir/rajaongkirSlice'
-import { fetchPrimaryAddress,fetchProvince } from '../features/users/addressSlice'
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../features/users/userSlice";
+import { useSelector } from "react-redux";
+import UploadModal from "../components/profiling/UploadModal";
+import ProfileCard from "../components/profiling/ProfileCard";
+import AddressCard from "../components/profiling/AddressCard";
+import EditProfile from "../components/profiling/EditProfile";
+import { useState } from "react";
+import { getCity, getProvince } from "../features/rajaongkir/rajaongkirSlice";
+import {
+  fetchPrimaryAddress,
+  fetchProvince,
+} from "../features/users/addressSlice";
 
 function Profile() {
   const dispatch = useDispatch()
@@ -33,7 +36,7 @@ function Profile() {
       <AddressCard />
     </div>
     </div>
-  )
+  );
 }
 
-export default Profile
+export default Profile;

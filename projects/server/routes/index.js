@@ -7,6 +7,7 @@ const rajaOngkirRouter = require("./rajaOngkirRouter");
 const addressRoute = require("./addressRoute");
 const addressRoutes = require("./addressRoutes");
 const qnaAdminRoutes = require("./admin/qnaAdminRoute");
+const prescriptionRouter = require("./prescriptionRouter");
 
 module.exports = {
   authRoutes,
@@ -15,7 +16,8 @@ module.exports = {
   qnaRoute,
   usersRoute,
   rajaOngkirRouter,
+  prescriptionRouter,
   addressRoute,
-  addressRoutes,
+  // addressRoutes,
   qnaAdminRoutes,
 };

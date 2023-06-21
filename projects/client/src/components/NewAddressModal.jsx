@@ -4,8 +4,9 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
 
-import { getCity } from "../features/rajaongkir/rajaongkirSlice";
+import { getCity, getProvince } from "../features/rajaongkir/rajaongkirSlice";
 import { addNewAddress } from "../features/users/addressSlice";
+import { useEffect } from "react";
 
 function NewAddressModal({ modalHandler }) {
   const dispatch = useDispatch();
@@ -57,6 +58,10 @@ function NewAddressModal({ modalHandler }) {
       Swal.fire(`${response.data.message}`, "", "error");
     }
   };
+
+  useEffect(() => {
+    dispatch(getProvince());
+  }, []);
 
   return (
     <Formik

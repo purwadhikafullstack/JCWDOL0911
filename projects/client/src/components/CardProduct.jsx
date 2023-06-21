@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { addProductToCart } from "../features/cart/cartSlice";
 
 function CardProduct({ product }) {
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -36,7 +37,9 @@ function CardProduct({ product }) {
       </div>
       <Button
         className="border-button"
-        onClick={() => dispatch(addProductToCart(product))}
+        onClick={() => {
+          dispatch(addProductToCart(product));
+        }}
       >
         Add to Cart
       </Button>

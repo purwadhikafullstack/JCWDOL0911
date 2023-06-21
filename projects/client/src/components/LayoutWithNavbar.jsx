@@ -4,20 +4,22 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "../features/users/userSlice";
-import { fetchAddresses } from "../features/users/addressSlice";
-
+import {
+  fetchAddresses,
+  fetchPrimaryAddress,
+} from "../features/users/addressSlice";
 
 function LayoutWithNavbar() {
-  const userId = JSON.parse(localStorage.getItem('user'))?.iduser;
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const userId = JSON.parse(localStorage.getItem("user"))?.iduser;
+
   useEffect(() => {
     if (userId) {
-      dispatch(fetchUser())
-      dispatch(fetchAddresses())
-      
+      dispatch(fetchUser());
+      dispatch(fetchAddresses());
+      dispatch(fetchPrimaryAddress(userId));
     }
-    
-  })
+  }, []);
   return (
     <div>
       <Navbar />

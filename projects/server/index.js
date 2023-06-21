@@ -10,6 +10,7 @@ const {
   addressRoute,
   addressRoutes,
   qnaAdminRoutes,
+  prescriptionRouter,
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -44,7 +45,7 @@ app.use("/address", addressRoutes);
 app.use("/admin/qna", qnaAdminRoutes);
 
 app.use(`/product`, relatedProductRouter);
-
+app.use(`/prescription`, prescriptionRouter);
 app.use("/qna", qnaRoute);
 app.use("/users", usersRoute);
 app.use("/addresses", addressRoute);

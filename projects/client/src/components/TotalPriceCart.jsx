@@ -56,7 +56,7 @@ function TotalPriceCart() {
       <div className=" w-[90%] rounded-xl shadow-xl">
         <div className="ml-6 font-bold pt-6">Summary</div>
         <div className="flex flex-col justify-between mx-6 mt-4">
-          {cartProduct.forEach((val) => {
+          {cartProduct.map((val) => {
             if (val.summary) {
               // if (checkBox.checked) {
               return (
@@ -91,7 +91,7 @@ function TotalPriceCart() {
               className=" disabled:bg-gray-300 disabled:hover:shadow-none hover:bg-green-500 hover:shadow-xl w-[80%] mx-auto rounded-md border-none text-white bg-green-700 h-[40px]"
               onClick={payClickHandler}
             >
-              Pay
+              Submit
             </button>
           </div>
         )}

@@ -8,8 +8,14 @@ const {
   qnaRoute,
   usersRoute,
   addressRoute,
+<<<<<<< Updated upstream
   addressRoutes,
   transactionRoute
+=======
+  // addressRoutes,
+  qnaAdminRoutes,
+  prescriptionRouter,
+>>>>>>> Stashed changes
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -40,6 +46,11 @@ app.use("/rajaongkir", rajaOngkirRouter);
 // NOTE : Add your routes here
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
+<<<<<<< Updated upstream
+=======
+// app.use("/address", addressRoutes);
+app.use("/admin/qna", qnaAdminRoutes);
+>>>>>>> Stashed changes
 
 app.use(`/product`, relatedProductRouter);
 

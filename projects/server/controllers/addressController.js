@@ -100,7 +100,7 @@ module.exports = {
         isprimary,
       } = req.body;
 
-      if (primary) {
+      if (isprimary) {
         await query(
           `UPDATE address SET isprimary = false WHERE isprimary = true`
         );
@@ -121,12 +121,12 @@ module.exports = {
       }
 
       let newAddressQuery = `insert into address values (null, ${db.escape(
-        userId
+        iduser
       )}, ${db.escape(idcity)}, ${db.escape(idprovince)}, ${db.escape(
-        userAddress
-      )}, ${db.escape(primary)}, ${db.escape(district || null)}, ${db.escape(
-        postalCode
-      )}, ${db.escape(city_name)}, ${db.escape(labelAddress)});`;
+        address
+      )}, ${db.escape(isprimary)}, ${db.escape(district || null)}, ${db.escape(
+        postal_code
+      )}, ${db.escape(city_name)}, ${db.escape(label_address)});`;
 
       const newAddress = await query(newAddressQuery);
       if (newAddress.affectedRows === 0) {

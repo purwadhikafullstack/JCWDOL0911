@@ -9,15 +9,7 @@ import { fetchAddresses } from "../features/users/addressSlice";
 
 function PrivateRoute() {
   const userId = JSON.parse(localStorage.getItem(USER))?.iduser;
-  const dispatch = useDispatch()
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchUser())
-      dispatch(fetchAddresses())
-      
-    }
-    
-  })
+ 
   if (!localStorage.getItem(AUTH_TOKEN) || !userId) {
     Swal.fire({
       icon: "warning",

@@ -7,5 +7,5 @@ router.get("/primary/:userId", addressController.primaryUserAddres);
 router.get("/:userId", addressController.userAddres);
 router.delete("/:idAddress", addressController.removeAddress);
 router.put("/:idAddress", addressController.setPrimary);
-router.post("/new", addressController.addNewAddress);
+router.post("/new", addressController.addAddress);
 module.exports = router;

@@ -13,35 +13,18 @@ import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
 import Verification from "./pages/Verification";
 import Login from "./pages/Login";
-import Address from "./pages/Address";
+// import Address from "./pages/Address";
 import Order from "./pages/Order";
 import ChangePassword from "./pages/ChangePassword";
 import PageNotFound from "./pages/PageNotFound";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./features/users/userSlice";
+import Products from "./pages/admin/Products";
+import PrivateRoute from "./components/PrivateRoute";
 
 //
 function App() {
-  //for token check
-  // useEffect(() => console.log("Running First"));
-  // const userProfile = {
-  //   name: "Rifqi",
-  //   email: "rifqirafialdy@gmail.com",
-  //   id: 1,
-  // };
-
-  // useEffect(() => {
-  //   localStorage.setItem("user", JSON.stringify(userProfile));
-  // });
-  const token = localStorage.getItem('authToken')
-  const dispatch = useDispatch()
-  useEffect(() => {
-    if (token) {
-      dispatch(fetchUser())
-      
-    }
-    
-  })
+  
 
   return (
     <div className="">
@@ -58,6 +41,7 @@ function App() {
             <Route path="/change-password" element={<ChangePassword />} />
           </Route>
         </Route>
+            <Route path="/admin/products" element={<Products />} />
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

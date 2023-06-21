@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { getCity } from '../../features/rajaongkir/rajaongkirSlice'
 import { useDispatch } from 'react-redux'
-import { addUserAddress } from '../../features/users/addressSlice'
+import { addUserAddress, fetchProvince } from '../../features/users/addressSlice'
 
 function AddressModal() {
   const dispatch = useDispatch()
@@ -32,6 +32,7 @@ function AddressModal() {
     setOpen(false)
   }
   useEffect(() => {
+    dispatch(fetchProvince())
     dispatch(getCity(provinceId))
   },[provinceId])
 

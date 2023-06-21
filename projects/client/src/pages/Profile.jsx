@@ -16,9 +16,7 @@ function Profile() {
   const [edit, setEdit] = useState(false)
   
   useEffect(() => {
-    dispatch(getCity())
     dispatch(fetchPrimaryAddress())
-    dispatch(fetchProvince())
   }, [])
   
   const profilePic = user.profile_image?`${process.env.REACT_APP_API_BE}/users/${user.profile_image}`:'/default.jpg'

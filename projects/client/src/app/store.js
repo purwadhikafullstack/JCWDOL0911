@@ -4,6 +4,7 @@ import userReducer from "../features/users/userSlice";
 import questionReducer from "../features/qna/questionSlice";
 import rajaongkirReducer from "../features/rajaongkir/rajaongkirSlice";
 import addressReducer from '../features/users/addressSlice'
+import productsReducer from '../features/cart/productsSlice'
 
 //Global state
 
@@ -13,6 +14,7 @@ export default configureStore({
     user: userReducer,
     questions: questionReducer,
     rajaongkir: rajaongkirReducer,
-    address:addressReducer
+    address: addressReducer,
+    product:productsReducer
   },
 });

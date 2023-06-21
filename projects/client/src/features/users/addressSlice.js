@@ -115,10 +115,12 @@ export const addNewAddress = (newAddress) => {
   return async (dispatch) => {
     const userId = JSON.parse(localStorage.getItem("user")).iduser;
     // console.log(userId);
+    // console.log(newAddress);
     const response = await axios.post(
       `${process.env.REACT_APP_API_BE}/addresses/new`,
       { ...newAddress, userId }
     );
+    console.log(response);
     if (response.data.success) {
       dispatch(fetchAddresses(0));
       dispatch(fetchPrimaryAddress());

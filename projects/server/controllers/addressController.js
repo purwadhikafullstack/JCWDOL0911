@@ -1,7 +1,6 @@
 const { db, query } = require("../database");
 
 module.exports = {
- 
   ProvinceList: async (req, res) => {
     const provincesQuery = await query("SELECT * FROM province");
     res.status(200).send(provincesQuery);
@@ -88,16 +87,18 @@ module.exports = {
   addAddress: async (req, res) => {
     try {
       const {
-        iduser,
-        first_name,
-        last_name,
+        userId,
+        firstName,
+        lastName,
         idprovince,
         idcity,
-        phone_number,
-        label_address,
-        postal_code,
-        address,
-        isprimary,
+        phoneNumber,
+        labelAddress,
+        city_name,
+        postalCode,
+        userAddress,
+        primary,
+        province,
       } = req.body;
 
       if (primary) {
@@ -124,9 +125,9 @@ module.exports = {
         userId
       )}, ${db.escape(idcity)}, ${db.escape(idprovince)}, ${db.escape(
         userAddress
-      )}, ${db.escape(primary)}, ${db.escape(district || null)}, ${db.escape(
-        postalCode
-      )}, ${db.escape(city_name)}, ${db.escape(labelAddress)});`;
+      )}, ${db.escape(primary)}, null, ${db.escape(postalCode)}, ${db.escape(
+        city_name
+      )}, ${db.escape(labelAddress)});`;
 
       const newAddress = await query(newAddressQuery);
       if (newAddress.affectedRows === 0) {

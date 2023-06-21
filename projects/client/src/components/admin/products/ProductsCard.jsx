@@ -6,10 +6,12 @@ import { currency } from "../../../helpers/currency";
 import { useState } from "react";
 import { updateStock } from "../../../features/cart/productsSlice";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 function ProductsCard({ product }) {
-    const [isEdit, setEdit] = useState(false)
-    const [stock, setStock] = useState(product.stock)
+  const [isEdit, setEdit] = useState(false)
+  const [stock, setStock] = useState(product.stock)
+  const categories = useSelector(state=>state.product.categories)
     const dispatch = useDispatch()
     let updatedStock = stock - product.stock
     const saveHandler = async (id) => {
@@ -60,8 +62,20 @@ function ProductsCard({ product }) {
       />
           <div className="px-6 py-4 text-center">
               <h1 className="font-bold text-xl mb-2">{product.name }</h1>
-              <span className="inline-block bg-emerald-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2">{product.category_name }</span>
-              <p className="text-gray-700 text-base">
+              {categories.map((category) => {
+          if (category.idproduct === product.idproduct) {
+            return (
+              <span
+                key={category.id}
+                className="inline-block bg-emerald-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2"
+              >
+                {category.category_name}
+              </span>
+            );
+                }
+              })}
+
+                <p className="text-gray-700 text-base">
                   {currency(product.price)}
               </p>
               {!isEdit? (

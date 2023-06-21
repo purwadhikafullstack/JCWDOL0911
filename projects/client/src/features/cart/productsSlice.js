@@ -16,7 +16,8 @@ export const productsSlice = createSlice({
             description: "",
             stock: "",
             product_image: "",
-        }
+        },
+        categories:[]
     },
     reducers: {
         setProduct: (state, action) => {
@@ -24,17 +25,21 @@ export const productsSlice = createSlice({
         },
         setProducts: (state, action) => {
             state.products = action.payload;
+        },
+        setCategories: (state, action) => {
+            state.categories = action.payload
         }
     }
 });
 
-export const { setProduct, setProducts } = productsSlice.actions;
+export const { setProduct, setProducts,setCategories } = productsSlice.actions;
 export default productsSlice.reducer;
 
 export function fetchProducts() {
     return async (dispatch) => {
         const response = await Axios.get(`http://localhost:8000/products`);
-        dispatch(setProducts(response.data))
+        dispatch(setCategories(response.data.categoryQuery))
+        dispatch(setProducts(response.data.productQuery))
     }
 }
 export function updateStock(id, stock, setEdit, updatedStock) {

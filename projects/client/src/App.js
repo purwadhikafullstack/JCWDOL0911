@@ -20,29 +20,11 @@ import PageNotFound from "./pages/PageNotFound";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./features/users/userSlice";
 import Products from "./pages/admin/Products";
+import PrivateRoute from "./components/PrivateRoute";
 
 //
 function App() {
-  //for token check
-  // useEffect(() => console.log("Running First"));
-  // const userProfile = {
-  //   name: "Rifqi",
-  //   email: "rifqirafialdy@gmail.com",
-  //   id: 1,
-  // };
-
-  // useEffect(() => {
-  //   localStorage.setItem("user", JSON.stringify(userProfile));
-  // });
-  const token = localStorage.getItem('authToken')
-  const dispatch = useDispatch()
-  useEffect(() => {
-    if (token) {
-      dispatch(fetchUser())
-      
-    }
-    
-  })
+  
 
   return (
     <div className="">
@@ -50,7 +32,7 @@ function App() {
         <Route element={<LayoutWithNavbar />}>
           <Route path="/productlist" element={<ProductList />} />
           <Route path="/" element={<LandingPage />} />
-          {/* <Route element={<PrivateRoute />}> */}
+          <Route element={<PrivateRoute />}>
             <Route path="/cart" element={<Cart />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/forum" element={<Forum />} />
@@ -58,8 +40,8 @@ function App() {
             <Route path="/order" element={<Order />} />
             <Route path="/change-password" element={<ChangePassword />} />
           </Route>
+        </Route>
             <Route path="/admin/products" element={<Products />} />
-        {/* </Route> */}
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

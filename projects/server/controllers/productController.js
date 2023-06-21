@@ -52,11 +52,12 @@ module.exports = {
     })
   },
   adminProduct: async (req, res) => {
-    const productQuery =await query (`SELECT product.*,category.name as category_name
-    FROM product
-    INNER JOIN category ON product.idcategory=category.idcategory
+    const productQuery = await query (`SELECT * FROM product`)
+    const categoryQuery =await query (`SELECT products_categories.*,category.name as category_name
+    FROM products_categories
+    INNER JOIN category ON products_categories.idcategory = category.idcategory
     `)
-    res.status(200).send(productQuery)
+    res.status(200).send({ productQuery, categoryQuery })
   },
   updateStock : async (req, res) => {
     const idProduct = parseInt(req.params.idProduct) 

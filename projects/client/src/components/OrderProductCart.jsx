@@ -60,7 +60,7 @@ function OrderProductCart() {
             <div className=" w-[90%] ml-6 py-4 border-b-black sm:pb-4 pb-9">
               <div>
                 {userPrimaryAddress.full_name.split(" ")[0]}
-                <span>{`'s ${userPrimaryAddress.address_type}`}</span>
+                <span>{`'s ${userPrimaryAddress.addres_type}`}</span>
               </div>
               <div>{userPrimaryAddress.street}</div>
               <div>

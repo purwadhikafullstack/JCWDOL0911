@@ -10,6 +10,9 @@ const {
   addressRoute,
   qnaAdminRoutes,
   prescriptionRouter,
+  transactionRoute,
+  qnaAdminRoutes,
+  prescriptionRouter,
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -42,11 +45,13 @@ app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/admin/qna", qnaAdminRoutes);
 
+
 app.use(`/product`, relatedProductRouter);
 app.use(`/prescription`, prescriptionRouter);
 app.use("/qna", qnaRoute);
 app.use("/users", usersRoute);
 app.use("/addresses", addressRoute);
+app.use("/transaction",transactionRoute)
 
 // app.get("/api/greetings", (req, res, next) => {
 //   res.status(200).json({

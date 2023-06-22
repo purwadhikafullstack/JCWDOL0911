@@ -44,6 +44,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/admin/qna", qnaAdminRoutes);
 app.use("/api/order", orderRouter);
+
 app.use(`/api/product`, relatedProductRouter);
 app.use(`/api/prescription`, prescriptionRouter);
 app.use("/api/qna", qnaRoute);

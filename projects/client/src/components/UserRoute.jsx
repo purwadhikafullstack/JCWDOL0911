@@ -1,14 +1,19 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { AUTH_TOKEN, ADMIN } from "../../helpers/constant";
+import { ADMIN } from "../helpers/constant";
+import Swal from "sweetalert2";
 
-function AuthRouteAdmin() {
+function UserRoute() {
   const adminId = JSON.parse(localStorage.getItem(ADMIN))?.idadmin;
 
-  if (localStorage.getItem(AUTH_TOKEN) && adminId) {
+  if (adminId) {
+    Swal.fire({
+      icon: "warning",
+      title: "Access denied!",
+    });
     return <Navigate to="/admin/dashboard" replace={true} />;
   }
   return <Outlet />;
 }
 
-export default AuthRouteAdmin;
+export default UserRoute;

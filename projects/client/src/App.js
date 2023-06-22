@@ -28,42 +28,46 @@ import AuthRouteAdmin from "./components/admin/AuthRouteAdmin";
 import PrivateRouteAdmin from "./components/admin/PrivateRouteAdmin";
 import DetailUserQuestion from "./pages/admin/DetailUserQuestion";
 import UserTransacations from "./pages/UserTransacations";
+import UserRoute from "./components/UserRoute";
+import AdminRoute from "./components/admin/AdminRoute";
 
 //
 function App() {
   return (
     <div className="">
       <Routes>
-        <Route element={<LayoutWithNavbar />}>
-          <Route path="/productlist" element={<ProductList />} />
-          <Route path="/" element={<LandingPage />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/forum" element={<Forum />} />
-            <Route path="/order" element={<Order />} />
-            <Route path="/orderlist" element={<OrderList />} />
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path='/my-transactions' element={<UserTransacations/>}/>
+        <Route element={<UserRoute />}>
+          <Route element={<LayoutWithNavbar />}>
+            <Route path="/productlist" element={<ProductList />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/forum" element={<Forum />} />
+              <Route path="/order" element={<Order />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+            </Route>
+          </Route>
+          <Route element={<AuthRoute />}>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/verification/:token" element={<Verification />} />
+            <Route path="/reset-password/:token" element={<ChangePassword />} />
           </Route>
         </Route>
-        <Route element={<AuthRoute />}>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/verification/:token" element={<Verification />} />
-          <Route path="/reset-password/:token" element={<ChangePassword />} />
-        </Route>
-        <Route element={<PrivateRouteAdmin />}>
-          <Route path="/admin/dashboard" element={<DashboardAdmin />} />
-          <Route path="/admin/answer-question" element={<AnswerQuestion />} />
+        <Route element={<AdminRoute />}>
+          <Route element={<PrivateRouteAdmin />}>
+            <Route path="/admin/dashboard" element={<DashboardAdmin />} />
+            <Route path="/admin/answer-question" element={<AnswerQuestion />} />
           <Route path="/admin/products" element={<Products />} />
-          <Route
-            path="/admin/answer-question/:idquestion"
-            element={<DetailUserQuestion />}
-          />
-        </Route>
-        <Route element={<AuthRouteAdmin />}>
-          <Route path="/admin/login" element={<LoginAdmin />} />
+            <Route
+              path="/admin/answer-question/:idquestion"
+              element={<DetailUserQuestion />}
+            />
+          </Route>
+          <Route element={<AuthRouteAdmin />}>
+            <Route path="/admin/login" element={<LoginAdmin />} />
+          </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>

@@ -10,13 +10,14 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
   Input,
   Button,
   Tooltip,
+  Center,
+  Divider,
 } from "@chakra-ui/react";
 
 function DetailUserQuestion() {
@@ -57,17 +58,14 @@ function DetailUserQuestion() {
     try {
       setIsLoading(true);
       event.preventDefault();
-
       let response = await axios.post(
         `${process.env.REACT_APP_API_BE}/admin/qna/answer/${params.idquestion}`,
         formAnswer,
         { headers: { authorization: `Bearer ${token}` } }
       );
-
       setIsLoading(false);
       setOnOpenAnswerModal(false);
       navigate("/admin/answer-question");
-
       Swal.fire({
         icon: "success",
         title: "Success!",
@@ -85,6 +83,13 @@ function DetailUserQuestion() {
     }
   };
 
+  const getDate = (dateTime) => {
+    if (dateTime && dateTime.length > 10) {
+      return dateTime.slice(0, 10);
+    }
+    return dateTime;
+  };
+
   useEffect(() => {
     fetchDetailUserQuestion();
   }, []);
@@ -96,74 +101,97 @@ function DetailUserQuestion() {
           <Sidebar />
         </div>
         <div
-          className="h-screen bg-dashboard-admin p-11 flex flex-col gap-11"
+          className="h-screen bg-dashboard-admin p-28  flex flex-col gap-6"
           style={{ width: "calc(100vw - 320px)" }}
         >
-          <p>title: {detailQuestion.title}</p>
-          <p>question: {detailQuestion.question}</p>
+          <p className="text-3xl font-bold">Detail Question</p>
+          <div className="flex items-center gap-6 pt-12">
+            <div className="w-1/4">
+              <p>Title </p>
+            </div>
+            <div className="w-3/4">
+              <p className="text-black text-3xl font-bold py-1 px-4">
+                {detailQuestion.title}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="w-1/4">
+              <p>Question </p>
+            </div>
+            <div className="w-3/4">
+              <p className="text-black text-xl py-1 px-4">
+                {detailQuestion.question}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="w-1/4">
+              <p>Question Date</p>
+            </div>
+            <div className="w-3/4">
+              <p className="text-black text-md py-1 px-4">
+                {getDate(detailQuestion.date)}
+              </p>
+            </div>
+          </div>
+          <Divider orientation="horizontal" />
           {detailQuestion.is_answer === 0 ? (
-            <Button
-              className="button-primary"
-              variant="solid"
-              onClick={() => setOnOpenAnswerModal(true)}
-            >
-              Answer
-            </Button>
-          ) : (
-            <Tooltip label="You already answer this question">
-              <Button
-                colorScheme="gray"
-                variant="solid"
-                className="cursor-not-allowed"
-              >
-                Answered
-              </Button>
-            </Tooltip>
-          )}
-        </div>
-      </div>
-      <Modal
-        isOpen={onOpenAnswerModal}
-        onClose={() => setOnOpenAnswerModal(false)}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <form onSubmit={handleSubmitAnswer}>
-            {/* <ModalHeader>Reset password</ModalHeader> */}
-            <ModalCloseButton />
-            <ModalBody>
-              <div className="">
-                <label htmlFor="email" className="sr-only" />
-                <p className="text-slate-400">
-                  Please input your answer below:
-                </p>
-                <div>
-                  <Input
+            <>
+              <p>Answer</p>
+              <div className="w-full flex flex-col">
+                <form onSubmit={handleSubmitAnswer}>
+                  <textarea
+                    rows={10}
                     id="answer"
                     name="answer"
                     type="text"
-                    placeholder="Answer"
-                    className="shadow-sm mt-4"
+                    placeholder="Input your answer here"
                     value={formAnswer.answer}
                     onChange={handleAnswerForm}
-                  />
+                    className="bg-white w-full text-black p-4 rounded-md shadow-card-tagline"
+                  ></textarea>
+
+                  <div className="text-right">
+                    <Button
+                      className="button-primary w-11 mt-6"
+                      variant="solid"
+                      type="submit"
+                      isLoading={isLoading}
+                    >
+                      Submit Answer
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </>
+          ) : (
+            <div className="w-full flex flex-col gap-6">
+              <div className="flex items-center gap-6">
+                <div className="w-1/4">
+                  <p>Answer</p>
+                </div>
+                <div className="w-3/4">
+                  <p className="text-black text-md py-1 px-4">
+                    {detailQuestion.answer}
+                  </p>
                 </div>
               </div>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                className="button-primary"
-                colorScheme="blue"
-                mr={3}
-                type="submit"
-                isLoading={isLoading}
-              >
-                Submit Answer
-              </Button>
-            </ModalFooter>
-          </form>
-        </ModalContent>
-      </Modal>
+              <div className="w-full text-right">
+                <Tooltip label="You already answer this question">
+                  <Button
+                    colorScheme="gray"
+                    variant="solid"
+                    className="cursor-not-allowed"
+                  >
+                    Answered
+                  </Button>
+                </Tooltip>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
 }

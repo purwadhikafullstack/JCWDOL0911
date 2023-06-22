@@ -12,7 +12,7 @@ export const adminSlice = createSlice({
   },
   reducers: {
     setAdmin: (state, action) => {
-      state.user = action.payload;
+      state.admin = action.payload;
     },
   },
 });

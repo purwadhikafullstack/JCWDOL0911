@@ -7,6 +7,7 @@ import rajaongkirReducer from "../features/rajaongkir/rajaongkirSlice";
 import addressReducer from '../features/users/addressSlice'
 import productsReducer from '../features/cart/productsSlice'
 import answerReducer from "../features/admin/answerSlice";
+import transactionReducer from '../features/transaction/transactionSlice'
 
 //Global state
 
@@ -20,5 +21,6 @@ export default configureStore({
     address: addressReducer,
     product: productsReducer,
     answers: answerReducer,
+    transactions : transactionReducer
   }
 })

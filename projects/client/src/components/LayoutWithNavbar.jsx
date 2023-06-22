@@ -8,6 +8,7 @@ import {
   fetchAddresses,
   fetchPrimaryAddress,
 } from "../features/users/addressSlice";
+import { fetchTransaction } from "../features/transaction/transactionSlice";
 
 function LayoutWithNavbar() {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ function LayoutWithNavbar() {
 
   useEffect(() => {
     if (userId) {
+      dispatch(fetchTransaction())
       dispatch(fetchUser());
       dispatch(fetchAddresses());
       dispatch(fetchPrimaryAddress(userId));

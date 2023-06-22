@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import check from "../assets/check.svg";
 import { removeAddress, setNewPrimary } from "../features/users/addressSlice";
 
-function ChangeAddressModal({ modalHandler }) {
+function ChangeAddressModal({ modalHandler, uploadModalHandler }) {
   const dispatch = useDispatch();
   //get globalstate of user address
   const userAddresses = useSelector(
@@ -14,9 +14,14 @@ function ChangeAddressModal({ modalHandler }) {
   const userProfile = useSelector((state) => state.user.user);
 
   //when user want to use the selected address
-  const onClickUseAddressHandler = (idAddress) => {
-    dispatch(setNewPrimary(idAddress));
-    modalHandler();
+  const onClickUseAddressHandler = async (idAddress) => {
+    await dispatch(setNewPrimary(idAddress, modalHandler, uploadModalHandler));
+    // modalHandler();
+
+    // //below is for showing prescription modal on landing page if the uploadModalHandler is passed
+    // if (uploadModalHandler) {
+    //   uploadModalHandler();
+    // }
   };
 
   //when user want to delete address

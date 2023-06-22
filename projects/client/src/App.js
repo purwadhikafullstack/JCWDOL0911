@@ -26,6 +26,7 @@ import AnswerQuestion from "./pages/admin/AnswerQuestion";
 import AuthRouteAdmin from "./components/admin/AuthRouteAdmin";
 import PrivateRouteAdmin from "./components/admin/PrivateRouteAdmin";
 import DetailUserQuestion from "./pages/admin/DetailUserQuestion";
+import UserTransacations from "./pages/UserTransacations";
 
 //
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <Route path="/forum" element={<Forum />} />
             <Route path="/order" element={<Order />} />
             <Route path="/change-password" element={<ChangePassword />} />
+            <Route path='/my-transactions' element={<UserTransacations/>}/>
           </Route>
         </Route>
         <Route element={<AuthRoute />}>

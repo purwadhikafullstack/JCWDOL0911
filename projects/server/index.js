@@ -43,12 +43,21 @@ app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/admin/qna", qnaAdminRoutes);
 
+<<<<<<< Updated upstream
 app.use(`/product`, relatedProductRouter);
 app.use(`/prescription`, prescriptionRouter);
 app.use("/qna", qnaRoute);
 app.use("/users", usersRoute);
 app.use("/addresses", addressRoute);
 app.use("/transactions",transactionRoute)
+=======
+app.use(`/api/product`, relatedProductRouter);
+app.use(`/api/prescription`, prescriptionRouter);
+app.use("/api/qna", qnaRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/addresses", addressRoute);
+app.use("/api/transactions",transactionRoute)
+>>>>>>> Stashed changes
 
 // app.get("/api/greetings", (req, res, next) => {
 //   res.status(200).json({

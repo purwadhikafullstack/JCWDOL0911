@@ -35,6 +35,7 @@ function App() {
   return (
     <div className="">
       <Routes>
+<<<<<<< Updated upstream
         <Route element={<LayoutWithNavbar />}>
           <Route path="/productlist" element={<ProductList />} />
           <Route path="/" element={<LandingPage />} />
@@ -45,6 +46,26 @@ function App() {
             <Route path="/order" element={<Order />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path='/my-transactions' element={<UserTransacations/>}/>
+=======
+        <Route element={<UserRoute />}>
+          <Route element={<LayoutWithNavbar />}>
+            <Route path="/productlist" element={<ProductList />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/forum" element={<Forum />} />
+              <Route path="/order" element={<Order />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/my-transactions" element={<UserTransacations/>}/>
+            </Route>
+          </Route>
+          <Route element={<AuthRoute />}>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/verification/:token" element={<Verification />} />
+            <Route path="/reset-password/:token" element={<ChangePassword />} />
+>>>>>>> Stashed changes
           </Route>
         </Route>
         <Route element={<AuthRoute />}>

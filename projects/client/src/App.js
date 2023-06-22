@@ -26,42 +26,46 @@ import AnswerQuestion from "./pages/admin/AnswerQuestion";
 import AuthRouteAdmin from "./components/admin/AuthRouteAdmin";
 import PrivateRouteAdmin from "./components/admin/PrivateRouteAdmin";
 import DetailUserQuestion from "./pages/admin/DetailUserQuestion";
+import UserRoute from "./components/UserRoute";
+import AdminRoute from "./components/admin/AdminRoute";
 
 //
 function App() {
-  
-
   return (
     <div className="">
       <Routes>
-        <Route element={<LayoutWithNavbar />}>
-          <Route path="/productlist" element={<ProductList />} />
-          <Route path="/" element={<LandingPage />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/forum" element={<Forum />} />
-            <Route path="/order" element={<Order />} />
-            <Route path="/change-password" element={<ChangePassword />} />
+        <Route element={<UserRoute />}>
+          <Route element={<LayoutWithNavbar />}>
+            <Route path="/productlist" element={<ProductList />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/forum" element={<Forum />} />
+              <Route path="/order" element={<Order />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+            </Route>
+          </Route>
+          <Route path="/admin/products" element={<Products />} />
+          <Route element={<AuthRoute />}>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/verification/:token" element={<Verification />} />
+            <Route path="/reset-password/:token" element={<ChangePassword />} />
           </Route>
         </Route>
-            <Route path="/admin/products" element={<Products />} />
-        <Route element={<AuthRoute />}>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/verification/:token" element={<Verification />} />
-          <Route path="/reset-password/:token" element={<ChangePassword />} />
-        </Route>
-        <Route element={<PrivateRouteAdmin />}>
-          <Route path="/admin/dashboard" element={<DashboardAdmin />} />
-          <Route path="/admin/answer-question" element={<AnswerQuestion />} />
-          <Route
-            path="/admin/answer-question/:idquestion"
-            element={<DetailUserQuestion />}
-          />
-        </Route>
-        <Route element={<AuthRouteAdmin />}>
-          <Route path="/admin/login" element={<LoginAdmin />} />
+        <Route element={<AdminRoute />}>
+          <Route element={<PrivateRouteAdmin />}>
+            <Route path="/admin/dashboard" element={<DashboardAdmin />} />
+            <Route path="/admin/answer-question" element={<AnswerQuestion />} />
+            <Route
+              path="/admin/answer-question/:idquestion"
+              element={<DetailUserQuestion />}
+            />
+          </Route>
+          <Route element={<AuthRouteAdmin />}>
+            <Route path="/admin/login" element={<LoginAdmin />} />
+          </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>

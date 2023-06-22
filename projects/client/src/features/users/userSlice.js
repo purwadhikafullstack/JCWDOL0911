@@ -19,21 +19,27 @@ export const userSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
-
     setChosenAddress: (state, action) => {
       state.chosenAddress = action.payload;
     },
-
     resetPrimary: (state, action) => {
       state.user.address.map((val) => {
         return (val.isprimary = false);
       });
     },
+    setResetUser: (state, action) => {
+      state.user = action.payload;
+    },
   },
 });
 
-export const { setUser, setProvinces, setChosenAddress, resetPrimary } =
-  userSlice.actions;
+export const {
+  setUser,
+  setProvinces,
+  setChosenAddress,
+  resetPrimary,
+  setResetUser,
+} = userSlice.actions;
 export default userSlice.reducer;
 
 export function fetchUser() {

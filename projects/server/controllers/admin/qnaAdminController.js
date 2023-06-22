@@ -6,11 +6,38 @@ const nodemailer = require("../../helpers/nodemailer");
 module.exports = {
   fetchAllUserQuestion: async (req, res) => {
     try {
-      const getAllUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, question.date FROM question
-      LEFT JOIN answer ON answer.idquestion = question.idquestion;`;
+      const is_answer = req.query.is_answer;
+      const sort = req.query.sort;
+      const key = req.query.key;
+      const limit = req.query.limit || 10;
+      // const offset = req.query.offset || 0;
+      const page = req.query.page || 1;
+
+      let getAllUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, question.date FROM question
+      LEFT JOIN answer ON answer.idquestion = question.idquestion`;
+
+      let getCountQuery = `SELECT COUNT(*) as count FROM question`;
+
+      if (is_answer !== undefined) {
+        getCountQuery += ` WHERE is_answer=${is_answer}`;
+        getAllUserQuestionQuery += ` WHERE is_answer=${is_answer}`;
+      }
+
+      if (sort) {
+        getAllUserQuestionQuery += ` ORDER BY ${key} ${sort}`;
+      }
+
+      const countData = await query(getCountQuery);
+
+      getAllUserQuestionQuery += ` LIMIT ${limit} OFFSET ${(page - 1) * limit}`;
+
+      console.log(getAllUserQuestionQuery);
+
       const getAllUserQuestion = await query(getAllUserQuestionQuery);
 
-      res.status(200).send(getAllUserQuestion);
+      res
+        .status(200)
+        .send({ questions: getAllUserQuestion, count: countData[0].count });
     } catch (error) {
       console.log(error);
       return res.status(500).send({ message: error });
@@ -20,7 +47,7 @@ module.exports = {
     try {
       const idParams = req.params.idquestion;
 
-      const getDetailUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, answer.date FROM question
+      const getDetailUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, question.date FROM question
       LEFT JOIN answer ON answer.idquestion = question.idquestion WHERE question.idquestion=${idParams};`;
       const getDetailUserQuestion = await query(getDetailUserQuestionQuery);
 

@@ -100,14 +100,21 @@ export function addUserAddress(
     dispatch(fetchAddresses(offset));
   };
 }
-export function setNewPrimary(idAddress) {
+export function setNewPrimary(idAddress, modalHandler, uploadModalHandler) {
   return async (dispatch) => {
     let response = await axios.put(
       `${process.env.REACT_APP_API_BE}/addresses/${idAddress}`
     );
-    Swal.fire(`${response.data.message}`, "", "success");
-    dispatch(fetchAddresses());
-    dispatch(fetchPrimaryAddress());
+    Swal.fire(`${response.data.message}`, "", "success").then(() => {
+      dispatch(fetchAddresses());
+      dispatch(fetchPrimaryAddress());
+      if (modalHandler) {
+        modalHandler();
+      }
+      if (uploadModalHandler) {
+        uploadModalHandler();
+      }
+    });
   };
 }
 

@@ -15,6 +15,8 @@ function LandingPage() {
   const [isChangeAddressModalHidden, setIsChangeAddressModalHidden] =
     useState(false);
   const [isNewAddressModalHidden, setIsNewAddressModalHidden] = useState(false);
+  const [isUploadPrescriptionModalHidden, setIsUploadPrescriptionModalHidden] =
+    useState(false);
 
   const userLogin = useSelector((state) => state.user.user.username);
   const userAddresses = useSelector(
@@ -23,7 +25,7 @@ function LandingPage() {
 
   const userId = JSON.parse(localStorage.getItem("user"))?.iduser;
 
-  const onClickUploadPrescriptionHandler = () => {
+  const onClickUploadPrescriptionHandler = async () => {
     if (!userId && userLogin !== "") {
       Swal.fire({
         icon: "info",
@@ -53,6 +55,10 @@ function LandingPage() {
         text: error.response?.data?.message,
       });
     }
+  };
+
+  const uploadPrescriptionHandler = () => {
+    setIsUploadPrescriptionModalHidden((prev) => !prev);
   };
 
   useEffect(() => {
@@ -165,7 +171,13 @@ function LandingPage() {
         <NewAddressModal modalHandler={onClickUploadPrescriptionHandler} />
       ) : null}
       {isChangeAddressModalHidden ? (
-        <ChangeAddressModal modalHandler={onClickUploadPrescriptionHandler} />
+        <ChangeAddressModal
+          modalHandler={onClickUploadPrescriptionHandler}
+          uploadModalHandler={uploadPrescriptionHandler}
+        />
+      ) : null}
+      {isUploadPrescriptionModalHidden ? (
+        <PrescriptionModal modalHandler={uploadPrescriptionHandler} />
       ) : null}
     </>
   );

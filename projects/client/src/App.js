@@ -41,13 +41,27 @@ function App() {
             <Route path="/change-password" element={<ChangePassword />} />
           </Route>
         </Route>
-            <Route path="/admin/products" element={<Products />} />
         <Route element={<AuthRoute />}>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verification/:token" element={<Verification />} />
           <Route path="/reset-password/:token" element={<ChangePassword />} />
         </Route>
+<<<<<<< Updated upstream
+=======
+        <Route element={<PrivateRouteAdmin />}>
+          <Route path="/admin/dashboard" element={<DashboardAdmin />} />
+          <Route path="/admin/answer-question" element={<AnswerQuestion />} />
+          <Route path="/admin/products" element={<Products />} />
+          <Route
+            path="/admin/answer-question/:idquestion"
+            element={<DetailUserQuestion />}
+          />
+        </Route>
+        <Route element={<AuthRouteAdmin />}>
+          <Route path="/admin/login" element={<LoginAdmin />} />
+        </Route>
+>>>>>>> Stashed changes
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>

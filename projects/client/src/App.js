@@ -46,6 +46,7 @@ function App() {
               <Route path="/forum" element={<Forum />} />
               <Route path="/order" element={<Order />} />
               <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/my-transactions" element={<UserTransacations/>}/>
             </Route>
           </Route>
           <Route element={<AuthRoute />}>

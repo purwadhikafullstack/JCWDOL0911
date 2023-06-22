@@ -7,6 +7,7 @@ import ChangeAddressModal from "../components/ChangeAddressModal";
 import { useSelector } from "react-redux";
 import NewAddressModal from "../components/NewAddressModal";
 import { useNavigate } from "react-router-dom";
+import PrescriptionModal from "../components/prescriptionn/PrescriptionModal";
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ function LandingPage() {
   const [isChangeAddressModalHidden, setIsChangeAddressModalHidden] =
     useState(false);
   const [isNewAddressModalHidden, setIsNewAddressModalHidden] = useState(false);
+
   const userLogin = useSelector((state) => state.user.user.username);
   const userAddresses = useSelector(
     (state) => state.address.addressList.allAddress

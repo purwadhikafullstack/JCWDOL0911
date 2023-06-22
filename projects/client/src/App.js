@@ -6,6 +6,7 @@ import LayoutWithNavbar from "./components/LayoutWithNavbar";
 import AuthRoute from "./components/AuthRoute";
 import Profile from "./pages/Profile";
 import Forum from "./pages/Forum";
+import OrderList from "./pages/OrderList";
 
 //put imported pages here!
 import ProductList from "./pages/ProductList";
@@ -30,8 +31,6 @@ import UserTransacations from "./pages/UserTransacations";
 
 //
 function App() {
-  
-
   return (
     <div className="">
       <Routes>
@@ -43,6 +42,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/forum" element={<Forum />} />
             <Route path="/order" element={<Order />} />
+            <Route path="/orderlist" element={<OrderList />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path='/my-transactions' element={<UserTransacations/>}/>
           </Route>

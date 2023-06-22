@@ -11,6 +11,7 @@ const {
   qnaAdminRoutes,
   prescriptionRouter,
   transactionRoute,
+  orderRouter,
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -35,20 +36,20 @@ app.use(express.json());
 app.use(express.static(join(__dirname, "public")));
 
 //#region API ROUTES
-app.use("/rajaongkir", rajaOngkirRouter);
+app.use("/api/rajaongkir", rajaOngkirRouter);
 
 // ===========================
 // NOTE : Add your routes here
-app.use("/auth", authRoutes);
-app.use("/products", productRoutes);
-app.use("/admin/qna", qnaAdminRoutes);
-
-app.use(`/product`, relatedProductRouter);
-app.use(`/prescription`, prescriptionRouter);
-app.use("/qna", qnaRoute);
-app.use("/users", usersRoute);
-app.use("/addresses", addressRoute);
-app.use("/transactions",transactionRoute)
+app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/admin/qna", qnaAdminRoutes);
+app.use("/api/order", orderRouter);
+app.use(`/api/product`, relatedProductRouter);
+app.use(`/api/prescription`, prescriptionRouter);
+app.use("/api/qna", qnaRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/addresses", addressRoute);
+app.use("/api/transaction",transactionRoute)
 
 // app.get("/api/greetings", (req, res, next) => {
 //   res.status(200).json({

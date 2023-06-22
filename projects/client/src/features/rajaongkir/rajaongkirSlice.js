@@ -33,7 +33,7 @@ export const rajaongkirSlice = createSlice({
 export const getProvince = () => {
   return async (dispatch) => {
     const response = await Axios.get(
-      "http://localhost:8000/rajaongkir/province"
+      `${process.env.REACT_APP_API_BE}/rajaongkir/province`
     );
     if (response.data.success) {
       dispatch(addProvince(response.data.province));
@@ -46,7 +46,7 @@ export const getProvince = () => {
 export const getCity = (provID) => {
   return async (dispatch) => {
     const response = await Axios.get(
-      `http://localhost:8000/rajaongkir/city/${provID}`
+      `${process.env.REACT_APP_API_BE}/rajaongkir/city/${provID}`
     );
     if (response.data.success) {
       dispatch(addCity(response.data.city));
@@ -56,12 +56,15 @@ export const getCity = (provID) => {
 
 export const getCost = (origin, destination, weight, courier) => {
   return async (dispatch) => {
-    const response = await Axios.post(`http://localhost:8000/rajaongkir/cost`, {
-      origin,
-      destination,
-      weight,
-      courier,
-    });
+    const response = await Axios.post(
+      `${process.env.REACT_APP_API_BE}/rajaongkir/cost`,
+      {
+        origin,
+        destination,
+        weight,
+        courier,
+      }
+    );
     if (!response.data.success) {
       Swal.fire(`${response.data.message}`, "", "error");
     } else {

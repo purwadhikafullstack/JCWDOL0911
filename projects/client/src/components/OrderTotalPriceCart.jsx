@@ -6,8 +6,11 @@ import { currency } from "../helpers/currency";
 import Courier from "./transaction/Courier";
 import { ORIGIN } from "../helpers/constant";
 import { resetServices } from "../features/rajaongkir/rajaongkirSlice";
-
+import { addUserOrder } from "../features/order/orderSlice";
 import { getCost } from "../features/rajaongkir/rajaongkirSlice";
+import Swal from "sweetalert2";
+
+import { resetCart } from "../features/cart/cartSlice";
 
 function OrderTotalPriceCart() {
   //generate freightPrice everytime userPick new services
@@ -34,6 +37,26 @@ function OrderTotalPriceCart() {
     } else {
       dispatch(resetServices());
       resetFreightPrice();
+    }
+  };
+
+  //when user click submit order, dispatch data to backend
+  const onSubmitOrderHandler = async () => {
+    let orderData = {
+      orderProduct: cartProduct,
+      orderAddress: destinationAddress,
+      orderPrice: totalPrice.totalPrice + freightPrice,
+    };
+    const response = await dispatch(addUserOrder(orderData));
+    console.log(response);
+    if (response.data.success) {
+      Swal.fire({
+        icon: "success",
+        title: `${response.data.message}`,
+        text: `Please proceed with the payment`,
+      });
+      dispatch(resetCart());
+      navigate("/orderlist");
     }
   };
 
@@ -93,9 +116,9 @@ function OrderTotalPriceCart() {
           <button
             disabled={!freightPrice ? true : false}
             className=" disabled:bg-gray-300 disabled:hover:shadow-none hover:bg-green-500 hover:shadow-xl w-[80%] mx-auto rounded-md border-none text-white bg-green-700 h-[40px]"
-            onClick={() => navigate("/address")}
+            onClick={onSubmitOrderHandler}
           >
-            Payment
+            Submit Order
           </button>
         ) : (
           <button

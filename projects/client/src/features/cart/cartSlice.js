@@ -101,13 +101,17 @@ export const cartSlice = createSlice({
           state.cart[action.payload].price,
       };
     },
+    resetCart: (state, action) => {
+      state.cart = [];
+      state.totalPrice = 0;
+    },
   },
 });
 
 export const getRelatedProduct = (cartProduct) => {
   return async (dispatch) => {
     const response = await Axios.post(
-      `http://localhost:8000/product/relatedproduct`,
+      `${process.env.REACT_APP_API_BE}/product/relatedproduct`,
       cartProduct
     );
   };
@@ -128,6 +132,7 @@ export const {
   addCheckedProduct,
   removeCheckedProduct,
   setEachTotalPrice,
+  resetCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

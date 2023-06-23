@@ -1,16 +1,14 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { authToken } from "../helpers/constant";
+import { AUTH_TOKEN, USER } from "../helpers/constant";
 
 function AuthRoute() {
-  if (localStorage.getItem(authToken)) {
-    return <Navigate to="/test" replace={true} />;
+  const userId = JSON.parse(localStorage.getItem(USER))?.iduser;
+
+  if (localStorage.getItem(AUTH_TOKEN) && userId) {
+    return <Navigate to="/" replace={true} />;
   }
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+  return <Outlet />;
 }
 
 export default AuthRoute;

@@ -51,19 +51,23 @@ const [sort,setSort]=useState('DESC')
   return (
     <div>
     {!open ? <button onClick={() => setOpen(true)}
-        className='border-2 border-blue-300  font-bold py-2 px-4 rounded-md hover:bg-blue-300 text-white'>MY QUESTION</button>
+        className='border-2 border-green-300  font-bold py-2 px-4 rounded-md hover:bg-green-300 text-white'>MY QUESTION</button>
         :
         
         <div className='fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
-          <div className=' bg-white p-2 rounded gap-2 flex flex-col shadow-lg w-80 items-center'>
+          <div className=' bg-white p-5 border-2 border-emerald-800 rounded-lg  gap-2 flex flex-col shadow-2xl w-80 items-center lg:w-[40rem] lg:h-[30rem]'>
+            <div className='flex flex-col  gap-2 lg:flex-row'>
             <input type="text"
-              className='max-w-sm rounded-lg  border-2 border-blue-300 '
-              onChange={searchHandler}/>
-            <select name="sort" id="sort" className=' border-blue-300 rounded-md border-2'
-            onChange={handleSortChange}>
+            placeholder='Search Question'
+        className="bg-gray-50 border border-green-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500  block w-40 h-10 lg:w-80 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
+        onChange={searchHandler}/>
+            <select name="sort" id="sort" 
+          className=' bg-gray-50 border-green-300 rounded-md border-2 h-8 w-30 text-xs lg:h-10'
+          onChange={handleSortChange}>
             <option value="DESC">Descending Date</option>
             <option value="ASC">Ascending Date</option>
            </select>
+              </div>
 
               {renderMyQuestion()}
               <p className=' text-red-300 text-sm font-bold'>*Question only can delete before 1 hour after created and not answered yet</p>

@@ -12,12 +12,14 @@ import { useRef } from 'react'
 function Forum() {
   const dispatch = useDispatch()
   const allQuestions = useSelector(state => state.questions.allQuestion)
+  let countData = useSelector(state=>state.questions.count.count)
   const [offset, setOffset] = useState(0)
   const [search, setSearch] = useState('')
   const [sort,setSort]=useState('DESC')
   const shouldLog = useRef(true)
 
-  
+  countData = parseInt(countData)
+  const pages = Math.floor(countData/6)
   const renderQuestions = () => {
     return allQuestions.map((question) => {
       return <QuestionsCard question = {question}/>
@@ -29,11 +31,15 @@ function Forum() {
     setSearch(e.target.value)
   }
   
-  const handlePagination = (offset) => {
-    let count = offset + 6
-    setOffset(count)
-    dispatch(loadMoreQuestion(count,search,sort))
-
+  const nextData = () => {
+    shouldLog.current=true
+    let nextOffset = offset + 6
+    setOffset(nextOffset)
+  }
+  const prevData = () => {
+    shouldLog.current = true
+    let prevOffset = offset - 6
+    setOffset(prevOffset)
   }
   const handleSortChange = (e) => {
       shouldLog.current=true
@@ -50,11 +56,11 @@ function Forum() {
     
   },[offset,search,sort])
   return (
-    <div className=' flex flex-col my-16 justify-center items-center '>
+    <div className=' bg-zinc-50 flex flex-col  justify-center items-center '>
     
-<section className="bg-center bg-no-repeat  bg-gray-700 bg-blend-multiply w-full" style={{ backgroundImage: `url('/doctor.jpg')` }}>
+<section className="bg-center bg-no-repeat bg-gray-500 bg-blend-multiply w-full" style={{ backgroundImage: `url('/doctor.jpg')` }}>
     <div className="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-56">
-        <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-blue-300 md:text-5xl lg:text-6xl">Got Something Troubling You</h1>
+        <h1 className=" h-24  mb-4 text-4xl font-extrabold tracking-tight leading-none border-green-400 text-transparent bg-gradient-to-r from-lime-200 via-emerald-300 to-green-400 bg-clip-text md:text-5xl lg:text-6xl">Got Something Troubling You</h1>
         <p className="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">Here Our Team Are Glady to Help You Solve The Problem</p>
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
         <QuestionModal/>
@@ -62,31 +68,55 @@ function Forum() {
         </div>
     </div>
       </section>
-      <div className=' flex flex-col gap-5'>
+      <div className=' flex flex-col gap-5 justify-center items-center'>
 
-      <div className=' bg-blue-300 w-screen text-center  py-2 flex flex-col shadow-2xl'>
-        
-        <h1 className=' text-2xl font-extrabold text-white lg:text-5xl'>DISCUSSION</h1>
-        </div>
-        <div className=' flex  items-center justify-center gap-3 '>
+      <div className="flex justify-center lg:justify-between items-center lg:w-full h-48 mx-5 lg:mx-24 my-11 bg-gradient-to-r from-green-500 via-emerald-300 to-lime-300 rounded-2xl">
+          <div className="px-5 lg:pl-16 flex flex-col ">
+          <h2 class="text-4xl font-extrabold text-white">FORUM DISCUSSION</h2>
+          <p class="my-4 text-lg text-white">Some People Might Already Had Same Problem </p>
+          <div className=' flex  items-center justify-center gap-3 '>
           <div>
 
         <input type="text"
         placeholder='Search Question' 
-        className='max-w-sm rounded-lg  border-2 border-blue-300 '
+        className="bg-gray-50 border border-green-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-72 h-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
         onChange={(e)=>searchHandler(e)}/>
           </div>
-          <select name="sort" id="sort" className=' border-blue-300 rounded-md border-2'
+          <select name="sort" id="sort" 
+          className=' bg-gray-50 border-green-300 rounded-md border-2 h-10'
           onChange={(e)=>handleSortChange(e)}>
+            <option>Sort By Date</option>
             <option value="DESC">Descending Date</option>
             <option value="ASC">Ascending Date</option>
            </select>
 
         </div>
-        <div className='grid grid-rows-3 gap-3 lg:grid-cols-3 '>
+          </div>
+        </div>
+      
+        <div className='flex flex-col gap-3 '>
         {renderQuestions()}
         </div>
-        <button onClick={()=>handlePagination(offset)}>See More</button>
+        <div class="flex flex-row mx-auto my-3">
+          {offset == 0 ? <></> : <button type="button" class="bg-emerald-600 text-white rounded-l-md border-r border-gray-100 py-2 hover:bg-red-700 hover:text-white px-3"
+          onClick={()=>prevData()}>
+            <div class="flex flex-row align-middle">
+              <svg class="w-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+              </svg>
+              <p class="ml-2">Prev</p>
+            </div>
+          </button>}
+          {offset / 6 == pages ? <></> : <button type="button" class="bg-emerald-600 text-white rounded-r-md py-2 border-l border-gray-200 hover:bg-red-700 hover:text-white px-3"
+            onClick={() => nextData()}>
+            <div class="flex flex-row align-middle">
+              <span class="mr-2">Next</span>
+              <svg class="w-5 ml-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+          </button>}
+  </div>
       </div>
     </div>
   )

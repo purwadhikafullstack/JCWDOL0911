@@ -1,41 +1,42 @@
-import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { fetchUser } from '../features/users/userSlice'
-import { useSelector } from 'react-redux'
-import UploadModal from '../components/profiling/UploadModal'
-import ProfileCard from '../components/profiling/ProfileCard'
-import AddressCard from '../components/profiling/AddressCard'
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../features/users/userSlice";
+import { useSelector } from "react-redux";
+import UploadModal from "../components/profiling/UploadModal";
+import ProfileCard from "../components/profiling/ProfileCard";
+import AddressCard from "../components/profiling/AddressCard";
+import EditProfile from "../components/profiling/EditProfile";
+import { useState } from "react";
+import { getCity, getProvince } from "../features/rajaongkir/rajaongkirSlice";
+import {
+  fetchPrimaryAddress,
+  fetchProvince,
+} from "../features/users/addressSlice";
 
 function Profile() {
   const dispatch = useDispatch()
   const user = useSelector(state => state.user.user)
+  const [edit, setEdit] = useState(false)
+  
   useEffect(() => {
-    dispatch(fetchUser())
-  },[])
+    dispatch(fetchPrimaryAddress())
+  }, [])
+  
+  const profilePic = user.profile_image?`${process.env.REACT_APP_API_BE}/users/${user.profile_image}`:'/default.jpg'
   return (
-    <div className=' my-14 px-9 flex flex-col justify-center items-center'>
-      <h1 className=' font-extrabold text-blue-300 text-4xl'>MY PROFILE</h1>
-      <div className=' my-14 flex flex-col gap-3 lg:flex lg:flex-row '>
-
-          <div className='relative max-w-lg lg:h-40 group'>
-            <img
-            src={`${process.env.REACT_APP_API_BE}/users/${user.profile_image}`}
-            className='rounded-lg shadow-xl group-hover:opacity-50'
-            alt="Avatar"
-            />
-         
-        <UploadModal/>
-        </div>
-
-          <div>
-        <ProfileCard user={user} />
+    <div className='lg:flex lg:flex-row bg-white flex flex-col   gap-4 lg:gap-32 py-4 px-12'>
+      <div className=' lg:h-60 lg:border-2 lg:border-emerald-600 flex justify-center items-center rounded-full'>
+      <h1 className=' font-extrabold px-6 text-3xl  mb-6 bg-gradient-to-r from-lime-300 via-green-400 to-green-700 bg-clip-text text-transparent'>
+        Profile Info's</h1>
       </div>
-      <div>
-        <AddressCard/>
+    <div className=' py-8'>
+      <div>{edit ? <EditProfile user={user} setEdit={setEdit} /> : <ProfileCard user={user} setEdit={setEdit} profilePic={profilePic} />}</div>
       </div>
-            </div>
+      <div className='py-8'>
+      <AddressCard />
     </div>
-  )
+    </div>
+  );
 }
 
-export default Profile
+export default Profile;

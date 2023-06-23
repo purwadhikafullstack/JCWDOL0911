@@ -13,17 +13,13 @@ function Cart() {
   const myCart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log(myCart);
-  }, [myCart.length]);
-
   return (
     <div>
       <div className="mt-10 ml-7 font-bold font-roboto leading-2 text-xl tracking-wide">
         My Cart
       </div>
       <div className="flex md:flex-row flex-col">
-        <div className="flex flex-col md:w-[60%] justify-center mx-8 md:ml-8 gap-0 mt-5 shadow-xl rounded-xl">
+        <div className="flex flex-col md:w-[60%] justify-center mx-8 md:ml-8 gap-0 mt-5 rounded-xl">
           <ProductCart />
         </div>
         <div className="mt-5 md:pr-4 md:w-[40%] flex flex-col items-center">

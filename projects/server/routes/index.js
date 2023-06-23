@@ -5,6 +5,12 @@ const qnaRoute = require("./qnaRoute");
 const usersRoute = require("./usersRoute");
 const categoryRoutes = require("./categoryRoutes");
 const transactionRoutes = require("./transactionRoutes")
+const rajaOngkirRouter = require("./rajaOngkirRouter");
+const addressRoute = require("./addressRoute");
+const qnaAdminRoutes = require("./admin/qnaAdminRoute");
+const prescriptionRouter = require("./prescriptionRouter");
+const transactionRoute = require('./transactionRoute')
+const orderRouter = require("./orderRouter");
 
 module.exports = {
   authRoutes,
@@ -13,5 +19,11 @@ module.exports = {
   qnaRoute,
   usersRoute,
   categoryRoutes,
-  transactionRoutes
+  transactionRoutes,
+  rajaOngkirRouter,
+  prescriptionRouter,
+  addressRoute,
+  qnaAdminRoutes,
+  transactionRoute,
+  orderRouter,
 };

@@ -2,54 +2,61 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const { authRoutes, productRoutes, qnaRoute, usersRoute, categoryRoutes, transactionRoutes } = require("./routes");
+const {
+  authRoutes,
+  productRoutes,
+  qnaRoute,
+  usersRoute,
+  addressRoute,
+  qnaAdminRoutes,
+  prescriptionRouter,
+  transactionRoute,
+  orderRouter,
+  categoryRoutes,
+  transactionRoutes
+} = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
 const { db, query } = require("./database/index");
 const PORT = process.env.PORT || 8000;
 const app = express();
+
+// API RajaOngkir
+const { rajaOngkirRouter } = require("./routes/index");
+
 app.use(cors());
-// app.use(
-//   cors({
-//     origin: [
-//       process.env.WHITELISTED_DOMAIN &&
-//         process.env.WHITELISTED_DOMAIN.split(","),
-//     ],
-//   })
-// );
+app.use(
+  cors({
+    origin: [
+      process.env.WHITELISTED_DOMAIN &&
+      process.env.WHITELISTED_DOMAIN.split(","),
+    ],
+  })
+);
 
 app.use(express.json());
 app.use(express.static(join(__dirname, "public")));
 
-app.use('/uploads', express.static(process.cwd() + '/uploads'));
+app.use('/api/uploads', express.static(process.cwd() + '/uploads'));
 
 //#region API ROUTES
+app.use("/api/rajaongkir", rajaOngkirRouter);
 
 // ===========================
 // NOTE : Add your routes here
-app.use("/", authRoutes);
-app.use("/products", productRoutes);
-app.use(`/product`, relatedProductRouter);
-
-app.use("/transactions", transactionRoutes);
-
-app.use("/categories", categoryRoutes)
-
-app.get("/api", (req, res) => {
-  res.send(`Hello, this is my API`);
-});
-
-app.get("/user", async (req, res) => {
-  const userQuery = "select * from user";
-  const user = await query(userQuery);
-  console.log(user);
-  return res.status(200).send({
-    success: true,
-    message: "fetching works!",
-  });
-});
-app.use("/qna", qnaRoute);
-app.use("/users", usersRoute);
+app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/admin/qna", qnaAdminRoutes);
+app.use("/api/order", orderRouter);
+app.use("/api/products", productRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/categories", categoryRoutes)
+app.use(`/api/product`, relatedProductRouter);
+app.use(`/api/prescription`, prescriptionRouter);
+app.use("/api/qna", qnaRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/addresses", addressRoute);
+app.use("/api/transactions", transactionRoute)
 
 // app.get("/api/greetings", (req, res, next) => {
 //   res.status(200).json({

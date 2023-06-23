@@ -9,5 +9,7 @@ router.get("/:idProduct", productController.getProductById);
 router.post("/", upload.single("file"), productController.createProduct);
 router.put("/:idProduct", upload.single("file"), productController.updateProduct);
 router.delete("/:idProduct", productController.deleteProduct);
+router.get('', productController.adminProduct)
+router.put('/stock/:idProduct', productController.updateStock)
 
 module.exports = router;

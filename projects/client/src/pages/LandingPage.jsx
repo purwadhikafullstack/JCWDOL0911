@@ -4,32 +4,74 @@ import { Button } from "@chakra-ui/react";
 import CardProduct from "../components/CardProduct";
 import axios from "axios";
 import Swal from "sweetalert2";
+import ChangeAddressModal from "../components/ChangeAddressModal";
+import { useDispatch, useSelector } from "react-redux";
+import NewAddressModal from "../components/NewAddressModal";
+import PrescriptionModal from "../components/prescriptionn/PrescriptionModal";
+import { getAllProductsByFilter } from "../features/product/productSlice";
 
 function LandingPage() {
-
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  // const [products, setProducts] = useState([]);
+  const [isChangeAddressModalHidden, setIsChangeAddressModalHidden] =
+    useState(false);
+  const [isNewAddressModalHidden, setIsNewAddressModalHidden] = useState(false);
+  const [isUploadPrescriptionModalHidden, setIsUploadPrescriptionModalHidden] =
+    useState(false);
 
-  const [products, setProducts] = useState([]);
+  const userLogin = useSelector((state) => state.user.user.username);
+  const userAddresses = useSelector(
+    (state) => state.address.addressList.allAddress
+  );
 
-  const getLatestProduct = async () => {
-    try {
-      let response = await axios.get(
-        `${process.env.REACT_APP_API_BE}/products/latest`
-      );
+  const products = useSelector((state) => state.products.productList)
 
-      setProducts(response.data);
-    } catch (error) {
-      console.log(error);
+  const userId = JSON.parse(localStorage.getItem("user"))?.iduser;
+
+  const onClickUploadPrescriptionHandler = async () => {
+    if (!userId && userLogin !== "") {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: error.response?.data?.message,
+        icon: "info",
+        title: "You have to login/register first",
+        text: "Please login / register your username",
       });
+      navigate("/login");
+    } else if (userAddresses.length !== 0) {
+      setIsChangeAddressModalHidden((prev) => !prev);
+    } else {
+      setIsNewAddressModalHidden((prev) => !prev);
     }
   };
 
+  // const getLatestProduct = async () => {
+  //   try {
+  //     let response = await axios.get(
+  //       `${process.env.REACT_APP_API_BE}/products/latest`
+  //     );
+
+  //     setProducts(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Oops...",
+  //       text: error.response?.data?.message,
+  //     });
+  //   }
+  // };
+
+  const uploadPrescriptionHandler = () => {
+    setIsUploadPrescriptionModalHidden((prev) => !prev);
+  };
+
   useEffect(() => {
-    getLatestProduct();
+    // getLatestProduct();
+    dispatch(getAllProductsByFilter({
+      order: 'DESC',
+      sortBy: 'idproduct',
+      page: 1,
+    }))
   }, []);
 
   return (
@@ -66,7 +108,12 @@ function LandingPage() {
             </p>
           </div>
           <div>
-            <Button className="button-primary">Upload prescription</Button>
+            <Button
+              onClick={onClickUploadPrescriptionHandler}
+              className="button-primary"
+            >
+              Upload prescription
+            </Button>
           </div>
         </div>
         <hr className="mx-5 lg:mx-24  m-11" />
@@ -78,8 +125,8 @@ function LandingPage() {
           </div>
           {/*  */}
           <div className="flex gap-4 justify-between mt-6 overflow-auto">
-            {products.map((product) => (
-              <CardProduct product={product} />
+            {products.map((product, index) => (
+              <CardProduct key={index} product={product} />
             ))}
           </div>
         </div>
@@ -133,6 +180,18 @@ function LandingPage() {
           </div>
         </div>
       </div>
+      {isNewAddressModalHidden ? (
+        <NewAddressModal modalHandler={onClickUploadPrescriptionHandler} />
+      ) : null}
+      {isChangeAddressModalHidden ? (
+        <ChangeAddressModal
+          modalHandler={onClickUploadPrescriptionHandler}
+          uploadModalHandler={uploadPrescriptionHandler}
+        />
+      ) : null}
+      {isUploadPrescriptionModalHidden ? (
+        <PrescriptionModal modalHandler={uploadPrescriptionHandler} />
+      ) : null}
     </>
   );
 }

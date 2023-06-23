@@ -53,7 +53,6 @@ export const cartSlice = createSlice({
       let indexProduct = state.cart.findIndex(
         (val) => val.idproduct === action.payload.idproduct
       );
-      console.log(indexProduct);
       if (indexProduct < 0) {
         state.cart.push(action.payload);
       } else {
@@ -94,13 +93,25 @@ export const cartSlice = createSlice({
         summary: false,
       };
     },
+    setEachTotalPrice: (state, action) => {
+      state.cart[action.payload] = {
+        ...state.cart[action.payload],
+        totalPrice:
+          state.cart[action.payload].quantity *
+          state.cart[action.payload].price,
+      };
+    },
+    resetCart: (state, action) => {
+      state.cart = [];
+      state.totalPrice = 0;
+    },
   },
 });
 
 export const getRelatedProduct = (cartProduct) => {
   return async (dispatch) => {
     const response = await Axios.post(
-      `http://localhost:8000/product/relatedproduct`,
+      `${process.env.REACT_APP_API_BE}/product/relatedproduct`,
       cartProduct
     );
   };
@@ -120,6 +131,8 @@ export const {
   decreaseProductQuantity,
   addCheckedProduct,
   removeCheckedProduct,
+  setEachTotalPrice,
+  resetCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

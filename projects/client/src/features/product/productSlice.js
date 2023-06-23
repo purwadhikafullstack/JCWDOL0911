@@ -39,7 +39,7 @@ export const productSlice = createSlice({
 export const { setProduct, setProductList, setTotalPage } = productSlice.actions;
 export default productSlice.reducer;
 
-export function getAllProductsByFilter({ order, productName, category, sortBy, page }) {
+export function getAllProductsByFilter({ order = 'DESC', productName = '', category = '', sortBy = 'idproduct', page = 1 }) {
     return async (dispatch) => {
         const response = await axios.get(
             `${process.env.REACT_APP_API_BE}/products/filter?order=${order}&productName=${productName}&category=${category}&sortBy=${sortBy}&page=${page}`

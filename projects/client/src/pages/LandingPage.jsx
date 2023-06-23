@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@chakra-ui/react";
 import CardProduct from "../components/CardProduct";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 function LandingPage() {
+
+  const navigate = useNavigate();
+
   const [products, setProducts] = useState([]);
 
   const getLatestProduct = async () => {
@@ -68,7 +72,11 @@ function LandingPage() {
         <hr className="mx-5 lg:mx-24  m-11" />
         <div className="mx-5 lg:mx-24 ">
           <p className="font-bold text-2xl">Popular Product</p>
-
+          {/* To Page Productlist */}
+          <div>
+            <h4 className="font-bold text-sm flex flex-row justify-end cursor-pointer" onClick={() => navigate("/productlist")}>See More</h4>
+          </div>
+          {/*  */}
           <div className="flex gap-4 justify-between mt-6 overflow-auto">
             {products.map((product) => (
               <CardProduct product={product} />

@@ -10,8 +10,10 @@ import Forum from "./pages/Forum";
 import { useEffect } from "react";
 
 //put imported pages here!
-import ProductList from "./pages/ProductList";
+
 import Cart from "./pages/Cart";
+import ProductList from "./pages/ProductList";
+import DetailProduct from "./pages/DetailProduct";
 
 //
 function App() {
@@ -33,6 +35,7 @@ function App() {
         {/* <Route path="/register" element={<Register />} /> */}
         <Route element={<LayoutWithNavbar />}>
           <Route path="/productlist" element={<ProductList />} />
+          <Route path="/detail/:productId" element={<DetailProduct />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/profile" element={<Profile />} />

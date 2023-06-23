@@ -1,53 +1,145 @@
-import React from 'react'
-import { Card, CardBody, Image, Stack, Heading, Text, Divider, CardFooter, ButtonGroup, Button } from "@chakra-ui/react"
-import { useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { getAllProductsByFilter } from '../features/product/productSlice';
+import { getAllCategory } from '../features/cartegory/categorySlice';
+import {
+    Stack, Button,
+    Input, MenuButton, Menu, MenuList,
+    MenuItem
+} from '@chakra-ui/react'
+import { ChevronDownIcon } from '@chakra-ui/icons'
+import CardProduct from '../components/CardProduct';
 
-function ProductList() {
 
-    const navigate = useNavigate();
+function Productlist() {
     const dispatch = useDispatch();
+    const [query, setQuery] = useState({
+        order: 'asc',
+        productName: '',
+        category: '',
+        sortBy: 'name',
+        page: 1,
+    });
 
-    const products = useSelector((state) => state.products.products)
+    const productlist = useSelector((state) => state.products.productList);
+    const totalPage = useSelector((state) => state.products.totalPage);
+    const categories = useSelector((state) => state.categories.categories);
+
+    const tempArray = Array.from({ length: totalPage }, (_, i) => i + 1);
+
+    useEffect(() => {
+        dispatch(getAllProductsByFilter(query))
+        dispatch(getAllCategory())
+    }, [query])
+
+    const getSortName = () => {
+        if (query.sortBy === 'name' && query.order === 'asc') return 'A-Z'
+        if (query.sortBy === 'name' && query.order === 'desc') return 'Z-A'
+        if (query.sortBy === 'price' && query.order === 'asc') return 'Lowest Price'
+        if (query.sortBy === 'price' && query.order === 'desc') return 'Highest Price'
+
+        return 'A-Z'
+    }
+
+    const getCategoryName = () => {
+        if (!query.category) return 'All Categories'
+        if (query.category) return query.category
+
+        return 'All Categories'
+    }
 
     return (
-        <div>
-            <div>
-                <Card maxW='sm'>
-                    <CardBody>
-                        <Image
-                            src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
-                            alt='Green double couch with wooden legs'
-                            borderRadius='lg'
-                        />
-                        <Stack mt='6' spacing='3'>
-                            <Heading size='md'>Living room Sofa</Heading>
-                            <Text>
-                                This sofa is perfect for modern tropical spaces, baroque inspired
-                                spaces, earthy toned spaces and for people who love a chic design with a
-                                sprinkle of vintage design.
-                            </Text>
-                            <Text color='blue.600' fontSize='2xl'>
-                                $450
-                            </Text>
-                        </Stack>
-                    </CardBody>
-                    <Divider />
-                    <CardFooter>
-                        <ButtonGroup spacing='2'>
-                            <Button variant='solid' colorScheme='blue'>
-                                Buy now
-                            </Button>
-                            <Button variant='ghost' colorScheme='blue'>
-                                Add to cart
-                            </Button>
-                        </ButtonGroup>
-                    </CardFooter>
-                </Card>
+        <div className='flex flex-row p-5 '>
+            <div className='p-6 justify-normal '>
+                <div className='font-extrabold text-xl text-color-green'> Product
+                    <hr className='mt-2' />
+                    <hr className='mt-2' />
+                    {/* Filter Product */}
+                </div>
+
+                <div className='text-sm font-semibold mt-4'>
+                    Product Name
+                    <Stack spacing={3} className='mt-2'>
+                        <Input placeholder='Find Product' size='sm' onChange={(e) => setQuery({ ...query, productName: e.target.value, page: 1 })} />
+                    </Stack>
+                </div>
+
+                {/* Sort */}
+                <div className='mt-4 text-sm font-semibold'>
+                    Sort Product
+                    <div className='mt-2'>
+                        <Menu >
+                            <MenuButton size="sm" className='button-primary' as={Button} rightIcon={<ChevronDownIcon />}>
+                                {getSortName()}
+                            </MenuButton>
+                            <MenuList>
+                                <MenuItem onClick={(e) => setQuery({ ...query, sortBy: 'name', order: 'asc' })}>A-Z</MenuItem>
+                                <MenuItem onClick={(e) => setQuery({ ...query, sortBy: 'name', order: 'desc' })}>Z-A</MenuItem>
+                                <MenuItem onClick={(e) => setQuery({ ...query, sortBy: 'price', order: 'asc' })}>Lowest Price</MenuItem>
+                                <MenuItem onClick={(e) => setQuery({ ...query, sortBy: 'price', order: 'desc' })}>Highest Price</MenuItem>
+                            </MenuList>
+                        </Menu>
+                    </div>
+                </div>
+                <div className='mt-4 text-sm font-semibold'>
+                    {/* Category */}
+                    Category Product
+                    <div className='mt-2'>
+                        <Menu >
+                            <MenuButton size="sm" className='button-primary' as={Button} rightIcon={<ChevronDownIcon />}>
+                                {getCategoryName()}
+                            </MenuButton>
+                            <MenuList>
+                                <MenuItem onClick={() => setQuery({ ...query, category: '' })}>All Categories</MenuItem>
+                                {
+                                    categories.map((category) => {
+                                        return <MenuItem onClick={() => setQuery({ ...query, category: category.name })}>{category.name}</MenuItem>
+                                    })
+                                }
+                            </MenuList>
+                        </Menu>
+                    </div>
+                </div>
+                <hr className='mt-6' />
+                <hr className='mt-2' />
+            </div>
+
+            <div className='flex flex-col'>
+                <div className='grid grid-cols-4 gap-4 justify-center mt-5 '>
+                    {productlist.map((product) =>
+                        (<CardProduct product={product} />)
+                    )}
+
+                </div>
+                <div className='flex p-3 mt-3 justify-center'>
+                    <Button size={'xs'} className='button-primary' onClick={() =>
+                        setQuery({ ...query, page: query.page === 1 ? 1 : query.page - 1 })
+                    }>
+                        {"<"}
+                    </Button>
+                    <div className='flex flex-row mx-3'>
+                        {
+                            tempArray.map((value) => (
+                                <p
+                                    className='mx-2 cursor-pointer'
+                                    onClick={() => setQuery({ ...query, page: value })}>
+                                    {
+                                        value === query.page ? <b>{value}</b> : value
+                                    }
+                                </p>
+                            ))
+                        }
+                    </div>
+                    <Button size={'xs'} className='button-primary' onClick={() =>
+                        setQuery({ ...query, page: query.page === totalPage ? totalPage : query.page + 1 })
+                    }>
+                        {">"}
+                    </Button>
+                </div>
             </div>
         </div>
-
     )
 }
 
-export default ProductList
+export default Productlist

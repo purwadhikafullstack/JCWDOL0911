@@ -2,7 +2,7 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const { authRoutes, productRoutes, qnaRoute, usersRoute } = require("./routes");
+const { authRoutes, productRoutes, qnaRoute, usersRoute, categoryRoutes, transactionRoutes } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
 const { db, query } = require("./database/index");
@@ -21,14 +21,19 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(join(__dirname, "public")));
 
+app.use('/uploads', express.static(process.cwd() + '/uploads'));
+
 //#region API ROUTES
 
 // ===========================
 // NOTE : Add your routes here
 app.use("/", authRoutes);
 app.use("/products", productRoutes);
-
 app.use(`/product`, relatedProductRouter);
+
+app.use("/transactions", transactionRoutes);
+
+app.use("/categories", categoryRoutes)
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

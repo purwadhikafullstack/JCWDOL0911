@@ -89,7 +89,7 @@ module.exports = {
       const getEmailUser = await query(getEmailUserQuery);
 
       const email = getEmailUser[0].email;
-
+      console.log('im add answer');
       let mail = {
         from: `Admin <${process.env.NODEMAILER_USER}>`,
         to: `${email}`,
@@ -114,25 +114,38 @@ module.exports = {
     }
   },
   deleteUserQuestion: async (req, res) => {
-    try {
-      const idquestion = req.params.idquestion;
+    //   try {
+    //     const idquestion = req.params.idquestion;
 
-      const getAllUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, answer.date FROM question
-      LEFT JOIN answer ON answer.idquestion = question.idquestion;`;
-      const getAllUserQuestion = await query(getAllUserQuestionQuery);
+    //     const getQuestionQuery = `SELECT idanswer FROM answer where idquestion=${idquestion};`;
+    //     const getQuestion = await query(getQuestionQuery);
 
-      const deleteUserAnswerQuery = `DELETE FROM answer WHERE idanswer=${getAllUserQuestion[0].idanswer};`;
-      const deleteUserQuestionQuery = `DELETE FROM question WHERE idquestion=${idquestion};`;
+    //     let dataQuestion = [];
+    //     for (let i = 0; i < getQuestion.length; i++) {
+    //       for (let prop in getQuestion[i]) {
+    //         dataQuestion.push(`${db.escape(getQuestion[i][prop])}`);
+    //       }
+    //     }
 
-      if (getAllUserQuestion.length > 0) {
-        const deleteUserQuestion = await query(deleteUserAnswerQuery);
-      }
+    //     const deleteUserQuestionQuery = `DELETE FROM answer WHERE idanswer IN (${db.escape(dataQuestion)});`;
+    //     const deleteUserQuestion = await query(deleteUserQuestionQuery);
+    //     const getAllUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, answer.date FROM question
+    //     LEFT JOIN answer ON answer.idquestion = question.idquestion;`;
+    //     const getAllUserQuestion = await query(getAllUserQuestionQuery);
 
-      const deleteUserQuestion = await query(deleteUserQuestionQuery);
-      res.status(200).send(getAllUserQuestion);
-    } catch (error) {
-      console.log(error);
-      return res.status(500).send({ message: error });
-    }
-  },
-};
+    //     const deleteUserAnswerQuery = `DELETE FROM answer WHERE idanswer=${getAllUserQuestion[0].idanswer};`;
+    //     const deleteUserQuestionQuery = `DELETE FROM question WHERE idquestion=${idquestion};`;
+
+    //     if (getAllUserQuestion.length > 0) {
+    //       const deleteUserQuestion = await query(deleteUserAnswerQuery);
+    //     }
+
+    //     const deleteUserQuestion = await query(deleteUserQuestionQuery);
+    //     res.status(200).send(getAllUserQuestion);
+    //   } catch (error) {
+    //     console.log(error);
+    //     return res.status(500).send({ message: error });
+    //   }
+    // },
+  }
+}

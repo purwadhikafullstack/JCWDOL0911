@@ -78,13 +78,14 @@ function AnswerQuestion() {
 
   const handleDeleteQuestion = async (idquestion) => {
     try {
-      console.log(idquestion);
+      
       let response = await axios.delete(
         `${process.env.REACT_APP_API_BE}/admin/qna/${idquestion}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-      );
+        );
+        console.log(response);
       navigate("/admin/answer-question");
       fetchAllUserQuestion();
     } catch (error) {

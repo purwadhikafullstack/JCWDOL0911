@@ -4,3 +4,5 @@ export const currency = (number) => {
     currency: "IDR",
   }).format(number);
 };
+
+

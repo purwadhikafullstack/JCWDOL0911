@@ -19,25 +19,24 @@ module.exports = {
 
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
-      console.log(hashPassword);
 
-      const addUserQuery = await query(
+      const addUserQuery =
         `INSERT INTO user VALUES(null, ${db.escape(
           username
         )}, null, null, null, ${db.escape(email)} ,${phone_number}, ${db.escape(
           hashPassword
         )}, 0, null, null);`
-      );
+
       const addUser = await query(addUserQuery);
 
       const payload = { id: addUser.insertId };
       const token = jwt.sign(payload, process.env.JWT_KEY);
-      console.log(token);
 
       const insertTokenQuery = `UPDATE user SET token=${db.escape(
         token
       )} WHERE iduser=${db.escape(addUser.insertId)}`;
-      const insertToken = await query(insertTokenQuery);
+
+      await query(insertTokenQuery);
 
       let mail = {
         from: `Admin <${process.env.NODEMAILER_USER}>`,
@@ -51,7 +50,7 @@ module.exports = {
         </div>`,
       };
 
-      let response = await nodemailer.sendMail(mail);
+      await nodemailer.sendMail(mail);
 
       return res.status(200).send({
         data: addUser,

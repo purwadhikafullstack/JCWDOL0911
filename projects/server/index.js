@@ -13,6 +13,8 @@ const {
   transactionRoute,
   orderRouter,
   productOnAdminRoute,
+  categoryRoutes,
+  transactionRoutes
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -28,13 +30,15 @@ app.use(
   cors({
     origin: [
       process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
+      process.env.WHITELISTED_DOMAIN.split(","),
     ],
   })
 );
 
 app.use(express.json());
 app.use(express.static(join(__dirname, "public")));
+
+app.use('/api/uploads', express.static(process.cwd() + '/uploads'));
 
 //#region API ROUTES
 app.use("/api/rajaongkir", rajaOngkirRouter);
@@ -47,6 +51,9 @@ app.use("/api/admin/qna", qnaAdminRoutes);
 app.use("/api/order", orderRouter);
 app.use("/api/admin/products", productOnAdminRoute);
 
+app.use("/api/products", productRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/categories", categoryRoutes)
 app.use(`/api/product`, relatedProductRouter);
 app.use(`/api/prescription`, prescriptionRouter);
 app.use("/api/qna", qnaRoute);

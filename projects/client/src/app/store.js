@@ -3,6 +3,8 @@ import cartReducer from "../features/cart/cartSlice";
 import userReducer from "../features/users/userSlice";
 import adminReduces from "../features/admin/adminSlice";
 import questionReducer from "../features/qna/questionSlice";
+import productReducer from "../features/product/productSlice";
+import categoryReducer from "../features/cartegory/categorySlice"
 import rajaongkirReducer from "../features/rajaongkir/rajaongkirSlice";
 import addressReducer from "../features/users/addressSlice";
 import productsReducer from "../features/cart/productsSlice";
@@ -23,7 +25,9 @@ export default configureStore({
     product: productsReducer,
     answers: answerReducer,
     order: orderReducer,
-    transactions : transactionReducer
+    transactions: transactionReducer,
+    products: productReducer,
+    categories: categoryReducer
   }
 })
 

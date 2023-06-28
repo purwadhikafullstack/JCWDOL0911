@@ -9,8 +9,10 @@ import Forum from "./pages/Forum";
 import OrderList from "./pages/OrderList";
 
 //put imported pages here!
-import ProductList from "./pages/ProductList";
+
 import Cart from "./pages/Cart";
+import ProductList from "./pages/ProductList";
+import DetailProduct from "./pages/DetailProduct";
 import Verification from "./pages/Verification";
 import Login from "./pages/Login";
 // import Address from "./pages/Address";
@@ -41,6 +43,7 @@ function App() {
         <Route element={<UserRoute />}>
           <Route element={<LayoutWithNavbar />}>
             <Route path="/productlist" element={<ProductList />} />
+            <Route path="/detail/:productId" element={<DetailProduct />} />
             <Route path="/" element={<LandingPage />} />
             <Route element={<PrivateRoute />}>
               <Route path="/cart" element={<Cart />} />

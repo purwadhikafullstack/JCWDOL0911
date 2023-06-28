@@ -10,7 +10,6 @@ module.exports = {
       const sort = req.query.sort;
       const key = req.query.key;
       const limit = req.query.limit || 10;
-      // const offset = req.query.offset || 0;
       const page = req.query.page || 1;
 
       let getAllUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, question.date FROM question
@@ -30,8 +29,6 @@ module.exports = {
       const countData = await query(getCountQuery);
 
       getAllUserQuestionQuery += ` LIMIT ${limit} OFFSET ${(page - 1) * limit}`;
-
-      console.log(getAllUserQuestionQuery);
 
       const getAllUserQuestion = await query(getAllUserQuestionQuery);
 
@@ -120,23 +117,18 @@ module.exports = {
     try {
       const idquestion = req.params.idquestion;
 
-      const getQuestionQuery = `SELECT idanswer FROM answer where idquestion=${idquestion};`;
-      const getQuestion = await query(getQuestionQuery);
-
-      let dataQuestion = [];
-      for (let i = 0; i < getQuestion.length; i++) {
-        for (let prop in getQuestion[i]) {
-          dataQuestion.push(`${db.escape(getQuestion[i][prop])}`);
-        }
-      }
-
-      const deleteUserQuestionQuery = `DELETE FROM answer WHERE idanswer IN (${dataQuestion});`;
-      const deleteUserQuestion = await query(deleteUserQuestionQuery);
-
       const getAllUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, answer.date FROM question
       LEFT JOIN answer ON answer.idquestion = question.idquestion;`;
       const getAllUserQuestion = await query(getAllUserQuestionQuery);
 
+      const deleteUserAnswerQuery = `DELETE FROM answer WHERE idanswer=${getAllUserQuestion[0].idanswer};`;
+      const deleteUserQuestionQuery = `DELETE FROM question WHERE idquestion=${idquestion};`;
+
+      if (getAllUserQuestion.length > 0) {
+        const deleteUserQuestion = await query(deleteUserAnswerQuery);
+      }
+
+      const deleteUserQuestion = await query(deleteUserQuestionQuery);
       res.status(200).send(getAllUserQuestion);
     } catch (error) {
       console.log(error);

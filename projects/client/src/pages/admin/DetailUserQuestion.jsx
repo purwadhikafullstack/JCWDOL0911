@@ -6,19 +6,7 @@ import { AUTH_TOKEN } from "../../helpers/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { setDetailUserQuestion } from "../../features/admin/answerSlice";
 import Sidebar from "../../components/admin/Sidebar";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Input,
-  Button,
-  Tooltip,
-  Center,
-  Divider,
-} from "@chakra-ui/react";
+import { Button, Tooltip, Divider } from "@chakra-ui/react";
 
 function DetailUserQuestion() {
   const params = useParams();
@@ -97,40 +85,37 @@ function DetailUserQuestion() {
   return (
     <>
       <div className="w-screen h-full flex justify-between bg-slate-50">
-        <div className="w-80">
+        <div className="sidebar-width">
           <Sidebar />
         </div>
-        <div
-          className="h-screen bg-dashboard-admin p-28  flex flex-col gap-6"
-          style={{ width: "calc(100vw - 320px)" }}
-        >
+        <div className="min-h-screen h-full bg-dashboard-admin p-8 lg:p-28 flex flex-col gap-6 content-width">
           <p className="text-3xl font-bold">Detail Question</p>
-          <div className="flex items-center gap-6 pt-12">
-            <div className="w-1/4">
-              <p>Title </p>
+          <div className="flex flex-wrap lg:flex-nowrap items-center lg:gap-6 pt-12">
+            <div className="w-full lg:w-1/4">
+              <p className="text-slate-500">Title </p>
             </div>
             <div className="w-3/4">
-              <p className="text-black text-3xl font-bold py-1 px-4">
+              <p className="text-black text-3xl font-bold py-1">
                 {detailQuestion.title}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="w-1/4">
-              <p>Question </p>
+          <div className="flex flex-wrap lg:flex-nowrap  items-center lg:gap-6">
+            <div className="w-full lg:w-1/4">
+              <p className="text-slate-500">Question </p>
             </div>
             <div className="w-3/4">
-              <p className="text-black text-xl py-1 px-4">
+              <p className="text-black text-xl py-1">
                 {detailQuestion.question}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="w-1/4">
-              <p>Question Date</p>
+          <div className="flex flex-wrap lg:flex-nowrap items-center lg:gap-6">
+            <div className="w-full lg:w-1/4">
+              <p className="text-slate-500">Question Date</p>
             </div>
             <div className="w-3/4">
-              <p className="text-black text-md py-1 px-4">
+              <p className="text-black text-md py-1">
                 {getDate(detailQuestion.date)}
               </p>
             </div>
@@ -138,7 +123,7 @@ function DetailUserQuestion() {
           <Divider orientation="horizontal" />
           {detailQuestion.is_answer === 0 ? (
             <>
-              <p>Answer</p>
+              <p className="text-slate-500">Answer</p>
               <div className="w-full flex flex-col">
                 <form onSubmit={handleSubmitAnswer}>
                   <textarea
@@ -152,7 +137,7 @@ function DetailUserQuestion() {
                     className="bg-white w-full text-black p-4 rounded-md shadow-card-tagline"
                   ></textarea>
 
-                  <div className="text-right">
+                  <div className="text-center lg:text-right">
                     <Button
                       className="button-primary w-11 mt-6"
                       variant="solid"
@@ -167,26 +152,23 @@ function DetailUserQuestion() {
             </>
           ) : (
             <div className="w-full flex flex-col gap-6">
-              <div className="flex items-center gap-6">
-                <div className="w-1/4">
-                  <p>Answer</p>
+              <div className="flex flex-wrap lg:flex-nowrap items-center lg:gap-6">
+                <div className="w-full lg:w-1/4">
+                  <p className="text-slate-500">Status</p>
                 </div>
                 <div className="w-3/4">
-                  <p className="text-black text-md py-1 px-4">
+                  <p className="text-black text-md py-1">Answered</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap lg:flex-nowrap items-center lg:gap-6">
+                <div className="w-full lg:w-1/4">
+                  <p className="text-slate-500">Answer</p>
+                </div>
+                <div className="w-3/4">
+                  <p className="text-black text-md py-1">
                     {detailQuestion.answer}
                   </p>
                 </div>
-              </div>
-              <div className="w-full text-right">
-                <Tooltip label="You already answer this question">
-                  <Button
-                    colorScheme="gray"
-                    variant="solid"
-                    className="cursor-not-allowed"
-                  >
-                    Answered
-                  </Button>
-                </Tooltip>
               </div>
             </div>
           )}

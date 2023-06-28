@@ -22,7 +22,7 @@ function Profile() {
     dispatch(fetchPrimaryAddress())
   }, [])
   
-  const profilePic = user.profile_image?`${process.env.REACT_APP_API_BE}/users/${user.profile_image}`:'/default.jpg'
+  const profilePic = user.profile_image?`${process.env.REACT_APP_API_PIC}/users/${user.profile_image}`:'/default.jpg'
   return (
     <div className='lg:flex lg:flex-row bg-white flex flex-col   gap-4 lg:gap-32 py-4 px-12'>
       <div className=' lg:h-60 lg:border-2 lg:border-emerald-600 flex justify-center items-center rounded-full'>

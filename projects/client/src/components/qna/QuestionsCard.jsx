@@ -5,7 +5,7 @@ function QuestionsCard({ question }) {
     const dateTime = date.getFullYear() + "/" +
     ("00" + (date.getMonth() + 1)).slice(-2) + "/" +
     ("00" + date.getDate()).slice(-2) + " " 
-    const profilePic = question.profile_image?`${process.env.REACT_APP_API_BE}/users/${question.profile_image}`:'/default.jpg'
+    const profilePic = question.profile_image?`${process.env.REACT_APP_API_BE_PIC}/users/${question.profile_image}`:'/default.jpg'
 
     return (
       <div class=" flex flex-col w-96 lg:w-[44rem] px-8 py-4 mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800" >

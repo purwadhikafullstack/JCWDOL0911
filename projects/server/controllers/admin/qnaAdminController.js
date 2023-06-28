@@ -92,7 +92,7 @@ module.exports = {
       const getEmailUser = await query(getEmailUserQuery);
 
       const email = getEmailUser[0].email;
-
+        console.log('im add answer');
       let mail = {
         from: `Admin <${process.env.NODEMAILER_USER}>`,
         to: `${email}`,
@@ -130,9 +130,8 @@ module.exports = {
         }
       }
 
-      const deleteUserQuestionQuery = `DELETE FROM answer WHERE idanswer IN (${dataQuestion});`;
+      const deleteUserQuestionQuery = `DELETE FROM answer WHERE idanswer IN (${db.escape(dataQuestion)});`;
       const deleteUserQuestion = await query(deleteUserQuestionQuery);
-
       const getAllUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, answer.date FROM question
       LEFT JOIN answer ON answer.idquestion = question.idquestion;`;
       const getAllUserQuestion = await query(getAllUserQuestionQuery);

@@ -55,7 +55,14 @@ module.exports = {
     });
   },
   adminProduct: async (req, res) => {
-    const productQuery = await query(`SELECT * FROM product`);
+    const order = req.query.order
+    const filter = req.query.filter
+    const queryCondition = filter === 'converted' ? 'WHERE product.idunit IS NOT NULL' : filter === 'not converted' ? 'WHERE product.idunit IS NULL' : '';
+    const productQuery = await query(`SELECT *
+    FROM product
+    LEFT JOIN unit ON product.idunit = unit.idunit
+    ${queryCondition}
+    ORDER BY product.name ${order}`);
     const categoryQuery =
       await query(`SELECT products_categories.*,category.name as category_name
     FROM products_categories
@@ -91,4 +98,41 @@ module.exports = {
     );
     res.status(200).send({ message: "Update stock succes" });
   },
-};
+  UnitConversionRules: async (req, res) => {
+    const { unit, quantity, unitDefault } = req.body
+    const unitQuery = await query(`SELECT * FROM unit WHERE unitname = ${db.escape(unit)} AND quantity = ${db.escape(quantity)}`)
+    if (unitQuery.length > 0) {
+      res.status(200).send({message:"Unit Conversion Rules Has Been Set"})
+    }
+    else {
+       await query(`INSERT INTO unit VALUES(null,${db.escape(unitDefault)},${db.escape(unit)},${db.escape(quantity)})`)
+      res.status(200).send({message:"Unit Conversion Rules Has Been Set"})
+    }
+  },
+  convertedUnit: async (req, res) => {
+    const convertedQuery = await query(`SELECT product.*,unit.unitname,unit.quantity as conversion_quantity FROM product
+    INNER JOIN unit ON product.idunit = unit.idunit`)
+    res.status(200).send(convertedQuery)
+  },
+  setConversionRules: async (req, res) => {
+    const idProduct = parseInt(req.params.idProduct);
+    const {idUnit}= req.body
+    await query(`UPDATE product SET idunit = ${db.escape(idUnit)} WHERE idproduct= ${db.escape(idProduct)}`)
+    res.status(200).send({message:"Rules has been set to this product"})
+  },
+  fetchRules: async (req, res) => {
+    let rulesQuery = await query(`SELECT * FROM unit`)
+    res.status(200).send(rulesQuery)
+  },
+  changeDefaultUnit: async (req, res) => {
+    const idProduct = parseInt(req.params.idProduct);
+    const {unit_product,stock}= req.body
+    await query(`UPDATE product SET unit_product = ${db.escape(unit_product)} , stock = ${db.escape(stock)} WHERE idproduct = ${db.escape(idProduct)}`)
+    res.status(200).send({message:"Change Succes"})
+  },
+  removeRule: async (req, res) => {
+    const idProduct = parseInt(req.params.idProduct)
+    await query(`UPDATE product SET idunit = null WHERE idproduct= ${db.escape(idProduct)}`)
+    res.status(200).send({message:"Rule has been Removed"})
+  }
+}

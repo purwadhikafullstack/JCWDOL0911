@@ -13,8 +13,9 @@ function Navbar() {
   const myCart = useSelector((state) => state.cart.cart);
   const user = useSelector((state) => state.user.user);
   const profilePic = user.profile_image
-    ? `${process.env.REACT_APP_API_BE}/users/${user.profile_image}`
+    ? `${process.env.REACT_APP_API_PIC}/users/${user.profile_image}`
     : "/default.jpg";
+
   const dispatch = useDispatch();
 
   const handleLogout = () => {

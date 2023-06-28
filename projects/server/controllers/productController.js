@@ -91,4 +91,69 @@ module.exports = {
     );
     res.status(200).send({ message: "Update stock succes" });
   },
+  getAllProductOnAdminDashboard: async (req, res) => {
+    try {
+      const idCategory = req.query.idcategory;
+      const sort = req.query.sort;
+      const key = req.query.key;
+      const limit = req.query.limit || 10;
+      const page = req.query.page || 1;
+
+      let getAllProductQuery = `SELECT p.*, c.name as category_name, c.idcategory as category_id FROM product p
+      LEFT JOIN products_categories pc ON p.idproduct = pc.id_product
+      LEFT JOIN category c ON pc.idcategory = c.idcategory`;
+
+      console.log("getAllProductQuery", getAllProductQuery);
+
+      let getCountQuery = `SELECT Count(*) as count FROM (SELECT p.*, c.name as category_name, c.idcategory as category_id FROM product p
+      LEFT JOIN products_categories pc ON p.idproduct = pc.id_product
+      LEFT JOIN category c ON pc.idcategory = c.idcategory) y`;
+
+      console.log("getcountquery", getCountQuery);
+
+      if (idCategory !== undefined) {
+        getCountQuery = `SELECT Count(*) as count FROM (SELECT p.*, c.name as category_name, c.idcategory as category_id FROM product p
+        LEFT JOIN products_categories pc ON p.idproduct = pc.id_product
+        LEFT JOIN category c ON pc.idcategory = c.idcategory WHERE c.idcategory=${idCategory}) y;`;
+        getAllProductQuery += ` WHERE c.idcategory=${idCategory}`;
+      }
+
+      if (sort) {
+        getAllProductQuery += ` ORDER BY ${key} ${sort}`;
+      }
+
+      console.log("getcountquerycat", getCountQuery);
+
+      const countData = await query(getCountQuery);
+
+      getAllProductQuery += ` LIMIT ${limit} OFFSET ${(page - 1) * limit}`;
+
+      const getAllProduct = await query(getAllProductQuery);
+
+      res
+        .status(200)
+        .send({ products: getAllProduct, count: countData[0].count });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error });
+    }
+  },
+  getDetailProductOnAdminDashboard: async (req, res) => {
+    try {
+      const idParams = req.params.idproduct;
+
+      const getDetailProductonAdminDashboardQuery = `SELECT p.*, c.name as category_name, c.idcategory as category_id FROM product p
+      LEFT JOIN products_categories pc ON p.idproduct = pc.id_product
+      LEFT JOIN category c ON pc.idcategory = c.idcategory WHERE p.idproduct=${idParams};`;
+
+      const getDetailProductonAdminDashboard = await query(
+        getDetailProductonAdminDashboardQuery
+      );
+
+      return res.status(200).send(getDetailProductonAdminDashboard);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error });
+    }
+  },
 };

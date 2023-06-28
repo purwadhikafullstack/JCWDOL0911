@@ -74,19 +74,19 @@ function LoginAdmin() {
               <>
                 <div className="flex min-h-screen h-full">
                   <div className="w-4/6 hidden lg:flex items-center justify-center register-page relative">
-                    <div className=" absolute left-6 top-6 ">
-                      {/* <Link to={"/"}> */}
+                    <div className="absolute left-6 top-6 ">
                       <img
                         src="../assets/logo-pharmacy.png"
                         alt="pharmacy"
                         className="logo-image"
                       />
-                      {/* </Link> */}
                     </div>
                     <img src="../assets/admin-picture.svg" width="70%" alt="" />
                   </div>
                   <div className="w-full lg:w-3/6 flex justify-center flex-col p-14">
-                    <p className="text-3xl font-bold mb-2">Log in as admin</p>
+                    <p className="text-2xl text-center lg:text-left lg:text-3xl font-bold mb-2">
+                      Log in as admin
+                    </p>
 
                     <div>
                       <Form className="mt-8 space-y-6" action="#" method="POST">

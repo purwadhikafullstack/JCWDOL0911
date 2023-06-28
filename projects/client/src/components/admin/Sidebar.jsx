@@ -11,7 +11,7 @@ function Sidebar() {
     Swal.fire({
       icon: "success",
       title: "Logout",
-      text: "You already logout from Dashboar Pharmacy Web",
+      text: "You already logout from Dashboard Pharmacy Web",
     });
   };
 
@@ -21,16 +21,16 @@ function Sidebar() {
       className="flex flex-col justify-between fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform dark:bg-gray-800 bg-white shadow-side-bar-admin "
     >
       <div className="flex flex-col gap-11">
-        <div className="mx-10 mt-6">
+        <div className="hidden lg:block mx-10 mt-6">
           <Link to={"/admin/dashboard"}>
             <img
-              src="../assets/logo-pharmacy.png"
+              src="/assets/logo-pharmacy.png"
               alt="pharmacy"
               className="logo-image"
             />
           </Link>
         </div>
-        <div className="flex flex-col gap-11 text-slate-400 text-lg font-bold mx-10">
+        <div className="flex flex-col gap-11 text-slate-400 text-lg font-bold lg:mx-10">
           <div
             className="flex gap-6 hover:cursor-pointer items-center hover-text-green"
             onClick={() => navigate("/admin/dashboard")}
@@ -51,7 +51,7 @@ function Sidebar() {
                 ></path>
               </svg>
             </div>
-            <p>Dashboard</p>
+            <p className="hidden lg:block">Dashboard</p>
           </div>
           <div
             className="flex gap-6 hover:cursor-pointer items-center hover-text-green"
@@ -73,7 +73,7 @@ function Sidebar() {
                 ></path>
               </svg>
             </div>
-            <p>Product</p>
+            <p className="hidden lg:block">Product</p>
           </div>
           <div
             className="flex gap-6 hover:cursor-pointer items-center hover-text-green"
@@ -95,7 +95,7 @@ function Sidebar() {
                 ></path>
               </svg>
             </div>
-            <p>Transaction</p>
+            <p className="hidden lg:block">Transaction</p>
           </div>
           <div
             className="flex gap-6 hover:cursor-pointer items-center hover-text-green"
@@ -117,7 +117,7 @@ function Sidebar() {
                 ></path>
               </svg>
             </div>
-            <p>Answer Question</p>
+            <p className="hidden lg:block">Answer Question</p>
           </div>
           <div
             className="flex gap-6 hover:cursor-pointer items-center hover-text-green"
@@ -139,13 +139,13 @@ function Sidebar() {
                 ></path>
               </svg>
             </div>
-            <p>Report</p>
+            <p className="hidden lg:block">Report</p>
           </div>
         </div>
       </div>
       <div
         onClick={handleLogoutAdmin}
-        className="flex gap-2 hover:cursor-pointer py-2 justify-center rounded-md text-lg mx-auto mb-6 font-bold w-1/2 logout-admin-button"
+        className="flex gap-2 hover:cursor-pointer py-2 justify-center rounded-md text-lg lg:mx-auto mb-6 font-bold lg:w-1/2 logout-admin-button"
       >
         <div className="w-7">
           <svg
@@ -163,7 +163,7 @@ function Sidebar() {
             ></path>
           </svg>
         </div>
-        <p>Logout</p>
+        <p className="hidden lg:block">Logout</p>
       </div>
     </div>
   );

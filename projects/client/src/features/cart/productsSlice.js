@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Axios from "axios";
 import Swal from "sweetalert2";
+import { AUTH_TOKEN } from "../../helpers/constant";
 
 export const productsSlice = createSlice({
   name: "products",
@@ -44,7 +45,28 @@ export function fetchProducts() {
     dispatch(setProducts(response.data.productQuery));
   };
 }
+
+export function fetchDetailProduct(idproduct) {
+  return async (dispatch) => {
+    try {
+      const token = localStorage.getItem(AUTH_TOKEN);
+      const response = await Axios.get(
+        `${process.env.REACT_APP_API_BE}/admin/products/${idproduct}`,
+        { headers: { authorization: `Bearer ${token}` } }
+      );
+      dispatch(setProduct(response.data[0]));
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.message,
+      });
+    }
+  };
+}
+
 export function updateStock(id, stock, setEdit, updatedStock, unit) {
+  console.log({ id, stock, setEdit, updatedStock, unit });
   if (updatedStock == "0") {
     Swal.fire({
       icon: "error",
@@ -59,7 +81,7 @@ export function updateStock(id, stock, setEdit, updatedStock, unit) {
         { stock, updatedStock, unit }
       );
       Swal.fire(`${response.data.message}`, "", "success");
-      dispatch(fetchProducts());
+      dispatch(fetchDetailProduct(id));
       setEdit(false);
     };
   }

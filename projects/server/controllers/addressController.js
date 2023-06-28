@@ -21,7 +21,7 @@ module.exports = {
     idCity = parseInt(idCity);
     idProvince = parseInt(idProvince);
     postal_code = parseInt(postal_code);
-    if (isPrimary) {
+    if (primary) {
       await query(
         `UPDATE address SET isprimary = false WHERE isprimary = true`
       );
@@ -101,7 +101,7 @@ module.exports = {
         province,
       } = req.body;
 
-      if (isprimary) {
+      if (primary) {
         await query(
           `UPDATE address SET isprimary = false WHERE isprimary = true`
         );

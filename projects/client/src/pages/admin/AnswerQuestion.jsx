@@ -69,8 +69,16 @@ function AnswerQuestion() {
     return dateTime;
   };
 
+  const getName = (name) => {
+    if (name.length > 20) {
+      return name.slice(0, 20) + "...";
+    }
+    return name;
+  };
+
   const handleDeleteQuestion = async (idquestion) => {
     try {
+      console.log(idquestion);
       let response = await axios.delete(
         `${process.env.REACT_APP_API_BE}/admin/qna/${idquestion}`,
         {
@@ -89,6 +97,22 @@ function AnswerQuestion() {
     }
   };
 
+  const saveHandler = async (idquestion) => {
+    fetchAllUserQuestion();
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this question",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, change it!",
+    });
+    if (result.isConfirmed) {
+      handleDeleteQuestion(idquestion);
+    }
+  };
+
   const handlePageDetailUserQuestion = async (idquestion) => {
     try {
       navigate(`/admin/answer-question/${idquestion}`);
@@ -103,7 +127,6 @@ function AnswerQuestion() {
   };
 
   useEffect(() => {
-    console.log(">>>>", selectedIsAnswer.isAnswer);
     fetchAllUserQuestion();
   }, [selectedIsAnswer.isAnswer, selectedSortBy.sort, page]);
 
@@ -126,121 +149,157 @@ function AnswerQuestion() {
   return (
     <>
       <div className="w-screen h-full flex justify-between bg-slate-50">
-        <div className="w-80">
+        <div className="sidebar-width">
           <Sidebar />
         </div>
-        <div
-          className="h-screen bg-dashboard-admin p-28 flex flex-col gap-11"
-          style={{ width: "calc(100vw - 320px)" }}
-        >
+        <div className="min-h-screen h-full bg-dashboard-admin p-8 lg:p-28 flex flex-col gap-11 content-width">
           <p className="text-3xl font-bold">Answer Question</p>
-          <div className="flex gap-4">
-            <div>
-              <Menu>
-                <MenuButton>
-                  <div className="flex gap-2 bg-slate-800 text-white py-1 rounded-md font-bold px-3">
-                    <div className="w-6">
-                      <svg
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
-                        ></path>
-                      </svg>
+          <div className="bg-white px-6 pb-11 rounded-lg shadow-card-tagline">
+            <div className="flex flex-wrap gap-4 my-11">
+              <div>
+                <Menu>
+                  <MenuButton>
+                    <div className="flex gap-2 bg-slate-800 text-white py-1 rounded-md font-bold px-3">
+                      <div className="w-6">
+                        <svg
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+                          ></path>
+                        </svg>
+                      </div>
+                      <p>Filter</p>
                     </div>
-                    <p>Filter</p>
-                  </div>
-                </MenuButton>
-                <MenuList label={selectedIsAnswer.isAnswer}>
-                  <MenuItem
-                    onClick={() => setSelectedIsAnswer({ isAnswer: 1 })}
-                  >
-                    <p className="text-black">Answered</p>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => setSelectedIsAnswer({ isAnswer: 0 })}
-                  >
-                    <p className="text-black">No Answer</p>
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </div>
-            <div>
-              <Menu>
-                <MenuButton>
-                  <div className="flex gap-1 bg-slate-800 text-white py-1 rounded-md font-bold pl-2 pr-3">
-                    <div className="w-6">
-                      <svg
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
-                        ></path>
-                      </svg>
+                  </MenuButton>
+                  <MenuList label={selectedIsAnswer.isAnswer}>
+                    <MenuItem
+                      onClick={() =>
+                        setSelectedIsAnswer({ isAnswer: undefined })
+                      }
+                    >
+                      <p className="text-black">All</p>
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => setSelectedIsAnswer({ isAnswer: 1 })}
+                    >
+                      <p className="text-black">Answered</p>
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => setSelectedIsAnswer({ isAnswer: 0 })}
+                    >
+                      <p className="text-black">No Answer</p>
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              </div>
+              <div>
+                <Menu>
+                  <MenuButton>
+                    <div className="flex gap-1 bg-slate-800 text-white py-1 rounded-md font-bold pl-2 pr-3">
+                      <div className="w-6">
+                        <svg
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                          ></path>
+                        </svg>
+                      </div>
+                      <p>Sort</p>
                     </div>
-                    <p>Sort</p>
-                  </div>
-                </MenuButton>
-                <MenuList label={selectedSortBy.sort}>
-                  <MenuItem
-                    onClick={() =>
-                      setSelectedSortBy({ sort: "DESC", key: "date" })
-                    }
-                  >
-                    <p className="text-black">Date: Oldest - Newest</p>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() =>
-                      setSelectedSortBy({ sort: "ASC", key: "date" })
-                    }
-                  >
-                    <p className="text-black">Date: Newest - Oldest</p>
-                  </MenuItem>
-                </MenuList>
-              </Menu>
+                  </MenuButton>
+                  <MenuList label={selectedSortBy.sort}>
+                    <MenuItem
+                      onClick={() =>
+                        setSelectedSortBy({ sort: "DESC", key: "date" })
+                      }
+                    >
+                      <p className="text-black">Date: Oldest - Newest</p>
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() =>
+                        setSelectedSortBy({ sort: "ASC", key: "date" })
+                      }
+                    >
+                      <p className="text-black">Date: Newest - Oldest</p>
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              </div>
             </div>
-          </div>
-
-          <div className="">
-            <TableContainer>
+            <TableContainer className="rounded-lg bg-table-list-color">
               <Table variant="striped" colorScheme="teal">
-                <Thead>
+                <Thead className="table-list-head">
                   <Tr>
-                    <Th>No</Th>
-                    <Th>Title</Th>
-                    <Th>Question</Th>
-                    <Th>Date</Th>
-                    <Th>Status</Th>
-                    <Th>Action</Th>
+                    <Th color="white" fontSize="base">
+                      No
+                    </Th>
+                    <Th color="white" fontSize="base">
+                      Title
+                    </Th>
+                    <Th color="white" fontSize="base">
+                      Question
+                    </Th>
+                    <Th color="white" fontSize="base">
+                      Date
+                    </Th>
+                    <Th color="white" fontSize="base">
+                      Status
+                    </Th>
+                    <Th color="white" fontSize="base">
+                      Action
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   {questions.map((question, index) => (
-                    <Tr
-                      key={question.idquestion}
-                      onClick={() =>
-                        handlePageDetailUserQuestion(question.idquestion)
-                      }
-                    >
+                    <Tr key={question.idquestion}>
                       <Td>{LIMIT * (page - 1) + 1 + index}</Td>
-                      <Td>{question.title}</Td>
-                      <Td>{question.question}</Td>
-                      <Td>{getDate(question.date)}</Td>
-                      <Td>
+                      <Td
+                        onClick={() =>
+                          handlePageDetailUserQuestion(question.idquestion)
+                        }
+                        className="cursor-pointer"
+                      >
+                        {question.title}
+                      </Td>
+                      <Td
+                        onClick={() =>
+                          handlePageDetailUserQuestion(question.idquestion)
+                        }
+                        className="cursor-pointer"
+                      >
+                        {getName(question.question)}
+                      </Td>
+                      <Td
+                        onClick={() =>
+                          handlePageDetailUserQuestion(question.idquestion)
+                        }
+                        className="cursor-pointer"
+                      >
+                        {getDate(question.date)}
+                      </Td>
+                      <Td
+                        onClick={() =>
+                          handlePageDetailUserQuestion(question.idquestion)
+                        }
+                        className="cursor-pointer"
+                      >
                         {question.is_answer ? (
                           <Tooltip label="You already answer this question">
                             <Button
@@ -257,41 +316,41 @@ function AnswerQuestion() {
                           </Button>
                         )}
                       </Td>
+
                       <Td>
-                        <Tooltip label="delete">
-                          <Button
-                            colorScheme="red"
-                            variant="ghost"
-                            onClick={() =>
-                              handleDeleteQuestion(question.idquestion)
-                            }
-                          >
-                            <svg
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
-                              aria-hidden="true"
-                              className="w-7"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                              ></path>
-                            </svg>
-                          </Button>
-                        </Tooltip>
+                        <div
+                          className="w-fit"
+                          onClick={() => saveHandler(question.idquestion)}
+                        >
+                          <Tooltip label="delete">
+                            <Button colorScheme="red" variant="ghost">
+                              <svg
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                                className="w-7"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                                ></path>
+                              </svg>
+                            </Button>
+                          </Tooltip>
+                        </div>
                       </Td>
                     </Tr>
                   ))}
                 </Tbody>
               </Table>
             </TableContainer>
-          </div>
-          <div className="flex w-full gap-4 justify-center">
-            {renderPagination()}
+            <div className="flex w-full gap-4 justify-center mt-11">
+              {renderPagination()}
+            </div>
           </div>
         </div>
       </div>

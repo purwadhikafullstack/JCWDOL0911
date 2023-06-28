@@ -12,6 +12,7 @@ const {
   prescriptionRouter,
   transactionRoute,
   orderRouter,
+  productOnAdminRoute,
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -44,14 +45,14 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/admin/qna", qnaAdminRoutes);
 app.use("/api/order", orderRouter);
-
+app.use("/api/admin/products", productOnAdminRoute);
 
 app.use(`/api/product`, relatedProductRouter);
 app.use(`/api/prescription`, prescriptionRouter);
 app.use("/api/qna", qnaRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/addresses", addressRoute);
-app.use("/api/transactions",transactionRoute)
+app.use("/api/transactions", transactionRoute);
 
 // app.get("/api/greetings", (req, res, next) => {
 //   res.status(200).json({

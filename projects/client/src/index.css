@@ -70,7 +70,7 @@ code {
 }
 
 .button-primary:hover {
-  background: #448c9c !important;
+  background: #447d8a !important;
 }
 
 .button-primary {
@@ -134,6 +134,10 @@ code {
   max-height: 150px !important;
 }
 
+.table-list-head {
+  background-color: #12857d !important;
+}
+
 @media only screen and (min-width: 992px) {
   .logo-bank {
     max-height: 3rem !important;
@@ -141,4 +145,33 @@ code {
   .logo-image {
     height: 44px !important;
   }
+}
+
+.sidebar-width {
+  width: 64px;
+}
+.content-width {
+  width: calc(100vw - 64px);
+  overflow: auto;
+}
+
+@media only screen and (min-width: 1024px) {
+  .sidebar-width {
+    width: 320px;
+  }
+  .content-width {
+    width: calc(100vw - 320px);
+  }
+}
+
+.button-icon-on-detail-page {
+  size: 24px;
+}
+
+.chakra-divider {
+  border-color: black !important;
+}
+
+.bg-table-list-color {
+  background-color: #f6fcfc !important;
 }

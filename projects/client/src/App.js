@@ -77,12 +77,11 @@ function App() {
               element={<DetailUserQuestion />}
             />
             <Route path="/admin/transactions" element={<Transaction />} />
+            <Route
+              path="/admin/products/:idproduct"
+              element={<DetailProductAdmin />}
+            />
           </Route>
-          <Route path="/admin/products" element={<Products />} />
-          <Route
-            path="/admin/products/:idproduct"
-            element={<DetailProductAdmin />}
-          />
           <Route element={<AuthRouteAdmin />}>
             <Route path="/admin/login" element={<LoginAdmin />} />
           </Route>

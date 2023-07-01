@@ -33,16 +33,24 @@ function ConvertUnitModal() {
       Create Conversion Rules</button>
                 : 
                         <div className='fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center '>
-                    <div className=' bg-white py-3 lg:px-14 px-2 rounded-xl gap-2 flex flex-col shadow-lg w-96  lg:w-[40rem]'>
-                        <h1>Conversion Rule</h1>
-                        <div className='flex gap-2'>
+                    <div className=' bg-white py-3 lg:px-14 px-2 rounded-xl gap-3 flex flex-col shadow-lg w-96  lg:w-[40rem]'>
+                        <h1 className='font-bold lg:text-4xl text-emerald-700'>Conversion Rule</h1>
+                       
+                        <div className='flex gap-2 border-2 p-2 rounded-md items-center justify-center border-emerald-600'>
                             <p>1</p>
-                            <input type="text" className='border-b-2' placeholder='unit' onChange={(e)=>setUnitDefault(e.target.value)} />
+                            <input type="text" className='border-b-2 w-24 border-slate-500' placeholder='unit' onChange={(e)=>setUnitDefault(e.target.value)} />
                             <p>=</p>
-                            <input type="text" className='border-b-2' placeholder='quantity' onChange={(e)=>setQuantity(e.target.value)} />
-                            <input type="text" className='border-b-2' placeholder='unit' onChange={(e)=>setUnit(e.target.value)} />
+                            <input type="text" className='border-b-2 w-24 border-slate-500' placeholder='quantity' onChange={(e)=>setQuantity(e.target.value)} />
+                            <input type="text" className='border-b-2 w-24 border-slate-500' placeholder='unit' onChange={(e)=>setUnit(e.target.value)} />
                         </div>
-                        <button onClick={()=>saveProductRules()}>save</button>
+                        <div className='flex items-center justify-center gap-5'>
+                        <button onClick={() => saveProductRules()}
+               className='border-2 border-emerald-500  font-bold py-2 px-4 rounded-md hover:bg-emerald-500 hover:text-white text-emerald-500'>
+               SAVE</button>
+                        <button onClick={() => setOpen(false)}
+               className='border-2 border-emerald-500  font-bold py-2 px-4 rounded-md hover:bg-emerald-500 hover:text-white text-emerald-500'>
+               CANCEL</button>
+                   </div>
                     </div>
 </div>}
 </div>

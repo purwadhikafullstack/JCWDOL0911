@@ -6,7 +6,7 @@ import { Button } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
-function DetailProduct() {
+function DetailProductUser() {
     const { productId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -51,4 +51,4 @@ function DetailProduct() {
     )
 }
 
-export default DetailProduct
+export default DetailProductUser

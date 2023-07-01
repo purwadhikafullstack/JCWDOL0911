@@ -45,6 +45,7 @@ function OrderTotalPriceCart() {
 
   //when user click submit order, dispatch data to backend
   const onSubmitOrderHandler = async () => {
+    alert('im called')
     let orderData = {
       courierData: courierData,
       serviceData: serviceData,
@@ -122,7 +123,7 @@ function OrderTotalPriceCart() {
           <button
             disabled={!freightPrice ? true : false}
             className=" disabled:bg-gray-300 disabled:hover:shadow-none hover:bg-green-500 hover:shadow-xl w-[80%] mx-auto rounded-md border-none text-white bg-green-700 h-[40px]"
-            onClick={onSubmitOrderHandler}
+            onClick={()=>onSubmitOrderHandler()}
           >
             Submit Order
           </button>

@@ -57,6 +57,7 @@ module.exports = {
         message: "Success register! Please verify your email",
       });
     } catch (error) {
+      console.log(error);
       return res.status(500).send({ message: error });
     }
   },

@@ -12,15 +12,12 @@ import OrderList from "./pages/OrderList";
 
 import Cart from "./pages/Cart";
 import ProductList from "./pages/ProductList";
-import DetailProduct from "./pages/DetailProduct";
 import Verification from "./pages/Verification";
 import Login from "./pages/Login";
 // import Address from "./pages/Address";
 import Order from "./pages/Order";
 import ChangePassword from "./pages/ChangePassword";
 import PageNotFound from "./pages/PageNotFound";
-import { useDispatch } from "react-redux";
-import { fetchUser } from "./features/users/userSlice";
 import Products from "./pages/admin/Products";
 import PrivateRoute from "./components/PrivateRoute";
 import LoginAdmin from "./pages/admin/LoginAdmin";
@@ -35,6 +32,7 @@ import AdminRoute from "./components/admin/AdminRoute";
 import DetailProductAdmin from "./pages/admin/DetailProduct";
 import UnitConversion from "./pages/admin/UnitConversion";
 import Transaction from "./pages/admin/Transaction";
+import DetailProductUser from "./pages/DetailProductUser";
 
 //
 function App() {
@@ -44,7 +42,7 @@ function App() {
         <Route element={<UserRoute />}>
           <Route element={<LayoutWithNavbar />}>
             <Route path="/productlist" element={<ProductList />} />
-            <Route path="/detail/:productId" element={<DetailProduct />} />
+            <Route path="/detail/:productId" element={<DetailProductUser/>} />
             <Route path="/" element={<LandingPage />} />
             <Route element={<PrivateRoute />}>
               <Route path="/cart" element={<Cart />} />

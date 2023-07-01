@@ -20,7 +20,7 @@ function ProductsConversionRow({ product,order,filter }) {
     const dispatch = useDispatch()
     const[idUnit,setIdUnit]=useState(0)
     const rules = useSelector(state => state.product.convertedUnit)
-    const sisaEceran = product.unit_product == product.unitname ?product.stock % product.quantity:0
+    const sisaEceran = product.unit == product.unitname ?product.stock % product.quantity:0
     const setRulesHandler = async() => {
         const result = await Swal.fire({
             title: 'Are you sure?',
@@ -38,7 +38,7 @@ function ProductsConversionRow({ product,order,filter }) {
     }
     const calculateConvertedStock = () => {
         if (product.quantity) {
-            if (product.unitname == product.unit_product) {
+            if (product.unitname == product.unit) {
                 return (Math.floor(product.stock / product.quantity))
             } else {
                 return (product.stock * product.quantity)
@@ -57,9 +57,9 @@ function ProductsConversionRow({ product,order,filter }) {
             confirmButtonText: 'Yes, Change it!'
         }) 
         if (result.isConfirmed) {
-            const unit_product = product.unit_product == product.unitname ? product.unit_set : product.unitname
+            const unit = product.unit == product.unitname ? product.unit_set : product.unitname
             const stock = calculateConvertedStock()
-            dispatch(changeDefaultUnit(product.idproduct,unit_product,stock,order,filter))
+            dispatch(changeDefaultUnit(product.idproduct,unit,stock,order,filter))
             
         }
     }
@@ -84,9 +84,9 @@ function ProductsConversionRow({ product,order,filter }) {
   return (
       <Tr>
           <Td>{product.name }</Td>
-          <Td>{product.unit_product }</Td>
+          <Td>{product.unit }</Td>
           <Td>{product.stock }</Td>
-          <Td>{product.unitname ? ( product.unitname == product.unit_product ?product.unit_set:product.unitname) :""}</Td>
+          <Td>{product.unitname ? ( product.unitname == product.unit ?product.unit_set:product.unitname) :""}</Td>
           <Td>{calculateConvertedStock()}</Td>
           <Td>{sisaEceran}</Td>
           <Td className='flex gap-2'>
@@ -105,7 +105,7 @@ function ProductsConversionRow({ product,order,filter }) {
                    <Select placeholder='Select option'
                    onChange={(e)=>setIdUnit(e.target.value)}>
                        {rules.map((rule) => {
-                           if (rule.unit_set == product.unit_product ||rule.unitname == product.unit_product) {
+                           if (rule.unit_set == product.unit ||rule.unitname == product.unit) {
                                
                                return <option value={rule.idunit}>{`1 ${rule.unit_set} = ${rule.quantity} ${rule.unitname}`}</option>
                             }

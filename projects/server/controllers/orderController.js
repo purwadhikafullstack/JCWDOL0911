@@ -3,6 +3,7 @@ const { format } = require("date-fns");
 
 module.exports = {
   uploadOrder: async (req, res) => {
+    console.log('im order');
     try {
       const iduser = parseInt(req.params.iduser);
       const {
@@ -12,6 +13,7 @@ module.exports = {
         courierData,
         serviceData,
       } = req.body;
+      console.log(req.body);
 
       const setTransactionOrderQuery = `insert into transaction values (null, null, null, ${db.escape(
         iduser
@@ -23,10 +25,12 @@ module.exports = {
         serviceData.service
       )}, ${db.escape(serviceData.description)}, ${db.escape(
         serviceData.cost[0].value
-      )} );`;
+        )} );`;
+      console.log(setTransactionOrderQuery);
 
       const setTransactionOrder = await query(setTransactionOrderQuery);
       console.log(setTransactionOrder);
+      console.log('query jalan');
       const { insertId } = setTransactionOrder;
 
       orderProduct.forEach(async (product, index) => {
@@ -81,12 +85,14 @@ module.exports = {
       }
 
       const oldTemp = fetchWaitingOrder.map(async (order, index) => {
+        // console.log(order);
         const fetchWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction} order by transaction.waiting_date asc limit 10 offset 0;`;
+        console.log(fetchWaitingProductQuery);
         const fetchWaitingProduct = await query(fetchWaitingProductQuery);
-
         return { ...order, orderProduct: fetchWaitingProduct };
       });
       const waitingOrder = await Promise.all(oldTemp);
+      console.log(waitingOrder);
 
       return res
         .status(200)

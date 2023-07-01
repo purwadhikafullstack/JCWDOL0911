@@ -54,18 +54,26 @@ module.exports = {
   adminProduct: async (req, res) => {
     const order = req.query.order
     const filter = req.query.filter
-    const queryCondition = filter === 'converted' ? 'WHERE product.idunit IS NOT NULL' : filter === 'not converted' ? 'WHERE product.idunit IS NULL' : '';
-    const productQuery = await query(`SELECT *
+    const search = req.query.search
+    const offset = parseInt(req.query.offset)
+    const queryCondition = filter === 'converted' ? 'WHERE product.idunit IS NOT NULL ' : filter === 'not converted' ? 'WHERE product.idunit IS NULL ' : '';
+    const productQuery =await query (`SELECT *
     FROM product
     LEFT JOIN unit ON product.idunit = unit.idunit
-    ${queryCondition}
-    ORDER BY product.name ${order}`);
+    ${(queryCondition)} ${search && queryCondition?`AND (product.name LIKE ${db.escape(`%${search}%`)})`:search?`WHERE (product.name LIKE ${db.escape(`%${search}%`)})`:''}
+    ORDER BY product.name ${order}
+    LIMIT 5 OFFSET ${db.escape(offset)}`);
     const categoryQuery =
       await query(`SELECT products_categories.*,category.name as category_name
     FROM products_categories
     INNER JOIN category ON products_categories.idcategory = category.idcategory
     `);
-    res.status(200).send({ productQuery, categoryQuery });
+    const countData = await query(`SELECT COUNT (*) as count
+    FROM product
+    LEFT JOIN unit ON product.idunit = unit.idunit
+    ${(queryCondition)} ${search && queryCondition?`AND (product.name LIKE ${db.escape(`%${search}%`)})`:search?`WHERE (product.name LIKE ${db.escape(`%${search}%`)})`:''}` )
+    console.log(offset);
+    res.status(200).send({ productQuery, categoryQuery,countData });
   },
   updateStock: async (req, res) => {
     const idProduct = parseInt(req.params.idProduct);
@@ -104,20 +112,20 @@ module.exports = {
       const page = req.query.page || 1;
 
       let getAllProductQuery = `SELECT p.*, c.name as category_name, c.idcategory as category_id FROM product p
-      LEFT JOIN products_categories pc ON p.idproduct = pc.id_product
+      LEFT JOIN products_categories pc ON p.idproduct = pc.idproduct
       LEFT JOIN category c ON pc.idcategory = c.idcategory`;
 
       console.log("getAllProductQuery", getAllProductQuery);
 
       let getCountQuery = `SELECT Count(*) as count FROM (SELECT p.*, c.name as category_name, c.idcategory as category_id FROM product p
-      LEFT JOIN products_categories pc ON p.idproduct = pc.id_product
+      LEFT JOIN products_categories pc ON p.idproduct = pc.idproduct
       LEFT JOIN category c ON pc.idcategory = c.idcategory) y`;
 
       console.log("getcountquery", getCountQuery);
 
       if (idCategory !== undefined) {
         getCountQuery = `SELECT Count(*) as count FROM (SELECT p.*, c.name as category_name, c.idcategory as category_id FROM product p
-        LEFT JOIN products_categories pc ON p.idproduct = pc.id_product
+        LEFT JOIN products_categories pc ON p.idproduct = pc.idproduct
         LEFT JOIN category c ON pc.idcategory = c.idcategory WHERE c.idcategory=${idCategory}) y;`;
         getAllProductQuery += ` WHERE c.idcategory=${idCategory}`;
       }
@@ -147,7 +155,7 @@ module.exports = {
       const idParams = req.params.idproduct;
 
       const getDetailProductonAdminDashboardQuery = `SELECT p.*, c.name as category_name, c.idcategory as category_id FROM product p
-      LEFT JOIN products_categories pc ON p.idproduct = pc.id_product
+      LEFT JOIN products_categories pc ON p.idproduct = pc.idproduct
       LEFT JOIN category c ON pc.idcategory = c.idcategory WHERE p.idproduct=${idParams};`;
 
       const getDetailProductonAdminDashboard = await query(

@@ -32,7 +32,7 @@ import DetailUserQuestion from "./pages/admin/DetailUserQuestion";
 import UserTransacations from "./pages/UserTransacations";
 import UserRoute from "./components/UserRoute";
 import AdminRoute from "./components/admin/AdminRoute";
-import DetailProduct from "./pages/admin/DetailProduct";
+import DetailProductAdmin from "./pages/admin/DetailProduct";
 import UnitConversion from "./pages/admin/UnitConversion";
 import Transaction from "./pages/admin/Transaction";
 
@@ -61,25 +61,27 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/verification/:token" element={<Verification />} />
             <Route path="/reset-password/:token" element={<ChangePassword />} />
-            </Route>
+          </Route>
         </Route>
         <Route element={<AdminRoute />}>
           <Route element={<PrivateRouteAdmin />}>
             <Route path="/admin/dashboard" element={<DashboardAdmin />} />
             <Route path="/admin/answer-question" element={<AnswerQuestion />} />
-          <Route path="/admin/products" element={<Products />} />
-          <Route path="/admin/products/unit-conversion" element={<UnitConversion />} />
+            <Route path="/admin/products" element={<Products />} />
+            <Route
+              path="/admin/products/unit-conversion"
+              element={<UnitConversion />}
+            />
             <Route
               path="/admin/answer-question/:idquestion"
               element={<DetailUserQuestion />}
             />
             <Route path="/admin/transactions" element={<Transaction />} />
+            <Route
+              path="/admin/products/:idproduct"
+              element={<DetailProductAdmin />}
+            />
           </Route>
-          <Route path="/admin/products" element={<Products />} />
-          <Route
-            path="/admin/products/:idproduct"
-            element={<DetailProduct />}
-          />
           <Route element={<AuthRouteAdmin />}>
             <Route path="/admin/login" element={<LoginAdmin />} />
           </Route>

@@ -19,7 +19,10 @@ export const productsSlice = createSlice({
       product_image: "",
     },
     categories: [],
-    convertedUnit:[],
+    convertedUnit: [],
+    count: {
+      count:""
+  }
   },
   reducers: {
     setProduct: (state, action) => {
@@ -33,20 +36,24 @@ export const productsSlice = createSlice({
     },
     setConvertedUnit: (state, action) => {
       state.convertedUnit = action.payload
-    }
+    },
+    setCount: (state, action) => {
+      state.count=action.payload
+  }
   },
 });
 
-export const { setProduct, setProducts, setCategories,setConvertedUnit } = productsSlice.actions;
+export const { setProduct, setProducts, setCategories,setConvertedUnit,setCount } = productsSlice.actions;
 export default productsSlice.reducer;
 
-export function fetchProducts(order, filter) {
+export function fetchProducts(order, filter,search,offset) {
   return async (dispatch) => {
     const response = await Axios.get(
-      `${process.env.REACT_APP_API_BE}/products?order=${order}&filter=${filter}`
+      `${process.env.REACT_APP_API_BE}/products?order=${order}&filter=${filter}&search=${search}&offset=${offset}`
     );
     dispatch(setCategories(response.data.categoryQuery));
     dispatch(setProducts(response.data.productQuery));
+    dispatch(setCount(response.data.countData))
   };
 }
 

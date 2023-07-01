@@ -12,6 +12,7 @@ const prescriptionRouter = require("./prescriptionRouter");
 const transactionRoute = require("./transactionRoute");
 const orderRouter = require("./orderRouter");
 const productOnAdminRoute = require("./admin/productOnAdminRoute");
+const paymentRouter = require("./paymentRouter");
 
 module.exports = {
   authRoutes,
@@ -28,4 +29,5 @@ module.exports = {
   transactionRoute,
   orderRouter,
   productOnAdminRoute,
+  paymentRouter,
 };

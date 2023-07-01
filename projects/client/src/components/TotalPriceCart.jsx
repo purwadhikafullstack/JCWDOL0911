@@ -7,6 +7,7 @@ import { getProvince } from "../features/rajaongkir/rajaongkirSlice";
 import { setTotalPrice } from "../features/cart/cartSlice";
 import { removeCheckedProduct } from "../features/cart/cartSlice";
 import NewAddressModal from "./NewAddressModal";
+import ChangeAddressModal from "./ChangeAddressModal";
 
 function TotalPriceCart() {
   const dispatch = useDispatch();
@@ -15,21 +16,31 @@ function TotalPriceCart() {
   const addressData = useSelector(
     (state) => state.address.addressList.allAddress
   );
+  const userPrimaryAddress = useSelector(
+    (state) => state.address.primaryAddress
+  );
   const navigate = useNavigate();
 
   const [total, setTotal] = useState(0);
   //when user doesn't have any address, below is hook to show address modal
   const [isHiddenAddress, setIsHiddenAddress] = useState(false);
+  const [isHiddenChangeAddress, setIsHiddenChangeAddress] = useState(false);
 
   //modalHandler
   const isHiddenAddressHandler = () => {
     setIsHiddenAddress((prev) => !prev);
   };
 
+  const isHiddenChangeAddressHandler = () => {
+    setIsHiddenChangeAddress((prev) => !prev);
+  };
+
   //clikhandle for pay, when address not available, show the address component modal on screen
   const payClickHandler = async () => {
     if (addressData.length === 0) {
       setIsHiddenAddress((prev) => !prev);
+    } else if (userPrimaryAddress.length === 0) {
+      setIsHiddenChangeAddress(true);
     } else {
       setTotal(0);
       await cartProduct.map(async (product, index) => {
@@ -44,7 +55,7 @@ function TotalPriceCart() {
     cartProduct.map((val, index) => {
       return dispatch(removeCheckedProduct(index));
     });
-    dispatch(getProvince());
+    // dispatch(getProvince());
   }, []);
 
   useEffect(() => {
@@ -80,7 +91,9 @@ function TotalPriceCart() {
           <div>Total Price</div>
           <div>{currency(totalPrice)}</div>
         </div>
-
+        {isHiddenChangeAddress ? (
+          <ChangeAddressModal modalHandler={isHiddenChangeAddressHandler} />
+        ) : null}
         {isHiddenAddress ? (
           <NewAddressModal modalHandler={isHiddenAddressHandler} />
         ) : (

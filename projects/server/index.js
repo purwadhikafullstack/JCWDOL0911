@@ -14,7 +14,8 @@ const {
   orderRouter,
   productOnAdminRoute,
   categoryRoutes,
-  transactionRoutes
+  transactionRoutes,
+  paymentRouter,
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -56,6 +57,7 @@ app.use("/api/transactions", transactionRoutes);
 app.use("/api/categories", categoryRoutes)
 app.use(`/api/product`, relatedProductRouter);
 app.use(`/api/prescription`, prescriptionRouter);
+app.use(`/api/payment`, paymentRouter);
 app.use("/api/qna", qnaRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/addresses", addressRoute);

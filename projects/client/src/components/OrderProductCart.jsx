@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //import assets
 import newAddress from "../assets/new_address.svg";
@@ -9,12 +9,18 @@ import NewAddressModal from "./NewAddressModal";
 
 //take cart globalstate
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 //import helper
 import { currency } from "../helpers/currency";
 import ChangeAddressModal from "./ChangeAddressModal";
+import {
+  fetchAddresses,
+  fetchPrimaryAddress,
+} from "../features/users/addressSlice";
 
 function OrderProductCart() {
+  const dispatch = useDispatch();
   //control if user want to add new address
   const [isHidden, setIsHidden] = useState(false);
   const [isAddressModalHidden, setAddressModalHidden] = useState(false);
@@ -32,9 +38,15 @@ function OrderProductCart() {
   const userAddresses = useSelector(
     (state) => state.address.addressList.allAddress
   );
-  const userPrimaryAddress = useSelector((state) => {
-    return state.address.primaryAddress[0] || userAddresses[0];
-  });
+  // return state.address.primaryAddress[0] || userAddresses[0];
+  const userPrimaryAddress = useSelector(
+    (state) => state.address.primaryAddress[0]
+  );
+
+  useEffect(() => {
+    dispatch(fetchAddresses(0));
+    dispatch(fetchPrimaryAddress());
+  }, []);
 
   return (
     <>
@@ -47,7 +59,7 @@ function OrderProductCart() {
             <hr className="mt-4" />
             <div className="flex sm:flex-row flex-col px-6 pt-4 sm:items-center justify-between">
               <div className=" font-bold whitespace-nowrap">
-                {userPrimaryAddress.full_name || userData.username}
+                {userData.fullname || userData.username}
                 <span>, {userData.phone_number}</span>
               </div>
               <button
@@ -59,8 +71,8 @@ function OrderProductCart() {
             </div>
             <div className=" w-[90%] ml-6 py-4 border-b-black sm:pb-4 pb-9">
               <div>
-                {userPrimaryAddress.full_name.split(" ")[0]}
-                <span>{`'s ${userPrimaryAddress.addres_type}`}</span>
+                {userData.fullname || userData.username}
+                <span>{`'s ${userPrimaryAddress.address_type}`}</span>
               </div>
               <div>{userPrimaryAddress.street}</div>
               <div>

@@ -13,9 +13,9 @@ function Courier({
   const userAddresses = useSelector(
     (state) => state.address.addressList.allAddress
   );
-  const userPrimaryAddress = useSelector((state) => {
-    return state.address.primaryAddress[0] || userAddresses[0];
-  });
+  const userPrimaryAddress = useSelector(
+    (state) => state.address.primaryAddress[0]
+  );
 
   useEffect(() => {
     console.log("There is an update on address");

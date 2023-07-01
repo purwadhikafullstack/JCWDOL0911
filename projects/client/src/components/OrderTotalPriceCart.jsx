@@ -15,6 +15,8 @@ import { resetCart } from "../features/cart/cartSlice";
 function OrderTotalPriceCart() {
   //generate freightPrice everytime userPick new services
   const [freightPrice, setFreightPrice] = useState(0);
+  const [serviceData, setServiceData] = useState({});
+  const [courierData, setCourierData] = useState("");
 
   const cartProduct = useSelector((state) => state.cart.cart);
   const totalPrice = useSelector((state) => state.cart);
@@ -26,6 +28,7 @@ function OrderTotalPriceCart() {
   const dispatch = useDispatch();
 
   const onClickCourierHandler = (event) => {
+    setCourierData(event.target.value);
     dispatch(resetServices());
     resetFreightPrice();
     let destination = destinationAddress.idcity;
@@ -43,6 +46,8 @@ function OrderTotalPriceCart() {
   //when user click submit order, dispatch data to backend
   const onSubmitOrderHandler = async () => {
     let orderData = {
+      courierData: courierData,
+      serviceData: serviceData,
       orderProduct: cartProduct,
       orderAddress: destinationAddress,
       orderPrice: totalPrice.totalPrice + freightPrice,
@@ -66,11 +71,12 @@ function OrderTotalPriceCart() {
   };
 
   //function to get freightPrice
-  const onServicesClickHandler = (freightData) => {
-    if (freightData !== "") {
+  const onServicesClickHandler = (serviceData) => {
+    if (serviceData !== "") {
       //below data is necessary for recording in database
-      const { cost, description, service } = JSON.parse(freightData);
+      const { cost, description, service } = JSON.parse(serviceData);
       const freighCost = cost[0].value;
+      setServiceData(JSON.parse(serviceData));
       setFreightPrice(freighCost);
     } else {
       resetFreightPrice();

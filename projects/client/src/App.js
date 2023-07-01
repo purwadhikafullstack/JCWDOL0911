@@ -34,6 +34,7 @@ import UserRoute from "./components/UserRoute";
 import AdminRoute from "./components/admin/AdminRoute";
 import DetailProduct from "./pages/admin/DetailProduct";
 import UnitConversion from "./pages/admin/UnitConversion";
+import Transaction from "./pages/admin/Transaction";
 
 //
 function App() {
@@ -50,9 +51,9 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/forum" element={<Forum />} />
               <Route path="/order" element={<Order />} />
+              <Route path="/orderlist" element={<OrderList />} />
               <Route path="/change-password" element={<ChangePassword />} />
-              <Route path="/orderlist" element={<OrderList/>}/>
-              <Route path="/my-transactions" element={<UserTransacations/>}/>
+              <Route path="/my-transactions" element={<UserTransacations />} />
             </Route>
           </Route>
           <Route element={<AuthRoute />}>
@@ -72,6 +73,7 @@ function App() {
               path="/admin/answer-question/:idquestion"
               element={<DetailUserQuestion />}
             />
+            <Route path="/admin/transactions" element={<Transaction />} />
           </Route>
           <Route path="/admin/products" element={<Products />} />
           <Route

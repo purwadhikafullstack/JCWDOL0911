@@ -7,8 +7,9 @@ const rajaOngkirController = require("./rajaOngkirController");
 const addressController = require("./addressController");
 const qnaAdminController = require("./admin/qnaAdminController");
 const prescriptionController = require("./prescriptionController");
-const transactionController = require('./transactionController')
+const transactionController = require("./transactionController");
 const orderController = require("./orderController");
+const paymentController = require("./paymentController");
 
 module.exports = {
   relatedProduct,
@@ -21,5 +22,6 @@ module.exports = {
   qnaAdminController,
   prescriptionController,
   transactionController,
-  orderController
-}
+  orderController,
+  paymentController,
+};

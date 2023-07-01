@@ -16,7 +16,7 @@ function LayoutWithNavbar() {
 
   useEffect(() => {
     if (userId) {
-      dispatch(fetchTransaction())
+      dispatch(fetchTransaction());
       dispatch(fetchUser());
       dispatch(fetchAddresses());
       dispatch(fetchPrimaryAddress(userId));

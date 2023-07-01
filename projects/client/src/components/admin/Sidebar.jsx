@@ -77,7 +77,7 @@ function Sidebar() {
           </div>
           <div
             className="flex gap-6 hover:cursor-pointer items-center hover-text-green"
-            onClick={() => navigate("/admin/dashboard")}
+            onClick={() => navigate("/admin/transactions")}
           >
             <div className="w-7">
               <svg

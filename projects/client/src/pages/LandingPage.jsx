@@ -26,7 +26,8 @@ function LandingPage() {
   const userId = JSON.parse(localStorage.getItem("user"))?.iduser;
 
   const onClickUploadPrescriptionHandler = async () => {
-    if (!userId && userLogin !== "") {
+    console.log(!userId || userLogin !== "");
+    if (!userId) {
       Swal.fire({
         icon: "info",
         title: "You have to login/register first",

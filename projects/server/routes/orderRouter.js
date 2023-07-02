@@ -7,5 +7,6 @@ router.get("/waiting/:iduser", orderController.getWaitingOrder);
 // router.get("/waitingproduct/:idtransaction", orderController.getWaitingProduct);
 router.get("/review/:iduser", orderController.getReviewOrder);
 router.get("/allwaiting", orderController.getAllWaitingOrder);
+router.get("/prescription/:iduser", orderController.getPrescriptionOrder);
 
 module.exports = router;

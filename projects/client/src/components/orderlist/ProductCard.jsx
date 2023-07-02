@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import trash from "../../assets/trash.png";
+import medicine from "../../assets/medicine.png";
 import { currency } from "../../helpers/currency";
 
 function ProductCard({ product }) {
@@ -7,7 +7,11 @@ function ProductCard({ product }) {
     <div className="md:flex-row flex flex-col sm:gap-6 gap-10 mt-4">
       <img
         className="lg:w-[15%] md:w-[30%] w-[50%] mx-auto object-contain"
-        src={trash}
+        src={
+          product.product_image
+            ? `http://localhost:8000/product${product.product_image}`
+            : medicine
+        }
         alt="gambar"
       />
       <div className="flex flex-col justify-between md:w-[70%] lg:[85%]">

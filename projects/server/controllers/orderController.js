@@ -209,6 +209,53 @@ module.exports = {
     }
   },
 
+  getPrescriptionOrder: async (req, res) => {
+    try {
+      const iduser = req.params.iduser;
+      const page = parseInt(req.query.page || 0);
+      const limit = parseInt(req.query.limit || 10);
+      const search = req.query.search || "";
+      const ascDescend = req.query.sort || "asc";
+      const offset = limit * page;
+
+      //querying total rows of data transaction from sql
+      const totalRowsQuery = `select count(idprescription) as totalOfRows from prescription where iduser=${db.escape(
+        iduser
+      )} and status = "ON QUEUE" and prescription.date is not null and prescription.prescription_image is not null and idprescription like ${
+        search || "" ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
+      };`;
+
+      const totalRows = await query(totalRowsQuery);
+      const { totalOfRows } = totalRows[0];
+      const totalPages = Math.ceil(totalOfRows / limit);
+
+      const fetchTransactionOrderQuery = `select * from prescription where iduser = ${iduser} and status = "ON QUEUE" and prescription.date is not null and prescription.prescription_image is not null and idprescription like ${
+        search ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
+      } order by prescription.date ${ascDescend} limit ${db.escape(
+        limit
+      )} offset ${db.escape(offset)};`;
+      const fetchTransactionOrder = await query(fetchTransactionOrderQuery);
+
+      // if fetchWaitingOrder length is 0, we return the result
+      if (fetchTransactionOrder.length === 0) {
+        return res.status(200).send({
+          success: false,
+          message: "You don't have any waiting order!",
+        });
+      }
+
+      return res.status(200).send({
+        success: true,
+        fetchTransactionOrder,
+        totalOfRows,
+        totalPages,
+        page,
+      });
+    } catch (error) {
+      return res.status(400).send(error);
+    }
+  },
+
   // getWaitingProduct: async (req, res) => {
   //   const idtransaction = req.params.idtransaction;
   //   const fetchWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.date, transaction.time, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, category.name from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct inner join category on product.idcategory = product.idcategory where transaction.idtransaction = ${29} order by date asc limit 3 offset 0;`;

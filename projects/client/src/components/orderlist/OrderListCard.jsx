@@ -5,10 +5,12 @@ import SendOrderCard from "./SendOrderCard";
 import OnProcessOrderCard from "./OnProcessOrderCard";
 import FinishedOrderCard from "./FinishedOrderCard";
 import ReviewOrderCard from "./ReviewOrderCard";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  fetchPrescriptionTransaction,
   fetchReviewTransaction,
   fetchWaitingTransaction,
+  resetPrescription,
   resetTransaction,
 } from "../../features/order/orderSlice";
 import Swal from "sweetalert2";
@@ -19,7 +21,7 @@ function OrderListCard() {
   //pagination state
   const [orderState, setOrderState] = useState("");
   const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(0);
   const [pages, setPages] = useState(0);
   const [rows, setRows] = useState(0);
   const [keyword, setKeyword] = useState("");
@@ -29,7 +31,6 @@ function OrderListCard() {
   }, [page, keyword, orderState]);
 
   const pageChange = ({ selected }) => {
-    console.log(selected);
     setPage(selected);
   };
 
@@ -43,7 +44,7 @@ function OrderListCard() {
     if (localStorage.getItem("user")) {
       if (orderState === "waiting") {
         dispatch(resetTransaction());
-        setPage(0);
+        dispatch(resetPrescription());
         const waitingPageInfo = await dispatch(
           fetchWaitingTransaction(keyword, page, limit)
         );
@@ -51,11 +52,21 @@ function OrderListCard() {
         setPages(waitingPageInfo.totalPages);
       } else if (orderState === "review") {
         dispatch(resetTransaction());
+        dispatch(resetPrescription());
         const reviewPageInfo = await dispatch(
           fetchReviewTransaction(keyword, page, limit)
         );
         setRows(reviewPageInfo.totalOfRows);
         setPages(reviewPageInfo.totalPages);
+      } else if (orderState === "prescription") {
+        dispatch(resetTransaction());
+        const prescriptionPageInfo = await dispatch(
+          fetchPrescriptionTransaction(keyword, page, limit)
+        );
+        setRows(prescriptionPageInfo.totalOfRows);
+        setPages(prescriptionPageInfo.totalPages);
+      } else if (orderState === "onprocess") {
+        console.log(orderState);
       }
     } else if (localStorage.getItem("admin")) {
       if (orderState === "waiting") {
@@ -78,7 +89,9 @@ function OrderListCard() {
   const dispatch = useDispatch();
 
   //when prescription is clicked by user, turn the other component off
-  const onClickPrescriptionHandler = () => {
+  const onClickPrescriptionHandler = (e) => {
+    setPage(0);
+    setOrderState(e.target.id);
     setIsPrescriptionOpen(true);
     setIsWaitingOpen(false);
     setIsOnProcessOpen(false);
@@ -89,6 +102,7 @@ function OrderListCard() {
 
   // when waiting is clicked by user, turn the other component off
   const onClickWaitingHandler = (e) => {
+    setPage(0);
     setOrderState(e.target.id);
     setIsWaitingOpen(true);
     setIsPrescriptionOpen(false);
@@ -99,7 +113,9 @@ function OrderListCard() {
   };
 
   // when waiting is clicked by user, turn the other component off
-  const onClickOnProcessHandler = () => {
+  const onClickOnProcessHandler = (e) => {
+    setPage(0);
+    setOrderState(e.target.id);
     setIsOnProcessOpen(true);
     setIsWaitingOpen(false);
     setIsPrescriptionOpen(false);
@@ -128,6 +144,7 @@ function OrderListCard() {
   };
 
   const onClickReviewHandler = (e) => {
+    setPage(0);
     setOrderState(e.target.id);
     setIsReviewOpen(true);
     setIsFinishedOpen(false);
@@ -202,7 +219,7 @@ function OrderListCard() {
       <div>
         Total Transactions: {rows}, Page: {rows ? page + 1 : 0} of {pages}
       </div>
-      <nav className="mt-4" role="navigation">
+      <nav className="mt-4" key={rows} role="navigation">
         <ReactPaginate
           breakLabel="..."
           previousLabel={"<< Prev"}

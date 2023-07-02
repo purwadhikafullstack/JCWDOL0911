@@ -197,7 +197,7 @@ module.exports = {
   changeDefaultUnit: async (req, res) => {
     const idProduct = parseInt(req.params.idProduct);
     const {unit_product,stock}= req.body
-    await query(`UPDATE product SET unit_product = ${db.escape(unit_product)} , stock = ${db.escape(stock)} WHERE idproduct = ${db.escape(idProduct)}`)
+    await query(`UPDATE product SET unit = ${db.escape(unit_product)} , stock = ${db.escape(stock)} WHERE idproduct = ${db.escape(idProduct)}`)
     res.status(200).send({message:"Change Succes"})
   },
   removeRule: async (req, res) => {

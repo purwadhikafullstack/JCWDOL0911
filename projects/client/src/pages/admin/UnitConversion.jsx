@@ -100,7 +100,7 @@ function UnitConversion() {
     </Thead>
      <Tbody>
                 {products?.map((product) => {
-                  return <ProductsConversionRow product={product} order={order} filter={filter } />
+                  return <ProductsConversionRow product={product} order={order} filter={filter } search={search} />
         })}    
     </Tbody>
     </Table>

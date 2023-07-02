@@ -16,7 +16,7 @@ import { changeDefaultUnit, fetchUnitConversionRules, removeRuleProduct, setConv
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
 
-function ProductsConversionRow({ product,order,filter }) {
+function ProductsConversionRow({ product,order,filter,search }) {
     const dispatch = useDispatch()
     const[idUnit,setIdUnit]=useState(0)
     const rules = useSelector(state => state.product.convertedUnit)
@@ -32,7 +32,7 @@ function ProductsConversionRow({ product,order,filter }) {
             confirmButtonText: 'Yes, assign it!'
         })
         if (result.isConfirmed) {
-            dispatch(setConversionRules(product.idproduct,idUnit,order,filter))
+            dispatch(setConversionRules(product.idproduct,idUnit,order,filter,search))
             
         }
     }
@@ -59,7 +59,7 @@ function ProductsConversionRow({ product,order,filter }) {
         if (result.isConfirmed) {
             const unit = product.unit == product.unitname ? product.unit_set : product.unitname
             const stock = calculateConvertedStock()
-            dispatch(changeDefaultUnit(product.idproduct,unit,stock,order,filter))
+            dispatch(changeDefaultUnit(product.idproduct,unit,stock,order,filter,search))
             
         }
     }
@@ -74,7 +74,7 @@ function ProductsConversionRow({ product,order,filter }) {
             confirmButtonText: 'Yes, Remove it!'
         }) 
         if (result.isConfirmed) { 
-            dispatch(removeRuleProduct(product.idproduct,order,filter))
+            dispatch(removeRuleProduct(product.idproduct,order,filter,search))
         }
         
     }

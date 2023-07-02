@@ -108,10 +108,11 @@ export function createConversionRules( unit, quantity,unitDefault,setOpen) {
   }
   
 }
-export function setConversionRules(idProduct, idUnit,order,filter) {
+export function setConversionRules(idProduct, idUnit, order, filter,search) {
+  const offset = 0
   return async (dispatch) => {
     let response = await Axios.post(`${process.env.REACT_APP_API_BE}/products/assign-rule/${idProduct}`, { idUnit })
-    dispatch(fetchProducts(order,filter))
+    dispatch(fetchProducts(order,filter,search,offset))
     Swal.fire(`${response.data.message}`, "", "success");
 
   }
@@ -127,19 +128,21 @@ export function fetchUnitConversionRules() {
   
 }
 
-export function changeDefaultUnit(idProduct, unit_product, stock, order, filter) {
+export function changeDefaultUnit(idProduct, unit_product, stock, order, filter,search) {
+  const offset = 0
   return async (dispatch) => {
     let response = await Axios.put(`${process.env.REACT_APP_API_BE}/products/change-unit/${idProduct}`, { unit_product, stock })
-    dispatch(fetchProducts(order,filter))
+    dispatch(fetchProducts(order,filter,search,offset))
     Swal.fire(`${response.data.message}`, "", "success");
 
   }
 }
 
-export function removeRuleProduct(idProduct,order,filter) {
+export function removeRuleProduct(idProduct, order, filter,search) {
+  const offset = 0
   return async (dispatch) => {
     let response = await Axios.delete(`${process.env.REACT_APP_API_BE}/products/remove-rule/${idProduct}`)
-    dispatch(fetchProducts(order,filter))
+    dispatch(fetchProducts(order,filter,search,offset))
     Swal.fire(`${response.data.message}`, "", "success");
 
   }

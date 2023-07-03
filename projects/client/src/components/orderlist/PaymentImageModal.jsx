@@ -18,7 +18,7 @@ function PaymentImageModal({ image, index }) {
             <img
               className="w-[100%] mx-auto"
               id="prescription"
-              src={`http://localhost:8000/payment${image}`}
+              src={image ? `http://localhost:8000/payment${image}` : null}
               alt="prescription"
             />
           </div>

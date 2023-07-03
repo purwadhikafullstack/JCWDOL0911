@@ -14,13 +14,12 @@ function PrescriptionOrderCard() {
   const [isPaymentModal, setIsPaymentModal] = useState(false);
   const prescriptions = useSelector((state) => state.order.prescriptions);
 
-  const onClickPayNowHandler = (prescription) => {
-    dispatch(setSelectedTransaction(prescription));
-    setIsPaymentModal((prev) => !prev);
+  const onClickAcceptHandler = (prescription) => {
+    console.log(prescription);
   };
 
-  const onClickClosePaymentHandler = () => {
-    setIsPaymentModal((prev) => !prev);
+  const onClickRejectHandler = (prescription) => {
+    console.log(prescription);
   };
 
   return (
@@ -31,8 +30,16 @@ function PrescriptionOrderCard() {
             key={prescription.idprescription}
             className="w-full rounded even:bg-green-50 odd:bg-gray-50 shadow-xl px-6 pb-4 pt-1 mb-10"
           >
-            <div className="font-bold mt-4 md:text-left text-center text-green-700">
-              Transaction ID : {prescription.idprescription}
+            <div className="flex flex-col my-4 justify-between items-center md:flex-row gap-4">
+              <div className="font-bold text-center text-green-700">
+                Transaction ID : {prescription.idprescription}
+              </div>
+              <div
+                hidden={localStorage.getItem("admin") ? false : true}
+                className="font-bold text-center text-green-700"
+              >
+                Name : {prescription.full_name || prescription.username}
+              </div>
             </div>
             <div className="flex md:flex-col flex-col-reverse">
               <div className="flex items-center sm:flex-row sm:gap-0 gap-4 flex-col justify-between mb-4">
@@ -68,13 +75,14 @@ function PrescriptionOrderCard() {
               <div className="flex sm:w-[50%] w-full flex-row gap-4">
                 <button
                   hidden={localStorage.getItem("user") ? true : false}
+                  onClick={() => onClickRejectHandler(prescription)}
                   className=" w-full p-2 font-bold mx-auto rounded hover:bg-red-800 text-white bg-red-600"
                 >
                   Reject
                 </button>
                 <button
                   hidden={localStorage.getItem("user") ? true : false}
-                  onClick={() => onClickPayNowHandler(prescription)}
+                  onClick={() => onClickAcceptHandler(prescription)}
                   className=" w-full  p-2 font-bold mx-auto rounded hover:bg-green-800 text-white bg-green-600"
                 >
                   Accept
@@ -87,12 +95,25 @@ function PrescriptionOrderCard() {
                 </div>
               </div>
             </div>
-            <div style={{ display: "none" }} id={prescriptionIndex}>
-              <PrescriptionImageModal
-                index={prescriptionIndex}
-                image={prescription.prescription_image}
-              />
-            </div>
+            {localStorage.getItem("admin") ? (
+              <div
+                className="relative -top-[400px] w-full h-full"
+                style={{ display: "none" }}
+                id={prescriptionIndex}
+              >
+                <PrescriptionImageModal
+                  index={prescriptionIndex}
+                  image={prescription.prescription_image}
+                />
+              </div>
+            ) : (
+              <div style={{ display: "none" }} id={prescriptionIndex}>
+                <PrescriptionImageModal
+                  index={prescriptionIndex}
+                  image={prescription.prescription_image}
+                />
+              </div>
+            )}
           </div>
         );
       })}

@@ -7,8 +7,16 @@ import FinishedOrderCard from "./FinishedOrderCard";
 import ReviewOrderCard from "./ReviewOrderCard";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  fetchAdminFinishedTransaction,
+  fetchAdminOnProcessTransaction,
+  fetchAdminPrescriptionTransaction,
+  fetchAdminReviewTransaction,
+  fetchAdminSendTransaction,
+  fetchFinishedTransaction,
+  fetchOnProcessTransaction,
   fetchPrescriptionTransaction,
   fetchReviewTransaction,
+  fetchSendTransaction,
   fetchWaitingTransaction,
   resetPrescription,
   resetTransaction,
@@ -19,6 +27,7 @@ import ReactPaginate from "react-paginate";
 
 function OrderListCard() {
   //pagination state
+  const [order, setOrder] = useState("desc");
   const [orderState, setOrderState] = useState("");
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(0);
@@ -46,7 +55,7 @@ function OrderListCard() {
         dispatch(resetTransaction());
         dispatch(resetPrescription());
         const waitingPageInfo = await dispatch(
-          fetchWaitingTransaction(keyword, page, limit)
+          fetchWaitingTransaction(keyword, page, limit, order)
         );
         setRows(waitingPageInfo.totalOfRows);
         setPages(waitingPageInfo.totalPages);
@@ -66,15 +75,79 @@ function OrderListCard() {
         setRows(prescriptionPageInfo.totalOfRows);
         setPages(prescriptionPageInfo.totalPages);
       } else if (orderState === "onprocess") {
-        console.log(orderState);
+        dispatch(resetTransaction());
+        dispatch(resetPrescription());
+        const onProcessPageInfo = await dispatch(
+          fetchOnProcessTransaction(keyword, page, limit)
+        );
+        setRows(onProcessPageInfo.totalOfRows);
+        setPages(onProcessPageInfo.totalPages);
+      } else if (orderState === "send") {
+        dispatch(resetTransaction());
+        dispatch(resetPrescription());
+        const sendPageInfo = await dispatch(
+          fetchSendTransaction(keyword, page, limit, order)
+        );
+        setRows(sendPageInfo.totalOfRows);
+        setPages(sendPageInfo.totalPages);
+      } else if (orderState === "finished") {
+        dispatch(resetTransaction());
+        dispatch(resetPrescription());
+        const finishedPageInfo = await dispatch(
+          fetchFinishedTransaction(keyword, page, limit, order)
+        );
+        setRows(finishedPageInfo.totalOfRows);
+        setPages(finishedPageInfo.totalPages);
       }
     } else if (localStorage.getItem("admin")) {
       if (orderState === "waiting") {
+        dispatch(resetTransaction());
+        dispatch(resetPrescription());
         const waitingPageInfo = await dispatch(
-          fetchAdminWaitingTransaction(keyword, page, limit)
+          fetchAdminWaitingTransaction(keyword, page, limit, order)
         );
         setRows(waitingPageInfo.totalOfRows);
         setPages(waitingPageInfo.totalPages);
+      } else if (orderState === "prescription") {
+        dispatch(resetPrescription());
+        dispatch(resetTransaction());
+        const prescriptionPageInfo = await dispatch(
+          fetchAdminPrescriptionTransaction(keyword, page, limit)
+        );
+        setRows(prescriptionPageInfo.totalOfRows);
+        setPages(prescriptionPageInfo.totalPages);
+      } else if (orderState === "review") {
+        dispatch(resetPrescription());
+        dispatch(resetTransaction());
+        const reviewPageInfo = await dispatch(
+          fetchAdminReviewTransaction(keyword, page, limit)
+        );
+        setRows(reviewPageInfo.totalOfRows);
+        setPages(reviewPageInfo.totalPages);
+      } else if (orderState === "onprocess") {
+        dispatch(resetTransaction());
+        dispatch(resetPrescription());
+        const onProcessPageInfo = await dispatch(
+          fetchAdminOnProcessTransaction(keyword, page, limit)
+        );
+        setRows(onProcessPageInfo.totalOfRows);
+        setPages(onProcessPageInfo.totalPages);
+      } else if (orderState === "send") {
+        dispatch(resetTransaction());
+        dispatch(resetPrescription());
+        const sendPageInfo = await dispatch(
+          fetchAdminSendTransaction(keyword, page, limit, order)
+        );
+        setRows(sendPageInfo.totalOfRows);
+        setPages(sendPageInfo.totalPages);
+      } else if (orderState === "finished") {
+        dispatch(resetTransaction());
+        dispatch(resetPrescription());
+        const sendPageInfo = await dispatch(
+          fetchAdminFinishedTransaction(keyword, page, limit, order)
+        );
+        setRows(sendPageInfo.totalOfRows);
+        setPages(sendPageInfo.totalPages);
       }
     }
   };
@@ -125,7 +198,9 @@ function OrderListCard() {
   };
 
   // when send is clicked by user, turn the other component off
-  const onClickSendHandler = () => {
+  const onClickSendHandler = (e) => {
+    setPage(0);
+    setOrderState(e.target.id);
     setIsSendOpen(true);
     setIsPrescriptionOpen(false);
     setIsWaitingOpen(false);
@@ -134,7 +209,9 @@ function OrderListCard() {
     setIsReviewOpen(false);
   };
 
-  const onClickFinishedHandler = () => {
+  const onClickFinishedHandler = (e) => {
+    setPage(0);
+    setOrderState(e.target.id);
     setIsFinishedOpen(true);
     setIsSendOpen(false);
     setIsPrescriptionOpen(false);
@@ -212,10 +289,14 @@ function OrderListCard() {
         <WaitingOrderCard changePageInfo={changePageInfo} />
       ) : null}
       {isPrescriptionOpen ? <PrescriptionOrderCard /> : null}
-      {isSendOpen ? <SendOrderCard /> : null}
-      {isOnProcessOpen ? <OnProcessOrderCard /> : null}
+      {isSendOpen ? <SendOrderCard changePageInfo={changePageInfo} /> : null}
+      {isOnProcessOpen ? (
+        <OnProcessOrderCard changePageInfo={changePageInfo} />
+      ) : null}
       {isFinishedOpen ? <FinishedOrderCard /> : null}
-      {isReviewOpen ? <ReviewOrderCard /> : null}
+      {isReviewOpen ? (
+        <ReviewOrderCard changePageInfo={changePageInfo} />
+      ) : null}
       <div>
         Total Transactions: {rows}, Page: {rows ? page + 1 : 0} of {pages}
       </div>

@@ -10,7 +10,7 @@ function PrescriptionImageModal({ image, index }) {
           <div className="flex md:flex-row-reverse flex-col md:gap-0 gap-4 font-bold justify-between items-center mt-5">
             <img className="md:w-[30%] w-[60%]" src={logo} alt="logo" />
             <div className=" sm:text-4xl text-2xl flex-1 text-center sm:text-left text-green-700">
-              Your Prescription
+              Prescription
             </div>
           </div>
           <hr className="my-6" />

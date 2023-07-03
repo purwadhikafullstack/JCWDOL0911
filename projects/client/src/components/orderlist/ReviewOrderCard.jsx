@@ -4,34 +4,55 @@ import { parse, format } from "date-fns";
 import { useSelector } from "react-redux";
 import ProductCard from "./ProductCard";
 import dots_comment from "../../assets/dots_comment.png";
+import medicine from "../../assets/medicine.png";
 import Swal from "sweetalert2";
 
 import { useDispatch } from "react-redux";
 import PaymentImageModal from "./PaymentImageModal";
-import { acceptPaymentReview } from "../../features/order/orderSlice";
+import {
+  acceptPaymentReview,
+  confirmPaymentReview,
+  rejectPaymentReview,
+} from "../../features/order/orderSlice";
 
-function ReviewOrderCard() {
+function ReviewOrderCard({ changePageInfo }) {
   const dispatch = useDispatch();
 
   const transactions = useSelector((state) => state.order.transaction);
 
   const onClickAcceptHandler = async (transaction) => {
     const swalAccept = await Swal.fire({
-      title: "Are you sure?",
-      text: "Order will proceed to the next step",
+      title: "Confirmed payment?",
+      text: "User payment will be confirmed",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
     });
     if (swalAccept.isConfirmed) {
-      dispatch(acceptPaymentReview(transaction));
+      const { pageStatus } = await dispatch(acceptPaymentReview(transaction));
+      changePageInfo(pageStatus);
+    }
+  };
+
+  const onClickConfirmHandler = async (transaction) => {
+    const swalAccept = await Swal.fire({
+      title: "Process the order?",
+      text: "Proceed your order to the next step",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    });
+    if (swalAccept.isConfirmed) {
+      const { pageStatus } = await dispatch(confirmPaymentReview(transaction));
+      changePageInfo(pageStatus);
     }
   };
 
   const onClickRejectHandler = async (transaction) => {
     const swalAccept = await Swal.fire({
-      title: "Are you sure?",
+      title: "Reject Payment?",
       text: "Order will be rejected",
       icon: "question",
       showCancelButton: true,
@@ -39,7 +60,9 @@ function ReviewOrderCard() {
       cancelButtonText: "No",
     });
     if (swalAccept.isConfirmed) {
-      console.log("Reject this payment");
+      // console.log(transaction);
+      const { pageStatus } = await dispatch(rejectPaymentReview(transaction));
+      changePageInfo(pageStatus);
     }
   };
 
@@ -51,8 +74,16 @@ function ReviewOrderCard() {
             key={transaction.idtransaction}
             className="w-full rounded even:bg-green-50 odd:bg-gray-50 shadow-xl px-6 pb-4 pt-1 mb-10"
           >
-            <div className="font-bold mt-4 md:text-left text-center text-green-700">
-              Transaction ID : {transaction.idtransaction}
+            <div className="flex flex-col my-4 justify-between items-center md:flex-row gap-4">
+              <div className="font-bold text-center text-green-700">
+                Transaction ID : {transaction.idtransaction}
+              </div>
+              <div
+                hidden={localStorage.getItem("admin") ? false : true}
+                className="font-bold text-center text-green-700"
+              >
+                Name : {transaction.full_name || transaction.username}
+              </div>
             </div>
             <div className="flex md:flex-col flex-col-reverse">
               <div className="flex items-center sm:flex-row sm:gap-0 gap-4 flex-col justify-between mb-4">
@@ -98,22 +129,40 @@ function ReviewOrderCard() {
               </div>
             </div>
             <div className="flex sm:flex-row-reverse flex-col mt-4 justify-between items-center">
-              <div className="flex sm:w-[50%] w-full flex-row gap-4">
-                <button
-                  // hidden={localStorage.getItem("user") ? true : false}
-                  onClick={() => onClickRejectHandler(transaction)}
-                  className=" w-full p-2 font-bold mx-auto rounded hover:bg-red-800 text-white bg-red-600"
-                >
-                  Reject
-                </button>
-                <button
-                  // hidden={localStorage.getItem("user") ? true : false}
-                  onClick={() => onClickAcceptHandler(transaction)}
-                  className=" w-full  p-2 font-bold mx-auto rounded hover:bg-green-800 text-white bg-green-600"
-                >
-                  Accept
-                </button>
-              </div>
+              {transaction.status === "PAYMENT CONFIRMED" &&
+              localStorage.getItem("user") ? (
+                <div className="flex sm:w-[50%] w-full flex-row gap-4">
+                  <button
+                    onClick={() => console.log(transaction)}
+                    className=" w-full p-2 font-bold mx-auto rounded hover:bg-red-800 text-white bg-red-600"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => onClickConfirmHandler(transaction)}
+                    className=" w-full  p-2 font-bold mx-auto rounded hover:bg-green-800 text-white bg-green-600"
+                  >
+                    Submit
+                  </button>
+                </div>
+              ) : (
+                <div className="flex sm:w-[50%] w-full flex-row gap-4">
+                  <button
+                    hidden={localStorage.getItem("user") ? true : false}
+                    onClick={() => onClickRejectHandler(transaction)}
+                    className=" w-full p-2 font-bold mx-auto rounded hover:bg-red-800 text-white bg-red-600"
+                  >
+                    Reject
+                  </button>
+                  <button
+                    hidden={localStorage.getItem("user") ? true : false}
+                    onClick={() => onClickAcceptHandler(transaction)}
+                    className=" w-full  p-2 font-bold mx-auto rounded hover:bg-green-800 text-white bg-green-600"
+                  >
+                    Accept
+                  </button>
+                </div>
+              )}
               <div className="flex flex-row mt-4 items-center hover:cursor-pointer gap-5 md:justify-start">
                 <img className="w-[30px]" src={dots_comment} alt="dots" />
                 <div className="font-bold text-green-600">
@@ -121,12 +170,25 @@ function ReviewOrderCard() {
                 </div>
               </div>
             </div>
-            <div id={transactionIndex} style={{ display: "none" }}>
-              <PaymentImageModal
-                index={transactionIndex}
-                image={transaction.payment_image}
-              />
-            </div>
+            {localStorage.getItem("admin") ? (
+              <div
+                className="relative -top-[650px]"
+                id={transactionIndex}
+                style={{ display: "none" }}
+              >
+                <PaymentImageModal
+                  index={transactionIndex}
+                  image={transaction.payment_image}
+                />
+              </div>
+            ) : (
+              <div style={{ display: "none" }} id={transactionIndex}>
+                <PaymentImageModal
+                  index={transactionIndex}
+                  image={transaction.payment_image}
+                />
+              </div>
+            )}
           </div>
         );
       })}

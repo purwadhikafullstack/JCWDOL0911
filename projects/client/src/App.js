@@ -33,6 +33,7 @@ import DetailProductAdmin from "./pages/admin/DetailProduct";
 import UnitConversion from "./pages/admin/UnitConversion";
 import Transaction from "./pages/admin/Transaction";
 import DetailProductUser from "./pages/DetailProductUser";
+import Prescription from "./pages/admin/Prescription";
 
 //
 function App() {
@@ -66,6 +67,7 @@ function App() {
             <Route path="/admin/dashboard" element={<DashboardAdmin />} />
             <Route path="/admin/answer-question" element={<AnswerQuestion />} />
             <Route path="/admin/products" element={<Products />} />
+            <Route path="/admin/prescription" element={<Prescription />} />
             <Route
               path="/admin/products/unit-conversion"
               element={<UnitConversion />}

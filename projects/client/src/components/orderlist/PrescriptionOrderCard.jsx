@@ -6,16 +6,17 @@ import PaymentModal from "../payment/PaymentModal";
 import { setSelectedTransaction } from "../../features/order/orderSlice";
 import PrescriptionImageModal from "./PrescriptionImageModal";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function PrescriptionOrderCard() {
   //function to close the modal
-
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const [isPaymentModal, setIsPaymentModal] = useState(false);
   const prescriptions = useSelector((state) => state.order.prescriptions);
 
   const onClickAcceptHandler = (prescription) => {
-    console.log(prescription);
+    navigate('/admin/prescription')
   };
 
   const onClickRejectHandler = (prescription) => {

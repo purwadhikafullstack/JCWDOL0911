@@ -21,7 +21,6 @@ import {
   resetPrescription,
   resetTransaction,
 } from "../../features/order/orderSlice";
-import Swal from "sweetalert2";
 import { fetchAdminWaitingTransaction } from "../../features/order/orderSlice";
 import ReactPaginate from "react-paginate";
 
@@ -284,6 +283,24 @@ function OrderListCard() {
         >
           Finished
         </div>
+      </div>
+      <div className="md:w-[50%] w-[90%] flex flex-row justify-startpx-3 mb-4">
+        <label className="flex-1" htmlFor="filter">
+          Search :
+        </label>
+        <input
+          id="filter"
+          type="text"
+          className="border-2 border-gray-400 flex-1"
+        />
+        <select value="">
+          <option name="order" value="asc">
+            Ascending
+          </option>
+          <option name="order" value="desc">
+            Descending
+          </option>
+        </select>
       </div>
       {isWaitingOpen ? (
         <WaitingOrderCard changePageInfo={changePageInfo} />

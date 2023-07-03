@@ -370,19 +370,17 @@ module.exports = {
       const search = req.query.search || "";
       const ascDescend = req.query.sort || "asc";
       const offset = limit * page;
-
-      console.log(iduser);
       //querying total rows of data transaction from sql
       const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where iduser=${db.escape(
         iduser
       )} and status = "ON PROCESS" and transaction.onprocess_date is not null and idtransaction like ${
         search || "" ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
       };`;
+
+      console.log(totalRowsQuery);
       const totalRows = await query(totalRowsQuery);
       const { totalOfRows } = totalRows[0];
       const totalPages = Math.ceil(totalOfRows / limit);
-
-      console.log(totalRows);
 
       //first thing we do is simply fetch the transaction where iduser matching and payment_image = null, limit by 3 offset 0
       const fetchOnProcessOrderQuery = `select  transaction.idtransaction, transaction.idprescription, transaction.idadmin, transaction.iduser, transaction.idpromo, transaction.idaddress, transaction.waiting_date,
@@ -696,8 +694,8 @@ module.exports = {
     try {
       const iduser = req.params.iduser;
       const { idtransaction } = req.body;
-      const acceptIdTransactionQuery = `update transaction set status = "ON PROCESS", iduser=${db.escape(
-        iduser
+      const acceptIdTransactionQuery = `update transaction set status = "ON PROCESS", onprocess_date = ${db.escape(
+        format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )} where idtransaction = ${idtransaction}`;
       const acceptIdTransaction = await query(acceptIdTransactionQuery);
 

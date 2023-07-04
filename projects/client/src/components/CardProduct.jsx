@@ -1,7 +1,16 @@
 import React from "react";
 import {
-  Button, Tooltip, Card, CardBody, CardFooter, Image, Stack, Heading
-  , Text, Divider, ButtonGroup
+  Button,
+  Tooltip,
+  Card,
+  CardBody,
+  CardFooter,
+  Image,
+  Stack,
+  Heading,
+  Text,
+  Divider,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import { currency } from "../helpers/currency";
 import { useNavigate } from "react-router-dom";
@@ -24,23 +33,28 @@ function CardProduct({ product }) {
   return (
     <div className="w-full max-w-xs flex flex-col items-center p-2 shadow-card-tagline border-y-2 rounded-md">
       {/* shadow-card-tagline h-1/3 border-2*/}
-      <Card maxW='xs'>
+      <Card maxW="xs">
         <CardBody>
           <Image
-            src={`${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`}
-            alt='medicine'
-            borderRadius='lg'
+            src={
+              product.product_image
+                ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
+                : "./assets/icon-medicine.png"
+            }
+            alt="medicine"
+            borderRadius="lg"
+            className="w-20 mx-auto"
           />
-          <Stack mt='6' spacing='3'>
-            <Heading size='md'>{getName(product.name)}</Heading>
-            <Text color='black' className="text-sm font-medium">
+          <Stack mt="6" spacing="3">
+            <Heading size="md">{getName(product.name)}</Heading>
+            <Text color="black" className="text-sm font-medium">
               {currency(product.price)}
             </Text>
           </Stack>
         </CardBody>
         <Divider />
         <CardFooter>
-          <ButtonGroup spacing='2'>
+          <ButtonGroup spacing="2">
             <Button
               size={"sm"}
               className="border-button"
@@ -49,10 +63,11 @@ function CardProduct({ product }) {
               Add to Cart
             </Button>
             <Button
-              className='button-primary'
+              className="button-primary"
               variant={"ghost"}
               size={"sm"}
-              onClick={() => navigate("/detail/" + product.idproduct)}>
+              onClick={() => navigate("/detail/" + product.idproduct)}
+            >
               Detail
             </Button>
           </ButtonGroup>
@@ -87,7 +102,6 @@ function CardProduct({ product }) {
         onClick={() => navigate("/detail/" + product.idproduct)}>
         Detail
       </Button> */}
-
     </div>
   );
 }

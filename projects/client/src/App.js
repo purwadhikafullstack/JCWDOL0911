@@ -33,6 +33,7 @@ import DetailProductAdmin from "./pages/admin/DetailProduct";
 import UnitConversion from "./pages/admin/UnitConversion";
 import Transaction from "./pages/admin/Transaction";
 import DetailProductUser from "./pages/DetailProductUser";
+import DetailQnaUser from "./pages/DetailQnaUser";
 
 //
 function App() {
@@ -42,7 +43,7 @@ function App() {
         <Route element={<UserRoute />}>
           <Route element={<LayoutWithNavbar />}>
             <Route path="/productlist" element={<ProductList />} />
-            <Route path="/detail/:productId" element={<DetailProductUser/>} />
+            <Route path="/detail/:productId" element={<DetailProductUser />} />
             <Route path="/" element={<LandingPage />} />
             <Route element={<PrivateRoute />}>
               <Route path="/cart" element={<Cart />} />
@@ -52,6 +53,7 @@ function App() {
               <Route path="/orderlist" element={<OrderList />} />
               <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/my-transactions" element={<UserTransacations />} />
+              <Route path="/forum/:idquestion" element={<DetailQnaUser />} />
             </Route>
           </Route>
           <Route element={<AuthRoute />}>

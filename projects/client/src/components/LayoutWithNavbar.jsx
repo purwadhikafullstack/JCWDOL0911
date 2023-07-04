@@ -25,7 +25,9 @@ function LayoutWithNavbar() {
   return (
     <div>
       <Navbar />
-      <Outlet />
+      <div style={{ minHeight: "70vh" }}>
+        <Outlet />
+      </div>
       <Footer />
     </div>
   );

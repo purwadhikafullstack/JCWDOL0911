@@ -1,27 +1,61 @@
-import React from 'react'
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function QuestionsCard({ question }) {
-    const date = new Date(question.date)
-    const dateTime = date.getFullYear() + "/" +
-    ("00" + (date.getMonth() + 1)).slice(-2) + "/" +
-    ("00" + date.getDate()).slice(-2) + " " 
-    const profilePic = question.profile_image?`${process.env.REACT_APP_API_BE_PIC}/users/${question.profile_image}`:'/default.jpg'
+  const navigate = useNavigate();
+  const date = new Date(question.date);
+  const dateTime =
+    date.getFullYear() +
+    "/" +
+    ("00" + (date.getMonth() + 1)).slice(-2) +
+    "/" +
+    ("00" + date.getDate()).slice(-2) +
+    " ";
+  const profilePic = question.profile_image
+    ? `${process.env.REACT_APP_API_PIC}/users/${question.profile_image}`
+    : "/default.jpg";
 
-    return (
-      <div class=" flex flex-col w-96 lg:w-[44rem] px-8 py-4 mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800" >
+  const handlePageDetaiQna = async (idquestion) => {
+    try {
+      console.log("idquestion", idquestion);
+      navigate(`/forum/${idquestion}`);
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.message,
+      });
+    }
+  };
+
+  return (
+    <div class=" flex flex-col w-96 lg:w-[44rem] px-8 py-4 mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
       <div class="flex items-center justify-between">
-          <span class="text-sm font-light text-gray-600 dark:text-gray-400">{dateTime }</span> 
-      </div> 
+        <span class="text-sm font-light text-gray-600 dark:text-gray-400">
+          {dateTime}
+        </span>
+      </div>
       <div class="mt-2">
-          <h1 class="text-2xl font-bold text-gray-700 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 hover:underline">{question.title}</h1>
-          <div className=' max-h-16 lg:max-h-30 py-2 break-normal mb-5'>
-          <p class="mt-2 text-gray-600 dark:text-gray-300 break-normal line-clamp-2 ">{question.question }</p>
-          </div>
-        </div> 
-      
-        <div className="mt-auto">
+        <h1 class="text-2xl font-bold text-gray-700 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 hover:underline">
+          {question.title}
+        </h1>
+        <div className=" max-h-16 lg:max-h-30 py-2 break-normal mb-5">
+          <p class="mt-2 text-gray-600 dark:text-gray-300 break-normal line-clamp-2 ">
+            {question.question}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-auto">
         <div className="flex items-center justify-between">
-          <a className="text-emerald-500 hover:underline">Read More ⟶</a>
+          <button
+            onClick={() => handlePageDetaiQna(question.idquestion)}
+            className="text-emerald-500 hover:underline"
+          >
+            Read More ⟶
+          </button>
           <div className="flex items-center">
             <img
               src={profilePic}
@@ -35,7 +69,7 @@ function QuestionsCard({ question }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default QuestionsCard
+export default QuestionsCard;

@@ -56,13 +56,15 @@ module.exports = {
     const filter = req.query.filter
     const search = req.query.search
     const offset = parseInt(req.query.offset)
+    const limit = parseInt(req.query.limit)
+    const limitClause = limit > 0 ? `LIMIT ${db.escape(limit)} OFFSET ${db.escape(offset)}` : '';
     const queryCondition = filter === 'converted' ? 'WHERE product.idunit IS NOT NULL ' : filter === 'not converted' ? 'WHERE product.idunit IS NULL ' : '';
-    const productQuery =await query (`SELECT *
+    const productQuery =await query(`SELECT *
     FROM product
     LEFT JOIN unit ON product.idunit = unit.idunit
     ${(queryCondition)} ${search && queryCondition?`AND (product.name LIKE ${db.escape(`%${search}%`)})`:search?`WHERE (product.name LIKE ${db.escape(`%${search}%`)})`:''}
     ORDER BY product.name ${order}
-    LIMIT 5 OFFSET ${db.escape(offset)}`);
+    ${limitClause}`);
     const categoryQuery =
       await query(`SELECT products_categories.*,category.name as category_name
     FROM products_categories
@@ -72,7 +74,7 @@ module.exports = {
     FROM product
     LEFT JOIN unit ON product.idunit = unit.idunit
     ${(queryCondition)} ${search && queryCondition?`AND (product.name LIKE ${db.escape(`%${search}%`)})`:search?`WHERE (product.name LIKE ${db.escape(`%${search}%`)})`:''}` )
-    console.log(offset);
+    console.log(productQuery);;
     res.status(200).send({ productQuery, categoryQuery,countData });
   },
   updateStock: async (req, res) => {

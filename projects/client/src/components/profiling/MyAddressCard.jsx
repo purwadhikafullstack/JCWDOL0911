@@ -39,7 +39,7 @@ function MyAddressCard({ address }) {
     <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">{address.isprimary ? "Primary Address" : "" }</h5>
     <p class="font-normal text-gray-700 dark:text-gray-400">{ address.full_name }</p>
     <p class="font-normal text-gray-700 dark:text-gray-400 text-xs">{ address.phone_number }</p>
-    <p class="font-bold text-gray-700 dark:text-gray-400">{ address.addres_type }</p>
+    <p class="font-bold text-gray-700 dark:text-gray-400">{ address.address_type }</p>
     <div class="flex gap-4">
         <div>
             <p class="font-normal text-gray-700 dark:text-gray-400 text-sm">{ address.street }, { address.province }, {address.city_name },</p>

@@ -29,6 +29,7 @@ function UnitConversion() {
   const dispatch = useDispatch()
   countData = parseInt(countData)
   const pages = Math.floor(countData/5)
+  const limit = 5
 
   const searchHandler = (e) => {
     setOffset(0)
@@ -51,7 +52,7 @@ function UnitConversion() {
     setOffset(prevOffset)
   }
     useEffect(() => {
-        dispatch(fetchProducts(order,filter,search,offset))
+        dispatch(fetchProducts(order,filter,search,offset,limit))
         },[order,filter,search,offset])
   return (
     <div className="w-screen h-full flex justify-between bg-slate-50">
@@ -82,7 +83,7 @@ function UnitConversion() {
         className="bg-gray-50 border border-green-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[28rem] h-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
         onChange={(e)=>searchHandler(e)}/>
         </div>
-    <TableContainer>
+            <TableContainer>
   <Table Table variant='simple'>
     <Thead>
       <Tr>
@@ -114,7 +115,7 @@ function UnitConversion() {
               <p class="ml-2">Prev</p>
             </div>
           </button>}
-          {offset / 6 == pages ? <></> : <button type="button" class="bg-emerald-600 text-white rounded-r-md py-2 border-l border-gray-200 hover:bg-red-700 hover:text-white px-3"
+          {offset / 5 == pages ? <></> : <button type="button" class="bg-emerald-600 text-white rounded-r-md py-2 border-l border-gray-200 hover:bg-red-700 hover:text-white px-3"
             onClick={() => nextData()}>
             <div class="flex flex-row align-middle">
               <span class="mr-2">Next</span>

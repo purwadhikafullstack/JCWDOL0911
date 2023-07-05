@@ -34,6 +34,8 @@ import UnitConversion from "./pages/admin/UnitConversion";
 import Transaction from "./pages/admin/Transaction";
 import DetailProductUser from "./pages/DetailProductUser";
 import DetailQnaUser from "./pages/DetailQnaUser";
+import Prescription from "./pages/admin/Prescription";
+import PrescriptionCheckOut from "./pages/PrescriptionCheckOut";
 
 //
 function App() {
@@ -50,6 +52,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/forum" element={<Forum />} />
               <Route path="/order" element={<Order />} />
+              <Route path="/prescription/checkout" element={<PrescriptionCheckOut />} />
               <Route path="/orderlist" element={<OrderList />} />
               <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/my-transactions" element={<UserTransacations />} />
@@ -68,6 +71,7 @@ function App() {
             <Route path="/admin/dashboard" element={<DashboardAdmin />} />
             <Route path="/admin/answer-question" element={<AnswerQuestion />} />
             <Route path="/admin/products" element={<Products />} />
+            <Route path="/admin/prescription/:idprescription" element={<Prescription />} />
             <Route
               path="/admin/products/unit-conversion"
               element={<UnitConversion />}

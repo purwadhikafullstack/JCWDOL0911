@@ -8,5 +8,9 @@ router.post(
   uploadPrescription,
   prescriptionController.uploadPrescription
 );
+router.get('/:presId', prescriptionController.fetchPrescription)
+router.post('/convert-prescription/:idProd', prescriptionController.convertUnitPrescription)
+router.post('/send-prescription', prescriptionController.sendPrescription)
+router.post('/prescription-order/:iduser',prescriptionController.prescriptionOrder)
 
 module.exports = router;

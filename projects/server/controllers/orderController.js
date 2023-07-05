@@ -589,7 +589,7 @@ module.exports = {
       //querying total rows of data transaction from sql
       const totalRowsQuery = `select count(idprescription) as totalOfRows from prescription where iduser=${db.escape(
         iduser
-      )} and status = "ON QUEUE" and prescription.date is not null and prescription.prescription_image is not null and idprescription like ${
+      )} and (status = "ON QUEUE" OR status = "WAITING TO CHECKOUT") and prescription.date is not null and prescription.prescription_image is not null and idprescription like ${
         search || "" ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
       };`;
 
@@ -597,7 +597,7 @@ module.exports = {
       const { totalOfRows } = totalRows[0];
       const totalPages = Math.ceil(totalOfRows / limit);
 
-      const fetchTransactionOrderQuery = `select * from prescription where iduser = ${iduser} and status = "ON QUEUE" and prescription.date is not null and prescription.prescription_image is not null and idprescription like ${
+      const fetchTransactionOrderQuery = `select * from prescription where iduser = ${iduser} and (status = "ON QUEUE" OR status = "WAITING TO CHECKOUT") and prescription.date is not null and prescription.prescription_image is not null and idprescription like ${
         search ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
       } order by prescription.date ${ascDescend} limit ${db.escape(
         limit
@@ -634,7 +634,7 @@ module.exports = {
       const offset = limit * page;
 
       //querying total rows of data transaction from sql
-      const totalRowsQuery = `select count(idprescription) as totalOfRows from prescription where status = "ON QUEUE" and prescription.date is not null and prescription.prescription_image is not null and idprescription like ${
+      const totalRowsQuery = `select count(idprescription) as totalOfRows from prescription where (status = "ON QUEUE" OR status = "WAITING TO CHECKOUT") and prescription.date is not null and prescription.prescription_image is not null and idprescription like ${
         search || "" ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
       };`;
 
@@ -643,7 +643,7 @@ module.exports = {
       const totalPages = Math.ceil(totalOfRows / limit);
 
       const fetchTransactionOrderQuery = `select prescription.idprescription, prescription.idadmin, prescription.iduser, user.username, user.full_name, prescription.prescription_image,
-      prescription.status, prescription.date from prescription inner join user on prescription.iduser = user.iduser where status = "ON QUEUE" and prescription.date is not null and prescription.prescription_image is not null and idprescription like ${
+      prescription.status, prescription.date from prescription inner join user on prescription.iduser = user.iduser where (status = "ON QUEUE" OR status = "WAITING TO CHECKOUT") and prescription.date is not null and prescription.prescription_image is not null and idprescription like ${
         search ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
       } order by prescription.date ${ascDescend} limit ${db.escape(
         limit

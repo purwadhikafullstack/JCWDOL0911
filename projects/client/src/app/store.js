@@ -11,6 +11,7 @@ import productsReducer from "../features/cart/productsSlice";
 import answerReducer from "../features/admin/answerSlice";
 import transactionReducer from '../features/transaction/transactionSlice'
 import orderReducer from "../features/order/orderSlice";
+import prescriptionReducer from '../features/product/prescriptionSlice'
 
 //Global state
 
@@ -27,7 +28,8 @@ export default configureStore({
     order: orderReducer,
     transactions: transactionReducer,
     products: productReducer,
-    categories: categoryReducer
+    categories: categoryReducer,
+    prescriptions:prescriptionReducer
   }
 })
 

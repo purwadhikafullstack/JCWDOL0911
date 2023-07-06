@@ -56,9 +56,9 @@ export function convertPrescription(id, order, filter, search, offset, retail_qu
     }
     
 }
-export function sendPrescription(medicines,totalprice,weight,doctor,patient) {
+export function preparePrescription(medicines,totalprice,weight,doctor,patient) {
     return async (dispatch) => {
-        const response = await axios.post(`${process.env.REACT_APP_API_BE}/prescription/send-prescription`, { medicines,totalprice,weight,doctor,patient })
+        const response = await axios.post(`${process.env.REACT_APP_API_BE}/prescription/prepare-prescription`, { medicines,totalprice,weight,doctor,patient })
         Swal.fire(`${response.data.message}`, "", "success");
     }
 }

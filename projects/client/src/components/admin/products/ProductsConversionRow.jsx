@@ -5,7 +5,6 @@ import {
     Tbody,
     Tfoot,
     Tr,
-    Th,
     Td,
     TableCaption,
     TableContainer,

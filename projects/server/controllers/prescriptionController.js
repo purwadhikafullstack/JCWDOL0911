@@ -47,7 +47,7 @@ module.exports = {
     res.status(200).send({message:"Conversion Succes"})
     
   },
-  sendPrescription: async (req, res) => {
+  preparePrescription: async (req, res) => {
     const { medicines, totalprice,weight,doctor,patient } = req.body
     const medicine = medicines[0]
     const date = new Date();

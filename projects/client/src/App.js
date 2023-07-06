@@ -36,6 +36,7 @@ import DetailProductUser from "./pages/DetailProductUser";
 import DetailQnaUser from "./pages/DetailQnaUser";
 import Prescription from "./pages/admin/Prescription";
 import PrescriptionCheckOut from "./pages/PrescriptionCheckOut";
+import Categories from "./pages/admin/Categories";
 
 //
 function App() {
@@ -71,6 +72,7 @@ function App() {
             <Route path="/admin/dashboard" element={<DashboardAdmin />} />
             <Route path="/admin/answer-question" element={<AnswerQuestion />} />
             <Route path="/admin/products" element={<Products />} />
+            <Route path="/admin/products/categories" element={<Categories />} />
             <Route path="/admin/prescription/:idprescription" element={<Prescription />} />
             <Route
               path="/admin/products/unit-conversion"

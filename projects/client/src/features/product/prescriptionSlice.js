@@ -16,7 +16,7 @@ export const prescriptionSlice = createSlice({
         setPrescriptionMedicine: (state, action) => {
             const product = action.payload;
             const existingMedicine = state.prescriptionMedicine.find(
-              (medicine) => medicine.idproduct === action.payload.idproduct
+              (medicine) => medicine.idproduct === action.payload.idproduct && medicine.unit === action.payload.unit
             );
       
             if (existingMedicine) {

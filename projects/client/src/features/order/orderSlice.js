@@ -42,14 +42,14 @@ export const addUserOrder = (orderData) => {
   };
 };
 
-export const fetchWaitingTransaction = (keyword, page, limit, sort) => {
+export const fetchWaitingTransaction = (keyword, page, limit, order) => {
   return async (dispatch) => {
     const userId = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/waiting/${userId}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&sort=${sort || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.waitingOrder));
@@ -71,14 +71,14 @@ export const fetchWaitingTransaction = (keyword, page, limit, sort) => {
   };
 };
 
-export const fetchReviewTransaction = (keyword, page, limit) => {
+export const fetchReviewTransaction = (keyword, page, limit, order) => {
   return async (dispatch) => {
     const userId = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/review/${userId}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.reviewOrder));
@@ -98,14 +98,14 @@ export const fetchReviewTransaction = (keyword, page, limit) => {
   };
 };
 
-export const fetchAdminReviewTransaction = (keyword, page, limit) => {
+export const fetchAdminReviewTransaction = (keyword, page, limit, order) => {
   return async (dispatch) => {
     const idadmin = JSON.parse(localStorage.getItem("admin")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/allreview/${idadmin}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.reviewOrder));
@@ -125,14 +125,14 @@ export const fetchAdminReviewTransaction = (keyword, page, limit) => {
   };
 };
 
-export const fetchPrescriptionTransaction = (keyword, page, limit) => {
+export const fetchPrescriptionTransaction = (keyword, page, limit, order) => {
   return async (dispatch) => {
     const userId = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/prescription/${userId}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 5}`
+      }&page=${page || 0}&limit=${limit || 5}&order=${order || "desc"}`
     );
     if (response.data.success) {
       dispatch(setPrescription(response.data.fetchTransactionOrder));
@@ -179,14 +179,14 @@ export const fetchAdminPrescriptionTransaction = (keyword, page, limit) => {
   };
 };
 
-export const fetchFinishedTransaction = (keyword, page, limit, sort) => {
+export const fetchFinishedTransaction = (keyword, page, limit, order) => {
   return async (dispatch) => {
     const iduser = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/finished/${iduser}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&sort=${sort || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${order}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.finishedOrder));
@@ -237,14 +237,14 @@ export const fetchAdminFinishedTransaction = (keyword, page, limit, sort) => {
   };
 };
 
-export const fetchSendTransaction = (keyword, page, limit, sort) => {
+export const fetchSendTransaction = (keyword, page, limit, order) => {
   return async (dispatch) => {
     const iduser = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/send/${iduser}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&sort=${sort || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.sendOrder));
@@ -296,14 +296,14 @@ export const fetchAdminSendTransaction = (keyword, page, limit, sort) => {
   };
 };
 
-export const fetchOnProcessTransaction = (keyword, page, limit) => {
+export const fetchOnProcessTransaction = (keyword, page, limit, order) => {
   return async (dispatch) => {
     const iduser = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/onprocess/${iduser}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.onProcessOrder));
@@ -325,14 +325,14 @@ export const fetchOnProcessTransaction = (keyword, page, limit) => {
   };
 };
 
-export const fetchAdminOnProcessTransaction = (keyword, page, limit) => {
+export const fetchAdminOnProcessTransaction = (keyword, page, limit, order) => {
   return async (dispatch) => {
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/allonprocess/${idadmin}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${order}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.onProcessOrder));
@@ -360,7 +360,7 @@ export const fetchAdminWaitingTransaction = (keyword, page, limit, order) => {
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/allwaiting?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&order=${order}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.allWaitingOrder));

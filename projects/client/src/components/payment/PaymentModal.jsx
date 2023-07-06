@@ -42,7 +42,6 @@ function PaymentModal({ modalHandler, transaction, changePageInfo }) {
       paymentProof(formData, selectedTransaction, modalHandler)
     );
     changePageInfo(pageInfo);
-    console.log(pageInfo);
   };
 
   return (

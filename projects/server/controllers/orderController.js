@@ -49,7 +49,7 @@ module.exports = {
       const page = parseInt(req.query.page || 0);
       const limit = parseInt(req.query.limit || 3);
       const search = req.query.search || "";
-      const ascDescend = req.query.sort || "desc";
+      const ascDescend = req.query.order || "desc";
       const offset = limit * page;
 
       //querying total rows of data transaction from sql
@@ -58,6 +58,7 @@ module.exports = {
       )} and payment_image is null and idtransaction like ${
         search || "" ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
       };`;
+
       const totalRows = await query(totalRowsQuery);
       const { totalOfRows } = totalRows[0];
       const totalPages = Math.ceil(totalOfRows / limit);
@@ -84,7 +85,7 @@ module.exports = {
       }
 
       const oldTemp = fetchWaitingOrder.map(async (order, index) => {
-        const fetchWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction} order by transaction.waiting_date asc limit 10 offset 0;`;
+        const fetchWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
         const fetchWaitingProduct = await query(fetchWaitingProductQuery);
 
         return { ...order, orderProduct: fetchWaitingProduct };
@@ -101,11 +102,10 @@ module.exports = {
 
   getAllWaitingOrder: async (req, res) => {
     try {
-      const order = req.query.order || "desc";
       const page = parseInt(req.query.page || 0);
       const limit = parseInt(req.query.limit || 3);
       const search = req.query.search || "";
-      const ascDescend = req.query.sort || "desc";
+      const ascDescend = req.query.order || "desc";
       const offset = limit * page;
 
       //querying total rows of data transaction from sql
@@ -122,7 +122,7 @@ module.exports = {
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
       from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where payment_image is null and idtransaction like ${
         search ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
-      } order by transaction.waiting_date ${order} limit ${db.escape(
+      } order by transaction.waiting_date ${ascDescend} limit ${db.escape(
         limit
       )} offset ${db.escape(offset)};`;
 
@@ -162,7 +162,7 @@ module.exports = {
       const page = parseInt(req.query.page || 0);
       const limit = parseInt(req.query.limit || 3);
       const search = req.query.search || "";
-      const ascDescend = req.query.sort || "desc";
+      const ascDescend = req.query.order || "desc";
       const offset = limit * page;
 
       //querying total rows of data transaction from sql
@@ -181,9 +181,10 @@ module.exports = {
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
       from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where transaction.iduser = ${iduser} and status = "COMPLETE" and transaction.finished_date is not null and transaction.idtransaction like ${
         search ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
-      } order by transaction.onprocess_date ${ascDescend} limit ${db.escape(
+      } order by transaction.finished_date ${ascDescend} limit ${db.escape(
         limit
       )} offset ${db.escape(offset)};`;
+
       const fetchFinishedOrder = await query(fetchFinishedOrderQuery);
 
       //if fetchWaitingOrder length is 0, we return the result
@@ -231,7 +232,7 @@ module.exports = {
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
       from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where status = "COMPLETE" and transaction.finished_date is not null and transaction.idtransaction like ${
         search ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
-      } order by transaction.onprocess_date ${ascDescend} limit ${db.escape(
+      } order by transaction.finished_date ${ascDescend} limit ${db.escape(
         limit
       )} offset ${db.escape(offset)};`;
       const fetchFinishedOrder = await query(fetchFinishedOrderQuery);
@@ -264,7 +265,7 @@ module.exports = {
       const page = parseInt(req.query.page || 0);
       const limit = parseInt(req.query.limit || 3);
       const search = req.query.search || "";
-      const ascDescend = req.query.sort || "desc";
+      const ascDescend = req.query.order || "desc";
       const offset = limit * page;
 
       //querying total rows of data transaction from sql
@@ -368,7 +369,7 @@ module.exports = {
       const page = parseInt(req.query.page || 0);
       const limit = parseInt(req.query.limit || 3);
       const search = req.query.search || "";
-      const ascDescend = req.query.sort || "asc";
+      const ascDescend = req.query.order || "desc";
       const offset = limit * page;
       //querying total rows of data transaction from sql
       const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where iduser=${db.escape(
@@ -472,7 +473,7 @@ module.exports = {
       const page = parseInt(req.query.page || 0);
       const limit = parseInt(req.query.limit || 3);
       const search = req.query.search || "";
-      const ascDescend = req.query.sort || "desc";
+      const ascDescend = req.query.order || "desc";
       const offset = limit * page;
 
       //querying total rows of data transaction from sql
@@ -527,6 +528,7 @@ module.exports = {
       const page = parseInt(req.query.page || 0);
       const limit = parseInt(req.query.limit || 3);
       const search = req.query.search || "";
+      const ascDescend = req.query.order || "desc";
       const offset = limit * page;
 
       //querying total rows of data transaction from sql
@@ -543,7 +545,7 @@ module.exports = {
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
       from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where status = "UNDER REVIEW" and transaction.review_date is not null and transaction.payment_image is not null and idtransaction like ${
         search ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
-      } order by transaction.review_date desc limit ${db.escape(
+      } order by transaction.review_date ${ascDescend} limit ${db.escape(
         limit
       )} offset ${db.escape(offset)};`;
       // console.log(fetchReviewOrderQuery);
@@ -578,7 +580,7 @@ module.exports = {
       const page = parseInt(req.query.page || 0);
       const limit = parseInt(req.query.limit || 10);
       const search = req.query.search || "";
-      const ascDescend = req.query.sort || "asc";
+      const ascDescend = req.query.order || "desc";
       const offset = limit * page;
 
       //querying total rows of data transaction from sql
@@ -621,11 +623,12 @@ module.exports = {
 
   getAllPrescriptionOrder: async (req, res) => {
     try {
+      const order = req.query.order;
       const idadmin = req.params.idadmin;
       const page = parseInt(req.query.page || 0);
       const limit = parseInt(req.query.limit || 10);
       const search = req.query.search || "";
-      const ascDescend = req.query.sort || "asc";
+      const ascDescend = req.query.sort || "desc";
       const offset = limit * page;
 
       //querying total rows of data transaction from sql

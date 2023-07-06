@@ -101,7 +101,7 @@ function ProductCart() {
       {myCart.length !== 0 ? (
         <>
           <div className="shadow-xl rounded-xl">
-            <div className="flex flex-row items-center gap-4 mt-4 w-[100%] pl-6 pt-6">
+            <div className="flex flex-row items-center gap-4 mt-4 w-[100%] px-4 lg:px-8 pt-6">
               <input
                 onClick={allCheckHandler}
                 id="all_checkBox"
@@ -116,44 +116,48 @@ function ProductCart() {
             </div>
             {myCart.map((item, index) => {
               return (
-                <div
-                  key={item.idproduct}
-                  className=" w-[100%] h-[200px] py-4 border-b-black pl-4"
-                >
-                  <div className="flex flex-row relative h-full">
-                    <div className="flex">
-                      <div className="flex items-center mb-4 pl-3">
-                        <input
-                          onClick={(e) => {
-                            checkHandler(item, index);
-                          }}
-                          id={item.idproduct}
-                          type="checkbox"
-                          value=""
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        ></input>
-                        <label
-                          htmlFor="default-checkbox"
-                          className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        ></label>
-                      </div>
-                      <img
-                        src={item.product_image || medicine}
-                        className=" object-contain w-[200px] h-full"
-                        alt="testing"
-                      />
-                    </div>
-                    <div className="flex sm:flex-row sm:gap-4 ml-10 flex-col w-full mt-10 mb-3 justify-between">
-                      <div className="flex sm:flex-row flex-col justify-between gap-4 w-full ml-4">
-                        <div>
-                          <p>{item.name}</p>
-                          <p className="text-xs">1 Botol</p>
+                <>
+                  <div
+                    key={item.idproduct}
+                    className=" w-[100%] h-auto lg:h-[200px] py-4 border-b-black lg:px-6"
+                  >
+                    <div className="flex flex-col h-full relative">
+                      <div className="flex items-center">
+                        <div className="flex items-center mb-4 pl-3">
+                          <input
+                            onClick={(e) => {
+                              checkHandler(item, index);
+                            }}
+                            id={item.idproduct}
+                            type="checkbox"
+                            value=""
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          ></input>
+                          <label
+                            htmlFor="default-checkbox"
+                            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          ></label>
                         </div>
-                        <p className="font-bold whitespace-nowrap">
-                          {currency(item.price)}
-                        </p>
+                        <img
+                          src={item.product_image || medicine}
+                          className=" object-contain w-1/5 lg:w-[100px] h-full"
+                          alt="testing"
+                        />
+                        <div className="flex flex-col w-full mt-10 mb-3 justify-between">
+                          <div className="flex sm:flex-row flex-col justify-between gap-4">
+                            <div className="mx-4">
+                              <p className="font-bold lg:text-xl lg:mb-2">
+                                {item.name}
+                              </p>
+                              <p className="text-xs">1 Botol</p>
+                            </div>
+                            <p className="font-bold whitespace-nowrap mx-4">
+                              {currency(item.price)}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex flex-row  mx-4 items-center">
+                      <div className="flex my-6 lg:my-0 lg:flex-nowrap mx-4 items-center">
                         <img
                           className="sm:absolute bottom-4 right-[160px] w-[23px] h-[23px] mx-6 cursor-pointer"
                           onClick={() => removeProductHandler(index, item)}
@@ -188,7 +192,8 @@ function ProductCart() {
                       </div>
                     </div>
                   </div>
-                </div>
+                  <hr className="mt-4" />
+                </>
               );
             })}
           </div>

@@ -25,14 +25,13 @@ function CardProduct({ product }) {
   const dispatch = useDispatch();
 
   const getName = (name) => {
-    if (name.length > 20) {
-      return name.slice(0, 20) + "...";
+    if (name.length > 15) {
+      return name.slice(0, 15) + "...";
     }
     return name;
   };
   return (
-    <div className="w-full max-w-xs flex flex-col items-center p-2 shadow-card-tagline border-y-2 rounded-md">
-      {/* shadow-card-tagline h-1/3 border-2*/}
+    <div className="max-w-xs flex flex-col items-center p-2 shadow-card-tagline border-y-2 rounded-md">
       <Card maxW="xs">
         <CardBody>
           <Image
@@ -42,11 +41,12 @@ function CardProduct({ product }) {
                 : "./assets/icon-medicine.png"
             }
             alt="medicine"
-            borderRadius="lg"
             className="w-20 mx-auto"
           />
           <Stack mt="6" spacing="3">
-            <Heading size="md">{getName(product.name)}</Heading>
+            <Tooltip label={product.name}>
+              <Heading size="md">{getName(product.name)}</Heading>
+            </Tooltip>
             <Text color="black" className="text-sm font-medium">
               {currency(product.price)}
             </Text>
@@ -73,35 +73,6 @@ function CardProduct({ product }) {
           </ButtonGroup>
         </CardFooter>
       </Card>
-
-      {/* <img
-        src={
-          product.product_image
-            ? `${process.env.REACT_APP_API_BE}/${product.product_image}`
-            : "./assets/icon-medicine.png"
-        }
-        alt=""
-        width="72px"
-      />
-      <Tooltip label={product.name}>
-        <p className="font-bold text-base mt-6 mb-2">{getName(product.name)}</p>
-      </Tooltip>
-      <div className="flex gap-1 items-center mb-6">
-        <p className="text-sm text-slate-600">{currency(product.price)}</p>
-      </div>
-      <Button
-        className="border-button"
-        onClick={() => {
-          dispatch(addProductToCart(product));
-        }}
-      >
-        Add to Cart
-      </Button>
-      <Button
-        size={"sm"}
-        onClick={() => navigate("/detail/" + product.idproduct)}>
-        Detail
-      </Button> */}
     </div>
   );
 }

@@ -33,7 +33,7 @@ function QuestionModal() {
         </button>
       ) : (
         <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center ">
-          <div className=" bg-white p-2 rounded-xl gap-2 flex flex-col shadow-lg w-80  lg:w-[40rem]">
+          <div className=" bg-white mx-4 p-2 rounded-xl gap-2 flex flex-col shadow-lg w-80  lg:w-[40rem]">
             <div className="bg-emerald-800">
               <h1 className="text-2xl text-white">Ask Question</h1>
             </div>

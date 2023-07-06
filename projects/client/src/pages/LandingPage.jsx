@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { Button } from "@chakra-ui/react";
 import CardProduct from "../components/CardProduct";
 import axios from "axios";
@@ -12,7 +12,7 @@ import { getAllProductsByFilter } from "../features/product/productSlice";
 
 function LandingPage() {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   // const [products, setProducts] = useState([]);
   const [isChangeAddressModalHidden, setIsChangeAddressModalHidden] =
     useState(false);
@@ -25,7 +25,7 @@ function LandingPage() {
     (state) => state.address.addressList.allAddress
   );
 
-  const products = useSelector((state) => state.products.productList)
+  const products = useSelector((state) => state.products.productList);
 
   const userId = JSON.parse(localStorage.getItem("user"))?.iduser;
 
@@ -68,11 +68,13 @@ function LandingPage() {
 
   useEffect(() => {
     // getLatestProduct();
-    dispatch(getAllProductsByFilter({
-      order: 'DESC',
-      sortBy: 'idproduct',
-      page: 1,
-    }))
+    dispatch(
+      getAllProductsByFilter({
+        order: "DESC",
+        sortBy: "idproduct",
+        page: 1,
+      })
+    );
   }, []);
 
   return (
@@ -119,10 +121,15 @@ function LandingPage() {
         </div>
         <hr className="mx-5 lg:mx-24  m-11" />
         <div className="mx-5 lg:mx-24 ">
-          <p className="font-bold text-2xl">Popular Product</p>
+          <p className="font-bold text-2xl">Our Product</p>
           {/* To Page Productlist */}
           <div>
-            <h4 className="font-bold text-sm flex flex-row justify-end cursor-pointer" onClick={() => navigate("/productlist")}>See More</h4>
+            <h4
+              className="font-bold text-sm flex flex-row justify-end cursor-pointer"
+              onClick={() => navigate("/productlist")}
+            >
+              See More
+            </h4>
           </div>
           {/*  */}
           <div className="flex gap-4 justify-between mt-6 overflow-auto">

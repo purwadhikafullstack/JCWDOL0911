@@ -12,52 +12,54 @@ function DetailProductUser() {
   const navigate = useNavigate();
   const product = useSelector((state) => state.products.product);
 
+  console.log("product", product);
+
   useEffect(() => {
     dispatch(getProductById(productId));
   }, []);
 
   return (
-    <div className="grid grid-cols-2 justify-center p-14">
-      <div className="p-8">
-        {/* image */}
-        <img
-          className="w-72 mx-48 "
-          src={
-            product.product_image
-              ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
-              : "./assets/icon-medicine.png"
-          }
-          borderRadius="lg"
-          alt="image not found"
-        />
-      </div>
-      <div className=" mt-7 shadow-card-tagline border-y-2 w-full max-w-xs flex flex-col p-2">
-        <div className="p-4">
-          {/* product name */}
-          <div className="text-xl font-extrabold">{product.name}</div>
-          {/* description */}
-          <div className="mt-4 text-sm font-medium">{product.description}</div>
-          {/* Stock */}
-          <div className="mt-2 text-sm font-medium">
-            Stock : {product.stock}
-          </div>
-          {/* Category */}
-          <div className="mt-2 text-sm font-medium">
-            Category : {product.category?.name || "-"}
-          </div>
-          {/* Price */}
-          <div className="mt-2 text-sm font-medium">
-            {currency(product.price)}
-          </div>
+    <div>
+      <div className="w-full justify-center gap-11 my-11 flex flex-wrap lg:flex-nowrap ">
+        <div className="">
+          <img
+            className="w-52 lg:w-72"
+            src={
+              product.product_image
+                ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
+                : "./assets/icon-medicine.png"
+            }
+            alt="image not found"
+          />
         </div>
-        <Button
-          className="button-primary mt-14 mb-1"
-          variant={"solid"}
-          size={"sm"}
-          onClick={() => navigate("/cart", dispatch(addProductToCart(product)))}
-        >
-          Add to Cart
-        </Button>
+
+        <div className="mt-7 shadow-card-tagline border-y-2 w-full max-w-xs flex flex-col p-2 mx-11 lg:mx-0">
+          <div className="p-4">
+            <div className="text-xl font-extrabold">{product.name}</div>
+            <div className="mt-4 text-sm font-medium">
+              {product.description}
+            </div>
+            <div className="mt-2 text-sm font-medium">
+              Stock : {product.stock}
+            </div>
+            <div className="mt-2 text-sm font-medium">
+              Category : {product.category?.name || "-"}
+            </div>
+            <div className="mt-2 text-sm font-medium">
+              {currency(product.price)}
+            </div>
+          </div>
+          <Button
+            className="button-primary mt-14 mb-1"
+            variant={"solid"}
+            size={"sm"}
+            onClick={() =>
+              navigate("/cart", dispatch(addProductToCart(product)))
+            }
+          >
+            Add to Cart
+          </Button>
+        </div>
       </div>
     </div>
   );

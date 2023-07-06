@@ -13,6 +13,7 @@ function ConcoctionMedicine({ prescription }) {
     const [offset, setOffset] = useState(0)
     const [quantity, setQuantity] = useState(0)
     const [open, setOpen] = useState(false)
+    const [unit,setUnit]= useState('')
     const products = useSelector(state=>state.product.products)
     const prescriptionMedicines = useSelector(state=>state.prescriptions.prescriptionMedicine)
     const limit = 0
@@ -32,10 +33,10 @@ function ConcoctionMedicine({ prescription }) {
         idproduct:selectedProduct.idproduct,
         name: selectedProduct.name,
         quantity: quantity,
-        unit: selectedProduct.unitname,
-        price: ((selectedProduct.price / selectedProduct.quantity) * quantity),
-        weight:(selectedProduct.weight/selectedProduct.quantity) * quantity,
-        status:'converted'
+        unit: unit,
+        price: unit == selectedProduct.unitname ? (selectedProduct.price / selectedProduct.quantity) * quantity : (selectedProduct.price * quantity),
+        weight : unit == selectedProduct.unitname ?(selectedProduct.weight * quantity):(selectedProduct.weight/selectedProduct.quantity)* quantity,
+        status: selectedProduct.unitname == unit?'converted':'default'
       }
       dispatch(setPrescriptionMedicine(product))
         
@@ -46,25 +47,35 @@ function ConcoctionMedicine({ prescription }) {
 
     },[search])
   return (
-    <div className='flex flex-col gap-3 justify-center items-center'>    
+    <div className='flex flex-col gap-3 justify-center items-center'> 
+      <div className='flex flex-col gap-2'>
     <div className=' relative inline-block  '>   
         <input type="text" placeholder='Search Medicine' value={search} className={`lg:w-60 w-30  border-black relative ${open?'':'z-10'} h-8 bg-slate-100 rounded-md p-2`}
        onChange={(e)=>searchHandler(e)} />
-        <select name="" id="" className=' absolute lg:w-72 w-56 h-8  left-0  border-black  bg-slate-100 rounded-md p-2' onChange={(e) => setSearch(e.target.value)}>
+        <select name="" id="" className=' absolute lg:w-72 w-56 h-8  left-0  border-black  bg-slate-100 rounded-md p-2'
+          onChange={(e) => setSearch(e.target.value)}>
             <option value="">Select Medicine</option>
             {products.map((product) => {
-                return <option value={product.name} >{product.name }</option>
+              return <option value={product.name} >{product.name }</option>
             })}
     </select>
-    </div>
+            </div>  
+      <select className=' lg:w-72 w-52 h-8 bg-slate-100 rounded-md'
+        onChange={(e) => setUnit(e.target.value)}>
+        <option value=''>Select Unit</option>
+        <option value={selectedProduct?.unit }>{selectedProduct?.unit }</option>
+        <option value={selectedProduct?.unitname}>{selectedProduct?.unitname }</option>
+      </select>
+      </div>
     <div className='flex gap-4'>    
     <div className='flex flex-col  justify-center items-center gap-5'>   
-    {selectedProduct ? (
+    {selectedProduct && unit ? (
   selectedProduct.unitname == selectedProduct.unit || selectedProduct.unitname == null ? (
 <div
   className="mb-4 rounded-lg bg-red-100 px-6 py-5 text-base text-danger-700"
   >
  <p> You Can't Make Conversion, Please Check Unit Conversion Page</p>
+ <p> To Access This Medicine</p>
   <a href='' onClick={()=>navigate('/admin/products/unit-conversion')} className="font-bold text-danger-700">Unit Conversion Page</a>
 </div>
                       ) :
@@ -91,7 +102,7 @@ function ConcoctionMedicine({ prescription }) {
     +
   </button>
 </div>
-      <p>{`Available Stock: ${selectedProduct.retail_remain ? updateStock : '0'} ${selectedProduct.unitname}`}</p>
+      <p>{`Available Stock: ${selectedProduct.retail_remain && unit == selectedProduct.unitname ? updateStock : selectedProduct.stock} ${unit}`}</p>
       <div className='flex justify-end gap-5'>
         <ConversionModal product={selectedProduct} order={order} filter={filter} search={search} offset={offset} open={open} setOpen = {setOpen} />
         <button className='border-2 border-green-300 font-bold h-10 px-2 rounded-md hover:bg-emerald-500 hover:text-white text-emerald-500 right-0'

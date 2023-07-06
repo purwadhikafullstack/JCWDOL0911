@@ -154,7 +154,7 @@ function Navbar() {
                   </div>
                   <p className="text-black">Profile Info</p>
                 </MenuItem>
-                <MenuItem onClick={() => navigate("/my-transactions")}>
+                <MenuItem onClick={() => navigate("/orderlist")}>
                   <div className="w-6 mr-4">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

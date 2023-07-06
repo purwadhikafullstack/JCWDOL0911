@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Sidebar from '../../components/admin/Sidebar'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { fetchUserPrescription, sendPrescription, setEmpty } from '../../features/product/prescriptionSlice'
+import { fetchUserPrescription, preparePrescription, setEmpty } from '../../features/product/prescriptionSlice'
 import { useSelector } from 'react-redux'
 import { useState } from 'react'
 import OverCounter from '../../components/admin/prescriptions/OverCounter'
@@ -62,7 +62,7 @@ function Prescription() {
       confirmButtonText: 'Yes, Do it!'
   }) 
   if (result.isConfirmed) { 
-    dispatch(sendPrescription(prescriptionMedicine, totalPrice,totalWeight,doctor,patient))
+    dispatch(preparePrescription(prescriptionMedicine, totalPrice,totalWeight,doctor,patient))
     dispatch(setEmpty())
     navigate('/admin/transactions')
   }

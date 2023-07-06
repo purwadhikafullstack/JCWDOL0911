@@ -119,12 +119,20 @@ function Products() {
         </div>
         <div className="min-h-screen h-full bg-dashboard-admin p-8 lg:p-28 flex flex-col gap-11 content-width">
           <p className="text-3xl font-bold">Product List</p>
+          <div className='flex gap-3'>
           <button
             className=" bg-green-600 text-white  font-bold h-10 px-2 rounded-md hover:bg-emerald-500 hover:text-white "
             onClick={() => navigate("/admin/products/unit-conversion")}
           >
             Unit's Conversion
           </button>
+          <button
+            className=" bg-green-600 text-white  font-bold h-10 px-2 rounded-md hover:bg-emerald-500 hover:text-white "
+            onClick={() => navigate("/admin/products/categories")}
+          >
+            Categories
+          </button>
+          </div>
           <div className="bg-white px-6 pb-11 rounded-lg shadow-card-tagline">
             <div className="flex flex-wrap items-center my-11 gap-4 justify-between">
               <div className="flex flex-wrap gap-4">

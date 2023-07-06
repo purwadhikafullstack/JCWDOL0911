@@ -2,50 +2,54 @@ const { db, query } = require("../database");
 const { format } = require("date-fns");
 
 module.exports = {
-  uploadOrder: async (req, res) => {
-    console.log('im order');
-    try {
-      const iduser = parseInt(req.params.iduser);
-      const {
-        orderProduct,
-        orderAddress,
-        orderPrice,
-        courierData,
-        serviceData,
-      } = req.body;
-      console.log(req.body);
+uploadOrder: async (req, res) => {
+  console.log('im order');
+  try {
+    const iduser = parseInt(req.params.iduser);
+    const {
+      orderProduct,
+      orderAddress,
+      orderPrice,
+      courierData,
+      serviceData,
+    } = req.body;
+    console.log(req.body);
 
-      const setTransactionOrderQuery = `insert into transaction values (null, null, null, ${db.escape(
-        iduser
-      )}, null, ${db.escape(orderAddress.idaddress)} ,${db.escape(
-        format(new Date(), "yyyy-MM-dd HH:mm:ss")
-      )},null, null, null, null, null, "WAITING FOR PAYMENT", ${db.escape(
-        orderPrice
-      )}, null, ${db.escape(courierData)}, ${db.escape(
-        serviceData.service
-      )}, ${db.escape(serviceData.description)}, ${db.escape(
-        serviceData.cost[0].value
-        )} );`;
-      console.log(setTransactionOrderQuery);
+    const setTransactionOrderQuery = `insert into transaction values (null, null, null, ${db.escape(
+      iduser
+    )}, null, ${db.escape(orderAddress.idaddress)} ,${db.escape(
+      format(new Date(), "yyyy-MM-dd HH:mm:ss")
+    )},null, null, null, null, null, "WAITING FOR PAYMENT", ${db.escape(
+      orderPrice
+    )}, null, ${db.escape(courierData)}, ${db.escape(
+      serviceData.service
+    )}, ${db.escape(serviceData.description)}, ${db.escape(
+      serviceData.cost[0].value
+    )} );`;
+    console.log(setTransactionOrderQuery);
 
-      const setTransactionOrder = await query(setTransactionOrderQuery);
-      const { insertId } = setTransactionOrder;
+    const setTransactionOrder = await query(setTransactionOrderQuery);
+    const { insertId } = setTransactionOrder;
 
-      orderProduct.forEach(async (product, index) => {
-        let setProductTransactionQuery = `insert into product_transaction values (null, ${db.escape(
-          product.idproduct
-        )}, ${db.escape(insertId)}, ${db.escape(product.quantity)})`;
-        await query(setProductTransactionQuery);
-      });
+    // Create an array to store the promises
+    const productPromises = orderProduct.map(async (product) => {
+      let setProductTransactionQuery = `insert into product_transaction values (null, ${db.escape(
+        product.idproduct
+      )}, ${db.escape(insertId)}, ${db.escape(product.quantity)})`;
+      await query(setProductTransactionQuery);
+    });
 
-      return res.status(200).send({
-        success: true,
-        message: "Your order has been recorded!",
-      });
-    } catch (error) {
-      return res.status(400).send(error);
-    }
-  },
+    // Wait for all the promises to resolve
+    await Promise.all(productPromises);
+
+    return res.status(200).send({
+      success: true,
+      message: "Your order has been recorded!",
+    });
+  } catch (error) {
+    return res.status(400).send(error);
+  }
+},
   getWaitingOrder: async (req, res) => {
     try {
       const iduser = req.params.iduser;
@@ -704,7 +708,7 @@ module.exports = {
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )} where idtransaction = ${idtransaction}`;
       const acceptIdTransaction = await query(acceptIdTransactionQuery);
-
+        console.log(acceptIdTransactionQuery);
       if (acceptIdTransaction.affectedRows !== 0) {
         return res
           .status(200)

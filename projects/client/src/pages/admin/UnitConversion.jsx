@@ -47,11 +47,11 @@ function UnitConversion() {
     setOrder(e.target.value);
   };
   const nextData = () => {
-    let nextOffset = offset + 6;
+    let nextOffset = offset + 5;
     setOffset(nextOffset);
   };
   const prevData = () => {
-    let prevOffset = offset - 6;
+    let prevOffset = offset - 5;
     setOffset(prevOffset);
   };
   useEffect(() => {
@@ -146,7 +146,7 @@ function UnitConversion() {
                   </div>
                 </button>
               )}
-              {offset / 6 == pages ? (
+              {offset / 5 == pages ? (
                 <></>
               ) : (
                 <button

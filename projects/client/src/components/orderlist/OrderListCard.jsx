@@ -231,76 +231,98 @@ function OrderListCard() {
   };
 
   useEffect(() => {
+    setPage(0);
+    setOrderState("prescription");
     setIsPrescriptionOpen(true);
   }, []);
 
+  console.log({ isPrescriptionOpen });
+
   return (
-    <div className="w-full rounded shadow-xl md:px-10 px-5 py-10">
-      <div className="text-2xl md:text-start text-center font-bold">
-        Order List
-      </div>
-      <hr className="my-4" />
+    <div className="">
       <div className="flex sm:flex-row flex-col justify-between py-5 items-center">
         <div
           id="prescription"
           onClick={onClickPrescriptionHandler}
-          className="hover:cursor-pointer transition duration-300 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full"
+          className={`hover:cursor-pointer transition duration-300 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full ${
+            isPrescriptionOpen &&
+            "border-b-4 border-b-green-600 font-bold bg-green-50 sm:bg-transparent rounded-t-md"
+          }`}
         >
           Prescription
         </div>
         <div
           id="waiting"
           onClick={onClickWaitingHandler}
-          className="hover:cursor-pointer transition duration-200 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full"
+          className={`hover:cursor-pointer transition duration-300 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full ${
+            isWaitingOpen &&
+            "border-b-4 border-b-green-600 font-bold bg-green-50 sm:bg-transparent rounded-t-md"
+          }`}
         >
           Waiting
         </div>
         <div
           id="review"
           onClick={onClickReviewHandler}
-          className="hover:cursor-pointer transition duration-200 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full"
+          className={`hover:cursor-pointer transition duration-300 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full ${
+            isReviewOpen &&
+            "border-b-4 border-b-green-600 font-bold bg-green-50 sm:bg-transparent rounded-t-md"
+          }`}
         >
           Review
         </div>
         <div
           id="onprocess"
           onClick={onClickOnProcessHandler}
-          className="hover:cursor-pointer transition duration-200 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full"
+          className={`hover:cursor-pointer transition duration-300 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full ${
+            isOnProcessOpen &&
+            "border-b-4 border-b-green-600 font-bold bg-green-50 sm:bg-transparent rounded-t-md"
+          }`}
         >
           On Process
         </div>
         <div
           id="send"
           onClick={onClickSendHandler}
-          className="hover:cursor-pointer transition duration-200 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full"
+          className={`hover:cursor-pointer transition duration-300 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full ${
+            isSendOpen &&
+            "border-b-4 border-b-green-600 font-bold bg-green-50 sm:bg-transparent rounded-t-md"
+          }`}
         >
           Send
         </div>
         <div
           id="finished"
           onClick={onClickFinishedHandler}
-          className="hover:cursor-pointer transition duration-200 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full"
+          className={`hover:cursor-pointer transition duration-300 ease-out hover:ease-in hover:border-b-4 h-[50px] hover:border-b-green-600 pb-4 text-center w-full ${
+            isFinishedOpen &&
+            "border-b-4 border-b-green-600 font-bold bg-green-50 sm:bg-transparent rounded-t-md"
+          }`}
         >
           Finished
         </div>
       </div>
-      <div className="md:w-[50%] w-[90%] flex flex-row justify-startpx-3 mb-4">
-        <label className="flex-1" htmlFor="filter">
-          Search :
-        </label>
-        <input
-          id="filter"
-          type="text"
-          className="border-2 border-gray-400 flex-1"
-        />
-        <select value="">
-          <option name="order" value="asc">
-            Ascending
-          </option>
-          <option name="order" value="desc">
-            Descending
-          </option>
-        </select>
+      <div className="w-full flex flex-wrap lg:flex-nowrap justify-between px-3 mb-4 gap-4">
+        <div className="flex flex-wrap w-full sm:flex-nowrap sm:w-3/5 sm:gap-4">
+          <label className="flex-1" htmlFor="filter">
+            Search
+          </label>
+          <input
+            id="filter"
+            type="text"
+            className="border-2 border-gray-400 rounded-md w-full"
+          />
+        </div>
+        <div className="">
+          <select value="">
+            <option name="order" value="asc">
+              Ascending
+            </option>
+            <option name="order" value="desc">
+              Descending
+            </option>
+          </select>
+        </div>
       </div>
       {isWaitingOpen ? (
         <WaitingOrderCard changePageInfo={changePageInfo} />
@@ -324,11 +346,11 @@ function OrderListCard() {
           nextLabel={"Next >>"}
           pageCount={pages}
           onPageChange={pageChange}
-          containerClassName="flex items-center flex-row justify-center gap-2"
-          pageClassName="p-2 sm:w-[5%] w-[10%] items-center hover:bg-blue-600 hover:text-white bg-blue-200 rounded text-center rounded"
+          containerClassName="flex items-center flex-row justify-center gap-2 text-xs sm:text-base"
+          pageClassName="sm:p-1 sm:w-[5%] w-[10%] items-center hover:bg-blue-600 hover:text-white bg-blue-200 rounded text-center rounded"
           activeLinkClassName="font-bold"
-          previousLinkClassName="w-[10%] bg-blue-200 rounded p-2 hover:bg-blue-600 hover:text-white"
-          nextLinkClassName="w-[10%] bg-blue-200 rounded p-2 hover:bg-blue-600 hover:text-white"
+          previousLinkClassName="w-[10%] bg-blue-200 rounded sm:p-1 hover:bg-blue-600 hover:text-white"
+          nextLinkClassName="w-[10%] bg-blue-200 rounded sm:p-1 hover:bg-blue-600 hover:text-white"
         />
       </nav>
     </div>

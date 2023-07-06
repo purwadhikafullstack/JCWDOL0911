@@ -6,14 +6,12 @@ function Transaction() {
   return (
     <>
       <div className="w-screen h-full flex justify-between bg-slate-50">
-        <div className="w-80">
+        <div className="sidebar-width">
           <Sidebar />
         </div>
-        <div
-          className="h-screen bg-dashboard-admin"
-          style={{ width: "calc(100vw - 320px)" }}
-        >
-          <div className="mx-auto">
+        <div className="min-h-screen h-full bg-dashboard-admin p-8 lg:p-28 flex flex-col gap-11 content-width">
+          <p className="text-3xl font-bold">Order List</p>
+          <div className="bg-white px-6 pb-11 rounded-lg shadow-card-tagline">
             <OrderListCard />
           </div>
         </div>

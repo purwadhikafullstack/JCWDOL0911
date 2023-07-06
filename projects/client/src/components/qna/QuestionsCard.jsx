@@ -18,7 +18,6 @@ function QuestionsCard({ question }) {
 
   const handlePageDetaiQna = async (idquestion) => {
     try {
-      console.log("idquestion", idquestion);
       navigate(`/forum/${idquestion}`);
     } catch (error) {
       console.log(error);
@@ -31,18 +30,18 @@ function QuestionsCard({ question }) {
   };
 
   return (
-    <div class=" flex flex-col w-96 lg:w-[44rem] px-8 py-4 mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
-      <div class="flex items-center justify-between">
-        <span class="text-sm font-light text-gray-600 dark:text-gray-400">
+    <div className=" flex flex-col w-full lg:w-[44rem] px-8 py-4 mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-light text-gray-600 dark:text-gray-400">
           {dateTime}
         </span>
       </div>
-      <div class="mt-2">
-        <h1 class="text-2xl font-bold text-gray-700 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 hover:underline">
+      <div className="mt-2">
+        <h1 className="text-2xl font-bold text-gray-700 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 hover:underline">
           {question.title}
         </h1>
         <div className=" max-h-16 lg:max-h-30 py-2 break-normal mb-5">
-          <p class="mt-2 text-gray-600 dark:text-gray-300 break-normal line-clamp-2 ">
+          <p className="mt-2 text-gray-600 dark:text-gray-300 break-normal line-clamp-2 ">
             {question.question}
           </p>
         </div>
@@ -60,9 +59,9 @@ function QuestionsCard({ question }) {
             <img
               src={profilePic}
               alt="Author Photo"
-              className="hidden object-cover w-10 h-10 mx-4 rounded-full sm:block"
+              className="hidden object-cover w-10 h-10 mx-4 rounded-full lg:block"
             />
-            <a className="font-bold text-gray-700 cursor-pointer dark:text-gray-200">
+            <a className="hidden lg:block font-bold text-gray-700 cursor-pointer dark:text-gray-200">
               {question.username}
             </a>
           </div>

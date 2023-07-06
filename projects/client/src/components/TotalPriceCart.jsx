@@ -64,7 +64,7 @@ function TotalPriceCart() {
 
   return (
     <>
-      <div className=" w-[90%] rounded-xl shadow-xl">
+      <div className=" w-[100%] rounded-xl shadow-xl">
         <div className="ml-6 font-bold pt-6">Summary</div>
         <div className="flex flex-col justify-between mx-6 mt-4">
           {cartProduct.map((val) => {

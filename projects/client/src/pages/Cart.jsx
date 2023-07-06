@@ -8,18 +8,22 @@ import ProductCard from "../components/ProductCard";
 
 //import function from cartSlice
 import { getRelatedProduct } from "../features/cart/cartSlice";
+import { useNavigate } from "react-router-dom";
+import CardProduct from "../components/CardProduct";
 
 function Cart() {
   const myCart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
+  const products = useSelector((state) => state.products.productList);
+  const navigate = useNavigate();
 
   return (
     <div>
-      <div className="mt-10 ml-7 font-bold font-roboto leading-2 text-xl tracking-wide">
-        My Cart
+      <div className="mx-5 lg:mx-24 my-11">
+        <p className="font-bold text-2xl">My Cart</p>
       </div>
-      <div className="flex md:flex-row flex-col">
-        <div className="flex flex-col md:w-[60%] justify-center mx-8 md:ml-8 gap-0 mt-5 rounded-xl">
+      <div className="mx-5 lg:mx-14 flex md:flex-row flex-col gap-6">
+        <div className="flex flex-col md:w-[60%] justify-center md:ml-8 gap-0 mt-5 rounded-xl">
           <ProductCart />
         </div>
         <div className="mt-5 md:pr-4 md:w-[40%] flex flex-col items-center">
@@ -27,16 +31,24 @@ function Cart() {
         </div>
       </div>
       <hr className="mx-8 md:mt-20 mt-8 border-slate-400" />
-      <div className="mt-10 ml-7 font-bold font-roboto leading-2 text-xl tracking-wide">
-        Related Product
-      </div>
-      <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 xl:grid-cols-6 gap-4 mt-10 mx-6 justify-around">
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <button onClick={() => console.log(myCart)}>press this</button>
+
+      <div className="mx-5 lg:mx-24 my-11">
+        <p className="font-bold text-2xl">Related Product</p>
+        {/* To Page Productlist */}
+        <div>
+          <h4
+            className="font-bold text-sm flex flex-row justify-end cursor-pointer"
+            onClick={() => navigate("/productlist")}
+          >
+            See More
+          </h4>
+        </div>
+        {/*  */}
+        <div className="flex gap-4 justify-between mt-6 overflow-auto">
+          {products.map((product, index) => (
+            <CardProduct key={index} product={product} />
+          ))}
+        </div>
       </div>
     </div>
   );

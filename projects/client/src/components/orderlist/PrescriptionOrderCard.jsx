@@ -35,21 +35,21 @@ function PrescriptionOrderCard() {
         return (
           <div
             key={prescription.idprescription}
-            className="w-full rounded even:bg-green-50 odd:bg-gray-50 shadow-xl px-6 pb-4 pt-1 mb-10"
+            className="w-full rounded even:bg-green-50 odd:bg-gray-50 shadow-xl px-4 lg:px-6 pb-4 pt-1 mb-10"
           >
             <div className="flex flex-col my-4 justify-between items-center md:flex-row gap-4">
-              <div className="font-bold text-center text-green-700">
+              <div className="font-bold text-center text-green-700 text-sm md:text-base">
                 Transaction ID : {prescription.idprescription}
               </div>
               <div
                 hidden={localStorage.getItem("admin") ? false : true}
-                className="font-bold text-center text-green-700"
+                className="font-bold text-center text-green-700 text-sm md:text-base"
               >
                 Name : {prescription.full_name || prescription.username}
               </div>
             </div>
             <div className="flex md:flex-col flex-col-reverse">
-              <div className="flex items-center sm:flex-row sm:gap-0 gap-4 flex-col justify-between mb-4">
+              <div className="flex items-center sm:flex-row sm:gap-0 gap-4 flex-col justify-between mb-4 text-slate-600 text-sm md:text-base">
                 <div>
                   {prescription?.date
                     ? format(
@@ -58,7 +58,7 @@ function PrescriptionOrderCard() {
                       )
                     : null}
                 </div>
-                <div className="rounded bg-yellow-400 border-2 font-bold text-yellow-900 border-yellow-700 p-2">
+                <div className="rounded bg-yellow-400 border-2 text-xs lg:text-base font-bold text-yellow-900 border-yellow-700 p-2">
                   {prescription.status}
                 </div>
               </div>
@@ -79,11 +79,11 @@ function PrescriptionOrderCard() {
             </div>
             <div className="flex flex-row w-[100%] sm:justify-end justify-between sm:gap-20"></div>
             <div className="flex sm:flex-row-reverse flex-col mt-4 justify-between items-center">
-              <div className="flex sm:w-[50%] w-full flex-row gap-4">
+              <div className="flex sm:w-[50%] w-full flex-row flex-wrap sm:flex-nowrap gap-2 lg:gap-4">
                 <button
                   hidden={localStorage.getItem("user") ? true : false}
                   onClick={() => onClickRejectHandler(prescription)}
-                  className=" w-full p-2 font-bold mx-auto rounded hover:bg-red-800 text-white bg-red-600"
+                  className=" w-full p-2 font-bold mx-auto rounded hover:bg-red-800 text-white text-sm lg:text-base bg-red-600"
                 >
                   Reject
                 </button>
@@ -98,7 +98,7 @@ function PrescriptionOrderCard() {
                 <button
                   hidden={localStorage.getItem("user") ? true : false}
                   onClick={() => onClickAcceptHandler(prescription)}
-                  className=" w-full  p-2 font-bold mx-auto rounded hover:bg-green-800 text-white bg-green-600"
+                  className=" w-full  p-2 font-bold mx-auto rounded hover:bg-green-800 text-white text-sm lg:text-base bg-green-600"
                 >
                   Accept
                 </button>:
@@ -110,9 +110,13 @@ function PrescriptionOrderCard() {
                   Checkout
                 </button>}
               </div>
-              <div className="flex flex-row mt-4 items-center hover:cursor-pointer gap-5 md:justify-start">
-                <img className="w-[30px]" src={dots_comment} alt="dots" />
-                <div className="font-bold text-green-600">
+              <div className="flex flex-row mt-4 items-center hover:cursor-pointer gap-2 lg:gap-5 justify-between">
+                <img
+                  className="w-5 lg:w-[30px]"
+                  src={dots_comment}
+                  alt="dots"
+                />
+                <div className="font-bold text-green-600 text-sm lg:text-base text-center">
                   Are you confused?
                 </div>
               </div>

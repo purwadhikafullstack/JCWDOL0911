@@ -5,7 +5,16 @@ import defaultImage from "../../assets/default_img.png";
 import logo from "../../assets/logo-pharmacy.png";
 import { paymentProof } from "../../features/order/orderSlice";
 
-function PaymentModal({ modalHandler, transaction, changePageInfo }) {
+function PaymentModal({
+  modalHandler,
+  transaction,
+  changePageInfo,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange,
+}) {
   const dispatch = useDispatch();
   const selectedTransaction = useSelector(
     (state) => state.order.selectedTransaction
@@ -39,7 +48,16 @@ function PaymentModal({ modalHandler, transaction, changePageInfo }) {
     const formData = new FormData();
     formData.append("file", file);
     const pageInfo = await dispatch(
-      paymentProof(formData, selectedTransaction, modalHandler)
+      paymentProof(
+        formData,
+        selectedTransaction,
+        modalHandler,
+        keyword,
+        page,
+        limit,
+        order,
+        dateRange
+      )
     );
     changePageInfo(pageInfo);
   };

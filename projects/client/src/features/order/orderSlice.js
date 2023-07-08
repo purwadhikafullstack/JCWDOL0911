@@ -25,7 +25,7 @@ export const orderSlice = createSlice({
       state.prescriptions = action.payload;
     },
     resetPrescription: (state, action) => {
-      state.prescription = [];
+      state.prescriptions = [];
     },
   },
 });
@@ -42,14 +42,22 @@ export const addUserOrder = (orderData) => {
   };
 };
 
-export const fetchWaitingTransaction = (keyword, page, limit, order) => {
+export const fetchWaitingTransaction = (
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const userId = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/waiting/${userId}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${
+        order || "desc"
+      }&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.waitingOrder));
@@ -71,14 +79,22 @@ export const fetchWaitingTransaction = (keyword, page, limit, order) => {
   };
 };
 
-export const fetchReviewTransaction = (keyword, page, limit, order) => {
+export const fetchReviewTransaction = (
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const userId = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/review/${userId}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${
+        order || "desc"
+      }&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.reviewOrder));
@@ -98,14 +114,22 @@ export const fetchReviewTransaction = (keyword, page, limit, order) => {
   };
 };
 
-export const fetchAdminReviewTransaction = (keyword, page, limit, order) => {
+export const fetchAdminReviewTransaction = (
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const idadmin = JSON.parse(localStorage.getItem("admin")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/allreview/${idadmin}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${
+        order || "desc"
+      }&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.reviewOrder));
@@ -125,14 +149,23 @@ export const fetchAdminReviewTransaction = (keyword, page, limit, order) => {
   };
 };
 
-export const fetchPrescriptionTransaction = (keyword, page, limit, order) => {
+export const fetchPrescriptionTransaction = (
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
+    console.log(dateRange);
     const userId = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/prescription/${userId}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 5}&order=${order || "desc"}`
+      }&page=${page || 0}&limit=${limit || 5}&order=${
+        order || "desc"
+      }&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setPrescription(response.data.fetchTransactionOrder));
@@ -142,6 +175,7 @@ export const fetchPrescriptionTransaction = (keyword, page, limit, order) => {
         totalOfRows: response.data.totalOfRows,
       };
     } else {
+      dispatch(resetPrescription());
       return {
         page: 0,
         totalPages: 0,
@@ -151,7 +185,13 @@ export const fetchPrescriptionTransaction = (keyword, page, limit, order) => {
   };
 };
 
-export const fetchAdminPrescriptionTransaction = (keyword, page, limit) => {
+export const fetchAdminPrescriptionTransaction = (
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
     //backend limits this fetch to 3 with offset for pagination purposes
@@ -160,16 +200,19 @@ export const fetchAdminPrescriptionTransaction = (keyword, page, limit) => {
         process.env.REACT_APP_API_BE
       }/order/allprescription/${idadmin}?search=${keyword || ""}&page=${
         page || 0
-      }&limit=${limit || 5}`
+      }&limit=${limit || 5}&order=${order || "desc"}&date=${JSON.stringify(
+        dateRange
+      )}`
     );
     if (response.data.success) {
-      dispatch(setPrescription(response.data.fetchTransactionOrder));
+      dispatch(setPrescription(response.data.fetchPrescriptionOrder));
       return {
         page: response.data.page,
         totalPages: response.data.totalPages,
         totalOfRows: response.data.totalOfRows,
       };
     } else {
+      dispatch(resetPrescription());
       return {
         page: 0,
         totalPages: 0,
@@ -179,14 +222,22 @@ export const fetchAdminPrescriptionTransaction = (keyword, page, limit) => {
   };
 };
 
-export const fetchFinishedTransaction = (keyword, page, limit, order) => {
+export const fetchFinishedTransaction = (
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const iduser = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/finished/${iduser}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&order=${order}`
+      }&page=${page || 0}&limit=${
+        limit || 3
+      }&order=${order}&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.finishedOrder));
@@ -208,14 +259,22 @@ export const fetchFinishedTransaction = (keyword, page, limit, order) => {
   };
 };
 
-export const fetchAdminFinishedTransaction = (keyword, page, limit, sort) => {
+export const fetchAdminFinishedTransaction = (
+  keyword,
+  page,
+  limit,
+  sort,
+  dateRange
+) => {
   return async (dispatch) => {
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/allfinished/${idadmin}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&sort=${sort || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&sort=${
+        sort || "desc"
+      }&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.finishedOrder));
@@ -237,14 +296,22 @@ export const fetchAdminFinishedTransaction = (keyword, page, limit, sort) => {
   };
 };
 
-export const fetchSendTransaction = (keyword, page, limit, order) => {
+export const fetchSendTransaction = (
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const iduser = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/send/${iduser}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${
+        order || "desc"
+      }&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.sendOrder));
@@ -266,7 +333,13 @@ export const fetchSendTransaction = (keyword, page, limit, order) => {
   };
 };
 
-export const fetchAdminSendTransaction = (keyword, page, limit, sort) => {
+export const fetchAdminSendTransaction = (
+  keyword,
+  page,
+  limit,
+  sort,
+  dateRange
+) => {
   return async (dispatch) => {
     console.log(sort);
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
@@ -274,7 +347,9 @@ export const fetchAdminSendTransaction = (keyword, page, limit, sort) => {
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/allsend/${idadmin}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&sort=${sort || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&sort=${
+        sort || "desc"
+      }&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.sendOrder));
@@ -296,14 +371,22 @@ export const fetchAdminSendTransaction = (keyword, page, limit, sort) => {
   };
 };
 
-export const fetchOnProcessTransaction = (keyword, page, limit, order) => {
+export const fetchOnProcessTransaction = (
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const iduser = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/onprocess/${iduser}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${
+        order || "desc"
+      }&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.onProcessOrder));
@@ -325,14 +408,22 @@ export const fetchOnProcessTransaction = (keyword, page, limit, order) => {
   };
 };
 
-export const fetchAdminOnProcessTransaction = (keyword, page, limit, order) => {
+export const fetchAdminOnProcessTransaction = (
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/allonprocess/${idadmin}?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&order=${order}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${
+        order || "desc"
+      }&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.onProcessOrder));
@@ -354,13 +445,21 @@ export const fetchAdminOnProcessTransaction = (keyword, page, limit, order) => {
   };
 };
 
-export const fetchAdminWaitingTransaction = (keyword, page, limit, order) => {
+export const fetchAdminWaitingTransaction = (
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/order/allwaiting?search=${
         keyword || ""
-      }&page=${page || 0}&limit=${limit || 3}&order=${order || "desc"}`
+      }&page=${page || 0}&limit=${limit || 3}&order=${
+        order || "desc"
+      }&date=${JSON.stringify(dateRange)}`
     );
     if (response.data.success) {
       dispatch(setTransaction(response.data.allWaitingOrder));
@@ -382,7 +481,16 @@ export const fetchAdminWaitingTransaction = (keyword, page, limit, order) => {
   };
 };
 
-export const paymentProof = (file, selectedTransaction, modalHandler) => {
+export const paymentProof = (
+  file,
+  selectedTransaction,
+  modalHandler,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     let idtransaction = selectedTransaction.idtransaction;
     const response = await Axios.post(
@@ -397,7 +505,9 @@ export const paymentProof = (file, selectedTransaction, modalHandler) => {
         confirmButtonText: "Ok",
       });
       if ((await condition).isConfirmed) {
-        const waitingPageInfo = await dispatch(fetchWaitingTransaction());
+        const waitingPageInfo = await dispatch(
+          fetchWaitingTransaction(keyword, page, limit, order, dateRange)
+        );
         modalHandler();
         return waitingPageInfo;
       }
@@ -405,7 +515,14 @@ export const paymentProof = (file, selectedTransaction, modalHandler) => {
   };
 };
 
-export const acceptPaymentReview = (transaction) => {
+export const acceptPaymentReview = (
+  transaction,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
     const response = await Axios.patch(
@@ -413,7 +530,9 @@ export const acceptPaymentReview = (transaction) => {
       transaction
     );
     if (response.data.success) {
-      const pageStatus = await dispatch(fetchAdminReviewTransaction());
+      const pageStatus = await dispatch(
+        fetchAdminReviewTransaction(keyword, page, limit, order, dateRange)
+      );
       return {
         pageStatus,
       };
@@ -421,7 +540,14 @@ export const acceptPaymentReview = (transaction) => {
   };
 };
 
-export const confirmPaymentReview = (transaction) => {
+export const confirmPaymentReview = (
+  transaction,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const iduser = JSON.parse(localStorage.getItem("user")).iduser;
     const response = await Axios.patch(
@@ -429,7 +555,9 @@ export const confirmPaymentReview = (transaction) => {
       transaction
     );
     if (response.data.success) {
-      const pageStatus = await dispatch(fetchReviewTransaction());
+      const pageStatus = await dispatch(
+        fetchReviewTransaction(keyword, page, limit, order, dateRange)
+      );
       return {
         pageStatus,
       };
@@ -454,7 +582,14 @@ export const rejectPaymentReview = (transaction) => {
   };
 };
 
-export const acceptOnProcessOrder = (transaction) => {
+export const acceptOnProcessOrder = (
+  transaction,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
     const response = await Axios.patch(
@@ -462,7 +597,9 @@ export const acceptOnProcessOrder = (transaction) => {
       transaction
     );
     if (response.data.success) {
-      const pageStatus = await dispatch(fetchAdminOnProcessTransaction());
+      const pageStatus = await dispatch(
+        fetchAdminOnProcessTransaction(keyword, page, limit, order, dateRange)
+      );
       return {
         pageStatus,
       };
@@ -470,7 +607,14 @@ export const acceptOnProcessOrder = (transaction) => {
   };
 };
 
-export const completeSendOrder = (transaction) => {
+export const completeSendOrder = (
+  transaction,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   return async (dispatch) => {
     const iduser = JSON.parse(localStorage.getItem("user")).iduser;
     const response = await Axios.patch(
@@ -478,7 +622,9 @@ export const completeSendOrder = (transaction) => {
       transaction
     );
     if (response.data.success) {
-      const pageStatus = await dispatch(fetchSendTransaction());
+      const pageStatus = await dispatch(
+        fetchSendTransaction(keyword, page, limit, order, dateRange)
+      );
       return {
         pageStatus,
       };

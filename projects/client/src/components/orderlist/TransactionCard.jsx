@@ -8,7 +8,14 @@ import PaymentModal from "../payment/PaymentModal";
 import { setSelectedTransaction } from "../../features/order/orderSlice";
 import { useDispatch } from "react-redux";
 
-function TransactionCard({ changePageInfo }) {
+function TransactionCard({
+  changePageInfo,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange,
+}) {
   const dispatch = useDispatch();
   const [isPaymentModal, setIsPaymentModal] = useState(false);
   const transactions = useSelector((state) => state.order.transaction);
@@ -93,6 +100,11 @@ function TransactionCard({ changePageInfo }) {
               <PaymentModal
                 modalHandler={onClickClosePaymentHandler}
                 changePageInfo={changePageInfo}
+                keyword={keyword}
+                page={page}
+                limit={limit}
+                order={order}
+                dateRange={dateRange}
               />
             ) : null}
           </div>

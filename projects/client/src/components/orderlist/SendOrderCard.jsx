@@ -10,7 +10,14 @@ import { useDispatch } from "react-redux";
 import PaymentImageModal from "./PaymentImageModal";
 import { completeSendOrder } from "../../features/order/orderSlice";
 
-function SendOrderCard({ changePageInfo }) {
+function SendOrderCard({
+  changePageInfo,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange,
+}) {
   const dispatch = useDispatch();
 
   const transactions = useSelector((state) => state.order.transaction);
@@ -25,7 +32,9 @@ function SendOrderCard({ changePageInfo }) {
       cancelButtonText: "No",
     });
     if (swalAccept.isConfirmed) {
-      const { pageStatus } = await dispatch(completeSendOrder(transaction));
+      const { pageStatus } = await dispatch(
+        completeSendOrder(transaction, keyword, page, limit, order, dateRange)
+      );
       // const { pageStatus } = await dispatch(acceptPaymentReview(transaction));
       changePageInfo(pageStatus);
     }

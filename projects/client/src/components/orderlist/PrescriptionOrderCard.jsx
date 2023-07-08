@@ -7,27 +7,29 @@ import { setSelectedTransaction } from "../../features/order/orderSlice";
 import PrescriptionImageModal from "./PrescriptionImageModal";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { prescriptionCart, prescriptionTotalPrice } from "../../features/cart/cartSlice";
+import {
+  prescriptionCart,
+  prescriptionTotalPrice,
+} from "../../features/cart/cartSlice";
 import { setPrescriptionCheckOut } from "../../features/product/prescriptionSlice";
 
 function PrescriptionOrderCard() {
   //function to close the modal
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [isPaymentModal, setIsPaymentModal] = useState(false);
   const prescriptions = useSelector((state) => state.order.prescriptions);
 
   const onClickAcceptHandler = (prescription) => {
-    navigate(`/admin/prescription/${prescription.idprescription}`)
+    navigate(`/admin/prescription/${prescription.idprescription}`);
   };
 
   const onClickRejectHandler = (prescription) => {
     console.log(prescription);
   };
   const checkoutHandler = (prescriptions) => {
-    dispatch(setPrescriptionCheckOut(prescriptions))
-    navigate('/prescription/checkout')
-  }
+    dispatch(setPrescriptionCheckOut(prescriptions));
+    navigate("/prescription/checkout");
+  };
 
   return (
     <>
@@ -94,21 +96,23 @@ function PrescriptionOrderCard() {
                 >
                   Cancel
                 </button>
-                {prescription.status !=='WAITING TO CHECKOUT'?
-                <button
-                  hidden={localStorage.getItem("user") ? true : false}
-                  onClick={() => onClickAcceptHandler(prescription)}
-                  className=" w-full  p-2 font-bold mx-auto rounded hover:bg-green-800 text-white text-sm lg:text-base bg-green-600"
-                >
-                  Accept
-                </button>:
-                <button
-                  hidden={localStorage.getItem("user") ? false : true}
-                  onClick={() => checkoutHandler(prescription)}
-                  className=" w-full  p-2 font-bold mx-auto rounded hover:bg-green-800 text-white bg-green-600"
-                >
-                  Checkout
-                </button>}
+                {prescription.status !== "WAITING TO CHECKOUT" ? (
+                  <button
+                    hidden={localStorage.getItem("user") ? true : false}
+                    onClick={() => onClickAcceptHandler(prescription)}
+                    className=" w-full  p-2 font-bold mx-auto rounded hover:bg-green-800 text-white text-sm lg:text-base bg-green-600"
+                  >
+                    Accept
+                  </button>
+                ) : (
+                  <button
+                    hidden={localStorage.getItem("user") ? false : true}
+                    onClick={() => checkoutHandler(prescription)}
+                    className=" w-full  p-2 font-bold mx-auto rounded hover:bg-green-800 text-white bg-green-600"
+                  >
+                    Checkout
+                  </button>
+                )}
               </div>
               <div className="flex flex-row mt-4 items-center hover:cursor-pointer gap-2 lg:gap-5 justify-between">
                 <img

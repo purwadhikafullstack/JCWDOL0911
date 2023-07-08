@@ -15,7 +15,14 @@ import {
   rejectPaymentReview,
 } from "../../features/order/orderSlice";
 
-function OnProcessOrderCard({ changePageInfo }) {
+function OnProcessOrderCard({
+  changePageInfo,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange,
+}) {
   const dispatch = useDispatch();
 
   const transactions = useSelector((state) => state.order.transaction);
@@ -31,7 +38,16 @@ function OnProcessOrderCard({ changePageInfo }) {
     });
     if (swalAccept.isConfirmed) {
       console.log("deliver the medicine");
-      const { pageStatus } = await dispatch(acceptOnProcessOrder(transaction));
+      const { pageStatus } = await dispatch(
+        acceptOnProcessOrder(
+          transaction,
+          keyword,
+          page,
+          limit,
+          order,
+          dateRange
+        )
+      );
       // const { pageStatus } = await dispatch(acceptPaymentReview(transaction));
       changePageInfo(pageStatus);
     }

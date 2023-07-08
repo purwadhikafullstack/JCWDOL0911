@@ -15,7 +15,14 @@ import {
   rejectPaymentReview,
 } from "../../features/order/orderSlice";
 
-function ReviewOrderCard({ changePageInfo }) {
+function ReviewOrderCard({
+  changePageInfo,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange,
+}) {
   const dispatch = useDispatch();
 
   const transactions = useSelector((state) => state.order.transaction);
@@ -30,7 +37,9 @@ function ReviewOrderCard({ changePageInfo }) {
       cancelButtonText: "No",
     });
     if (swalAccept.isConfirmed) {
-      const { pageStatus } = await dispatch(acceptPaymentReview(transaction));
+      const { pageStatus } = await dispatch(
+        acceptPaymentReview(transaction, keyword, page, limit, order, dateRange)
+      );
       changePageInfo(pageStatus);
     }
   };
@@ -45,7 +54,16 @@ function ReviewOrderCard({ changePageInfo }) {
       cancelButtonText: "No",
     });
     if (swalAccept.isConfirmed) {
-      const { pageStatus } = await dispatch(confirmPaymentReview(transaction));
+      const { pageStatus } = await dispatch(
+        confirmPaymentReview(
+          transaction,
+          keyword,
+          page,
+          limit,
+          order,
+          dateRange
+        )
+      );
       changePageInfo(pageStatus);
     }
   };
@@ -61,7 +79,9 @@ function ReviewOrderCard({ changePageInfo }) {
     });
     if (swalAccept.isConfirmed) {
       // console.log(transaction);
-      const { pageStatus } = await dispatch(rejectPaymentReview(transaction));
+      const { pageStatus } = await dispatch(
+        rejectPaymentReview(transaction, keyword, page, limit, order, dateRange)
+      );
       changePageInfo(pageStatus);
     }
   };

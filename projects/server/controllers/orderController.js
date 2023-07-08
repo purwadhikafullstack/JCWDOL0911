@@ -980,15 +980,15 @@ module.exports = {
     try {
       const idAdmin = req.params.idadmin;
       const { idtransaction } = req.body;
-      const acceptIdTransactionQuery = `update transaction set status = "WAITING FOR PAYMENT", cancel_date=${db.escape(
+      const rejectIdTransactionQuery = `update transaction set status = "WAITING FOR PAYMENT", cancel_date=${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )}, idadmin=${db.escape(
         idAdmin
       )}, payment_image=null where idtransaction = ${idtransaction}`;
       // console.log(acceptIdTransactionQuery);
-      const acceptIdTransaction = await query(acceptIdTransactionQuery);
+      const rejectIdTransaction = await query(rejectIdTransactionQuery);
 
-      if (acceptIdTransaction.affectedRows !== 0) {
+      if (rejectIdTransaction.affectedRows !== 0) {
         return res
           .status(200)
           .send({ success: true, message: "We are processing your order" });

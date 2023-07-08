@@ -79,7 +79,9 @@ function ReviewOrderCard({
     });
     if (swalAccept.isConfirmed) {
       // console.log(transaction);
-      const { pageStatus } = await dispatch(rejectPaymentReview(transaction));
+      const { pageStatus } = await dispatch(
+        rejectPaymentReview(transaction, keyword, page, limit, order, dateRange)
+      );
       changePageInfo(pageStatus);
     }
   };

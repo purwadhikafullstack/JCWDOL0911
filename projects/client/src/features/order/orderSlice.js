@@ -565,7 +565,14 @@ export const confirmPaymentReview = (
   };
 };
 
-export const rejectPaymentReview = (transaction) => {
+export const rejectPaymentReview = (
+  transaction,
+  keyword,
+  page,
+  limit,
+  order,
+  dateRange
+) => {
   //idadmin here
   const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
   return async (dispatch) => {
@@ -574,10 +581,13 @@ export const rejectPaymentReview = (transaction) => {
       transaction
     );
     if (response.data.success) {
-      const pageStatus = await dispatch(fetchAdminReviewTransaction());
-      return {
-        pageStatus,
-      };
+      const pageStatus = await dispatch(
+        fetchAdminReviewTransaction(keyword, page, limit, order, dateRange)
+      );
+      console.log(pageStatus);
+      // return {
+      //   pageStatus,
+      // };
     }
   };
 };

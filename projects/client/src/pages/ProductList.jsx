@@ -55,7 +55,7 @@ function Productlist() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row p-5 ">
+    <div className="flex flex-col lg:flex-row p-5">
       <div className="p-6 justify-normal ">
         <div className="font-extrabold text-xl text-color-green">
           Product

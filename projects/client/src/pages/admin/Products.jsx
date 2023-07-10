@@ -26,13 +26,17 @@ import { AUTH_TOKEN } from "../../helpers/constant";
 import { useNavigate } from "react-router-dom";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { currency } from "../../helpers/currency";
+import AddNewProductModal from "../../components/admin/products/AddNewProductModal";
+import { getAllCategory } from "../../features/cartegory/categorySlice";
 
 function Products() {
   const LIMIT = 5;
   const token = localStorage.getItem(AUTH_TOKEN);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [selectedFilter, setSelectedFilter] = useState({
     idcategory: undefined,
+    name: "",
   });
   const [selectedSortBy, setSelectedSortBy] = useState({
     sort: undefined,
@@ -40,8 +44,9 @@ function Products() {
   });
   const [countData, setCountData] = useState(0);
   const [page, setPage] = useState(1);
+  const [modalAddNewProductOpen, setModalAddNewProductOpen] = useState(false);
   const products = useSelector((state) => state.product.products);
-  const dispatch = useDispatch();
+  const categories = useSelector((state) => state.categories.categories);
 
   const fetchAllProduct = async () => {
     try {
@@ -108,6 +113,10 @@ function Products() {
   };
 
   useEffect(() => {
+    dispatch(getAllCategory());
+  }, []);
+
+  useEffect(() => {
     fetchAllProduct();
   }, [selectedFilter.idcategory, selectedSortBy.sort, page]);
 
@@ -148,27 +157,37 @@ function Products() {
                             ></path>
                           </svg>
                         </div>
-                        <p>Filter</p>
+                        {selectedFilter.name || "Filter All"}
                       </div>
                     </MenuButton>
-                    <MenuList label={selectedFilter.idcategory}>
+                    <MenuList>
                       <MenuItem
-                        onClick={() =>
-                          setSelectedFilter({ idcategory: undefined })
-                        }
+                        onClick={() => {
+                          setSelectedFilter({
+                            idcategory: undefined,
+                            name: "Filter All",
+                          });
+                          setPage(1);
+                        }}
                       >
-                        <p className="text-black">All</p>
+                        <p className="text-black">Filter All</p>
                       </MenuItem>
-                      <MenuItem
-                        onClick={() => setSelectedFilter({ idcategory: 1 })}
-                      >
-                        <p className="text-black">obat</p>
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => setSelectedFilter({ idcategory: 2 })}
-                      >
-                        <p className="text-black">vitamin</p>
-                      </MenuItem>
+
+                      {categories.map((category) => {
+                        return (
+                          <MenuItem
+                            onClick={() => {
+                              setSelectedFilter({
+                                idcategory: category.idcategory,
+                                name: category.name,
+                              });
+                              setPage(1);
+                            }}
+                          >
+                            <p className="text-black"> {category.name}</p>
+                          </MenuItem>
+                        );
+                      })}
                     </MenuList>
                   </Menu>
                 </div>
@@ -192,10 +211,16 @@ function Products() {
                             ></path>
                           </svg>
                         </div>
-                        <p>Sort</p>
+                        <p>{selectedSortBy.key}</p>
+                        <p>{selectedSortBy.sort || "No sort"}</p>
                       </div>
                     </MenuButton>
-                    <MenuList label={selectedSortBy.sort}>
+                    <MenuList>
+                      <MenuItem
+                        onClick={() => setSelectedSortBy({ sort: "", key: "" })}
+                      >
+                        <p className="text-black">No sort</p>
+                      </MenuItem>
                       <MenuItem
                         onClick={() =>
                           setSelectedSortBy({ sort: "DESC", key: "name" })
@@ -210,16 +235,40 @@ function Products() {
                       >
                         <p className="text-black">Name: A - Z</p>
                       </MenuItem>
+                      <MenuItem
+                        onClick={() =>
+                          setSelectedSortBy({ sort: "ASC", key: "price" })
+                        }
+                      >
+                        <p className="text-black">Price: low - high</p>
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() =>
+                          setSelectedSortBy({ sort: "DESC", key: "price" })
+                        }
+                      >
+                        <p className="text-black">Price: high - low</p>
+                      </MenuItem>
                     </MenuList>
                   </Menu>
                 </div>
               </div>
               <div>
                 <div>
-                  <Button className="button-primary">Add product</Button>
+                  <Button
+                    className="button-primary"
+                    onClick={() => setModalAddNewProductOpen(true)}
+                  >
+                    Add product
+                  </Button>
                 </div>
               </div>
             </div>
+            <AddNewProductModal
+              isOpen={modalAddNewProductOpen}
+              onClose={() => setModalAddNewProductOpen(false)}
+              className="mx-4 sm:mx-0"
+            />
             <TableContainer className="rounded-lg bg-table-list-color">
               <Table variant="striped" colorScheme="teal">
                 <Thead className="table-list-head">
@@ -252,20 +301,15 @@ function Products() {
                 </Thead>
                 <Tbody className="">
                   {products.map((product, index) => (
-                    <Tr
-                      key={product.idproduct}
-                      // onClick={() =>
-                      //   handlePageDetailUserQuestion(question.idquestion)
-                      // }
-                    >
+                    <Tr key={product.idproduct}>
                       <Td>{LIMIT * (page - 1) + 1 + index}</Td>
 
                       <Td>
                         <img
                           src={
                             product.product_image
-                              ? product.product_image
-                              : "../../assets/icon-medicine.png"
+                              ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
+                              : "./assets/icon-medicine.png"
                           }
                           alt=""
                           width="44px"
@@ -273,6 +317,7 @@ function Products() {
                       </Td>
 
                       <Td>{getName(product.name)}</Td>
+                      {/* <Td>{product.name}</Td> */}
                       <Td>
                         {product.stock === 0 ? (
                           <p className="text-red-600 font-bold">out of stock</p>
@@ -282,11 +327,11 @@ function Products() {
                       </Td>
                       <Td>{product.unit ? product.unit : <p>-</p>}</Td>
                       <Td>
-                        {product.category_name ? (
-                          product.category_name
-                        ) : (
-                          <p>-</p>
-                        )}
+                        {(product.categories || []).length > 0
+                          ? product.categories.map((category) => (
+                              <p>{category.name}</p>
+                            ))
+                          : "-"}
                       </Td>
                       <Td>{currency(product.price)}</Td>
                       <Td>
@@ -304,7 +349,7 @@ function Products() {
                 </Tbody>
               </Table>
             </TableContainer>
-            <div className="flex w-full gap-4 justify-center mt-11">
+            <div className="flex flex-wrap sm:flex-nowrap w-full gap-4 justify-center mt-11">
               {renderPagination()}
             </div>
           </div>

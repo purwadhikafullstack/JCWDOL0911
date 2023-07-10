@@ -78,14 +78,13 @@ function AnswerQuestion() {
 
   const handleDeleteQuestion = async (idquestion) => {
     try {
-      
       let response = await axios.delete(
         `${process.env.REACT_APP_API_BE}/admin/qna/${idquestion}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-        );
-        console.log(response);
+      );
+      console.log(response);
       navigate("/admin/answer-question");
       fetchAllUserQuestion();
     } catch (error) {
@@ -147,6 +146,18 @@ function AnswerQuestion() {
     ));
   };
 
+  const filter = (idanswer) => {
+    if (idanswer == undefined) {
+      return "Filter All";
+    }
+    if (idanswer == 1) {
+      return "Answered";
+    }
+    if (idanswer == 0) {
+      return "No answer";
+    }
+  };
+
   return (
     <>
       <div className="w-screen h-full flex justify-between bg-slate-50">
@@ -177,7 +188,7 @@ function AnswerQuestion() {
                           ></path>
                         </svg>
                       </div>
-                      <p>Filter</p>
+                      <p>{filter(selectedIsAnswer.isAnswer)}</p>
                     </div>
                   </MenuButton>
                   <MenuList label={selectedIsAnswer.isAnswer}>
@@ -186,7 +197,7 @@ function AnswerQuestion() {
                         setSelectedIsAnswer({ isAnswer: undefined })
                       }
                     >
-                      <p className="text-black">All</p>
+                      <p className="text-black">Filter All</p>
                     </MenuItem>
                     <MenuItem
                       onClick={() => setSelectedIsAnswer({ isAnswer: 1 })}
@@ -221,7 +232,8 @@ function AnswerQuestion() {
                           ></path>
                         </svg>
                       </div>
-                      <p>Sort</p>
+                      <p>{selectedSortBy.key}</p>
+                      <p>{selectedSortBy.sort || "No sort"}</p>
                     </div>
                   </MenuButton>
                   <MenuList label={selectedSortBy.sort}>
@@ -349,7 +361,7 @@ function AnswerQuestion() {
                 </Tbody>
               </Table>
             </TableContainer>
-            <div className="flex w-full gap-4 justify-center mt-11">
+            <div className="flex flex-wrap sm:flex-nowrap  w-full gap-4 justify-center mt-11">
               {renderPagination()}
             </div>
           </div>

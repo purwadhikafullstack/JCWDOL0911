@@ -185,3 +185,14 @@ code {
     inset: 0px 0px 0px 320px;
   }
 }
+
+.swal2-container {
+  z-index: 9999;
+}
+
+.image-detail-product {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}

@@ -12,47 +12,58 @@ function DetailProductUser() {
   const navigate = useNavigate();
   const product = useSelector((state) => state.products.product);
 
-  console.log("product", product);
-
   useEffect(() => {
     dispatch(getProductById(productId));
   }, []);
 
   return (
     <div>
-      <div className="w-full justify-center gap-11 my-11 flex flex-wrap lg:flex-nowrap ">
-        <div className="">
+      <div className="w-full justify-center my-11 gap-11 flex flex-wrap xs:flex-nowrap px-11">
+        <div className="sm:w-1/3 max-w-xs">
           <img
-            className="w-52 lg:w-72"
+            className="w-full object-contain"
             src={
               product.product_image
                 ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
                 : "./assets/icon-medicine.png"
             }
-            alt="image not found"
+            alt=""
           />
         </div>
 
-        <div className="mt-7 shadow-card-tagline border-y-2 w-full max-w-xs flex flex-col p-2 mx-11 lg:mx-0">
+        <div className="shadow-card-tagline border-y-2 w-full sm:w-1/3 flex flex-col p-1 xs:p-4">
           <div className="p-4">
-            <div className="text-xl font-extrabold">{product.name}</div>
-            <div className="mt-4 text-sm font-medium">
+            <div className="text-2xl font-extrabold">{product.name}</div>
+            <div className="mt-6 text-base font-medium">
               {product.description}
             </div>
-            <div className="mt-2 text-sm font-medium">
-              Stock : {product.stock}
+            <div className="mt-11 text-sm font-medium flex gap-4 ">
+              Stock
+              <div className="text-blue-600">{product.stock}</div>
             </div>
-            <div className="mt-2 text-sm font-medium">
-              Category : {product.category?.name || "-"}
+            <div className="mt-2 text-sm font-medium flex gap-4">
+              Category
+              <div className="flex gap-2 flex-wrap xs:flex-nowrap">
+                {(product.categories || []).length > 0
+                  ? (product.categories || []).map((category) => {
+                      return (
+                        <p key={category.idcategory} className="text-blue-600">
+                          {category.name || "-"}
+                        </p>
+                      );
+                    })
+                  : "-"}
+              </div>
             </div>
-            <div className="mt-2 text-sm font-medium">
+            <hr className="mt-4" />
+            <div className="mt-4 text-2xl font-bold text-center">
               {currency(product.price)}
             </div>
           </div>
           <Button
-            className="button-primary mt-14 mb-1"
+            className="button-primary mt-2 mb-2 mx-4"
             variant={"solid"}
-            size={"sm"}
+            size={"md"}
             onClick={() =>
               navigate("/cart", dispatch(addProductToCart(product)))
             }

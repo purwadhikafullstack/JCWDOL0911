@@ -23,16 +23,16 @@ import {
 import ProductsConversionRow from "../../components/admin/products/ProductsConversionRow";
 
 function UnitConversion() {
-  const [order, setOrder] = useState('ASC')
-  const [filter, setFilter] = useState('')
-  const [search, setSearch] = useState('')
-  const [offset, setOffset] = useState(0)
-  const products = useSelector(state => state.product.products)
-  let countData = useSelector(state=>state.product.count[0]?.count)
-  const dispatch = useDispatch()
-  countData = parseInt(countData)
-  const pages = Math.floor(countData/5)
-  const limit = 5
+  const [order, setOrder] = useState("ASC");
+  const [filter, setFilter] = useState("");
+  const [search, setSearch] = useState("");
+  const [offset, setOffset] = useState(0);
+  const products = useSelector((state) => state.product.products);
+  let countData = useSelector((state) => state.product.count[0]?.count);
+  const dispatch = useDispatch();
+  countData = parseInt(countData);
+  const pages = Math.floor(countData / 5);
+  const limit = 5;
 
   const searchHandler = (e) => {
     setOffset(0);
@@ -55,7 +55,7 @@ function UnitConversion() {
     setOffset(prevOffset);
   };
   useEffect(() => {
-    dispatch(fetchProducts(order, filter, search, offset,limit));
+    dispatch(fetchProducts(order, filter, search, offset, limit));
   }, [order, filter, search, offset]);
 
   return (
@@ -100,7 +100,6 @@ function UnitConversion() {
                       <Th>Convert Into</Th>
                       <Th>Converted Stock</Th>
                       <Th>
-                        {" "}
                         <p>Unconverted</p>
                         Stock
                       </Th>

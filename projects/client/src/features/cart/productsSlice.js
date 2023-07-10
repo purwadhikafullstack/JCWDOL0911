@@ -21,8 +21,8 @@ export const productsSlice = createSlice({
     categories: [],
     convertedUnit: [],
     count: {
-      count:""
-  }
+      count: "",
+    },
   },
   reducers: {
     setProduct: (state, action) => {
@@ -35,25 +35,31 @@ export const productsSlice = createSlice({
       state.categories = action.payload;
     },
     setConvertedUnit: (state, action) => {
-      state.convertedUnit = action.payload
+      state.convertedUnit = action.payload;
     },
     setCount: (state, action) => {
-      state.count=action.payload
-  }
+      state.count = action.payload;
+    },
   },
 });
 
-export const { setProduct, setProducts, setCategories,setConvertedUnit,setCount } = productsSlice.actions;
+export const {
+  setProduct,
+  setProducts,
+  setCategories,
+  setConvertedUnit,
+  setCount,
+} = productsSlice.actions;
 export default productsSlice.reducer;
 
-export function fetchProducts(order, filter,search,offset,limit) {
+export function fetchProducts(order, filter, search, offset, limit) {
   return async (dispatch) => {
     const response = await Axios.get(
       `${process.env.REACT_APP_API_BE}/products?order=${order}&filter=${filter}&search=${search}&offset=${offset}&limit=${limit}`
     );
     dispatch(setCategories(response.data.categoryQuery));
     dispatch(setProducts(response.data.productQuery));
-    dispatch(setCount(response.data.countData))
+    dispatch(setCount(response.data.countData));
   };
 }
 
@@ -65,7 +71,9 @@ export function fetchDetailProduct(idproduct) {
         `${process.env.REACT_APP_API_BE}/admin/products/${idproduct}`,
         { headers: { authorization: `Bearer ${token}` } }
       );
-      dispatch(setProduct(response.data[0]));
+
+      console.log({ AAA: response.data });
+      dispatch(setProduct(response.data.product));
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -98,55 +106,66 @@ export function updateStock(id, stock, setEdit, updatedStock, unit) {
   }
 }
 
-
-
-export function createConversionRules( unit, quantity,unitDefault,setOpen) {
-  return async(dispatch) => {
-    const response = await Axios.post(`${process.env.REACT_APP_API_BE}/products/unit-conversions`, { unit, quantity,unitDefault })
-    Swal.fire(`${response.data.message}`, "", "success");
-    setOpen(false)
-  }
-  
-}
-export function setConversionRules(idProduct, idUnit, order, filter,search) {
-  const offset = 0
-  const limit = 5
+export function createConversionRules(unit, quantity, unitDefault, setOpen) {
   return async (dispatch) => {
-    let response = await Axios.post(`${process.env.REACT_APP_API_BE}/products/assign-rule/${idProduct}`, { idUnit })
-    dispatch(fetchProducts(order,filter,search,offset,limit))
+    const response = await Axios.post(
+      `${process.env.REACT_APP_API_BE}/products/unit-conversions`,
+      { unit, quantity, unitDefault }
+    );
     Swal.fire(`${response.data.message}`, "", "success");
-
-  }
-  
+    setOpen(false);
+  };
+}
+export function setConversionRules(idProduct, idUnit, order, filter, search) {
+  const offset = 0;
+  const limit = 5;
+  return async (dispatch) => {
+    let response = await Axios.post(
+      `${process.env.REACT_APP_API_BE}/products/assign-rule/${idProduct}`,
+      { idUnit }
+    );
+    dispatch(fetchProducts(order, filter, search, offset, limit));
+    Swal.fire(`${response.data.message}`, "", "success");
+  };
 }
 
 export function fetchUnitConversionRules() {
   return async (dispatch) => {
-    let response = await Axios.get(`${process.env.REACT_APP_API_BE}/products/rules`)
-    dispatch(setConvertedUnit(response.data))
-    
-  }
-  
+    let response = await Axios.get(
+      `${process.env.REACT_APP_API_BE}/products/rules`
+    );
+    dispatch(setConvertedUnit(response.data));
+  };
 }
 
-export function changeDefaultUnit(idProduct, unit_product, stock, order, filter,search) {
-  const offset = 0
-  const limit = 5
+export function changeDefaultUnit(
+  idProduct,
+  unit_product,
+  stock,
+  order,
+  filter,
+  search
+) {
+  const offset = 0;
+  const limit = 5;
   return async (dispatch) => {
-    let response = await Axios.put(`${process.env.REACT_APP_API_BE}/products/change-unit/${idProduct}`, { unit_product, stock })
-    dispatch(fetchProducts(order,filter,search,offset,limit))
+    let response = await Axios.put(
+      `${process.env.REACT_APP_API_BE}/products/change-unit/${idProduct}`,
+      { unit_product, stock }
+    );
+    dispatch(fetchProducts(order, filter, search, offset, limit));
     Swal.fire(`${response.data.message}`, "", "success");
-
-  }
+  };
 }
 
-export function removeRuleProduct(idProduct, order, filter,search) {
-  const offset = 0
-  const limit = 5
+export function removeRuleProduct(idProduct, order, filter, search) {
+  const offset = 0;
+  const limit = 5;
   return async (dispatch) => {
-    let response = await Axios.delete(`${process.env.REACT_APP_API_BE}/products/remove-rule/${idProduct}`)
-    dispatch(fetchProducts(order,filter,search,offset,limit))
+    let response = await Axios.delete(
+      `${process.env.REACT_APP_API_BE}/products/remove-rule/${idProduct}`
+    );
+    dispatch(fetchProducts(order, filter, search, offset, limit));
     Swal.fire(`${response.data.message}`, "", "success");
-
-  }
-} 
+  };
+}

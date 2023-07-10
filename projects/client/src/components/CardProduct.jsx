@@ -34,17 +34,20 @@ function CardProduct({ product }) {
     <div className="max-w-xs flex flex-col items-center p-2 shadow-card-tagline border-y-2 rounded-md">
       <Card maxW="xs">
         <CardBody>
-          <Image
-            src={
-              product.product_image
-                ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
-                : "./assets/icon-medicine.png"
-            }
-            alt="medicine"
-            className="w-20 mx-auto"
-          />
-          <Stack mt="6" spacing="3">
+          <div className="w">
+            <Image
+              src={
+                product.product_image
+                  ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
+                  : "./assets/icon-medicine.png"
+              }
+              alt="medicine"
+              className="w-20 h-20 mx-auto"
+            />
+          </div>
+          <Stack mt="6" spacing="4">
             <Tooltip label={product.name}>
+              {/* <Heading size="md">{product.name}</Heading> */}
               <Heading size="md">{getName(product.name)}</Heading>
             </Tooltip>
             <Text color="black" className="text-sm font-medium">

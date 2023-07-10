@@ -8,6 +8,7 @@ import Sidebar from "../../components/admin/Sidebar";
 import { Button, Tooltip, Divider } from "@chakra-ui/react";
 import {
   fetchDetailProduct,
+  fetchProducts,
   setProduct,
 } from "../../features/cart/productsSlice";
 import { currency } from "../../helpers/currency";
@@ -22,6 +23,7 @@ import {
   ModalCloseButton,
   Input,
 } from "@chakra-ui/react";
+import EditProductModal from "../../components/admin/products/EditProductModal";
 
 function DetailProduct() {
   const navigate = useNavigate();
@@ -33,6 +35,7 @@ function DetailProduct() {
   const [stock, setStock] = useState(product.stock);
   const [stockOnOpenModal, setStockOnOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [modalEditProductOpen, setModalEditProductOpen] = useState(false);
 
   let updatedStock = stock - product.stock;
 
@@ -40,12 +43,12 @@ function DetailProduct() {
     setStockOnOpenModal(false);
     const result = await Swal.fire({
       title: "Are you sure?",
-      text: "You want to Update Product Stock",
+      text: "You want to update product stock",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, change it!",
+      confirmButtonText: "Update stock",
     });
     if (result.isConfirmed) {
       dispatch(updateStock(id, stock, setEdit, updatedStock, unit));
@@ -58,16 +61,51 @@ function DetailProduct() {
 
     const result = await Swal.fire({
       title: "Are you sure?",
-      text: "You want to Delete Product Stock",
+      text: "You want to set out of stock?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, change it!",
+      confirmButtonText: "Out of stock!",
     });
     if (result.isConfirmed) {
       setStock(0);
       dispatch(updateStock(id, deletedStock, setEdit, updatedStock, unit));
+    }
+  };
+
+  const handleDeleteProductOnAdmin = async (idproduct) => {
+    try {
+      let response = await axios.delete(
+        `${process.env.REACT_APP_API_BE}/admin/products/${idproduct}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      navigate("/admin/products");
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.message,
+      });
+    }
+  };
+
+  const handleConfirmationDeleteProduct = async (idproduct) => {
+    fetchProducts();
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this question",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Delete",
+    });
+    if (result.isConfirmed) {
+      handleDeleteProductOnAdmin(idproduct);
     }
   };
 
@@ -78,9 +116,6 @@ function DetailProduct() {
   useEffect(() => {
     setStock(product.stock);
   }, [product.stock]);
-
-  console.log("stock", stock);
-  console.log("product", product);
 
   return (
     <>
@@ -94,19 +129,25 @@ function DetailProduct() {
             <img
               src={
                 product.product_image
-                  ? `${process.env.REACT_APP_API_BE}/${product.product_image}`
-                  : "../../assets/icon-medicine.png"
+                  ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
+                  : "./assets/icon-medicine.png"
               }
               alt=""
               width="240px"
               height="fit-content"
               style={{ height: "fit-content" }}
             />
-            <div className="w-full lg:px-11">
-              <div className="flex justify-between lg:w-3/4 items-center gap-2">
+            <div className="w-full">
+              <div className="flex justify-between w-full items-start gap-4">
                 <p className="font-bold text-3xl lg:text-5xl">{product.name}</p>
                 <div className="flex gap-2 lg:gap-4">
-                  <Button colorScheme="blue" className="lg:w-full w-4">
+                  <Button
+                    colorScheme="blue"
+                    className="lg:w-full w-4"
+                    onClick={() => {
+                      setModalEditProductOpen(true);
+                    }}
+                  >
                     <div className="block lg:hidden">
                       <svg
                         fill="none"
@@ -126,7 +167,13 @@ function DetailProduct() {
                     </div>
                     <p className="hidden lg:block">Edit</p>
                   </Button>
-                  <Button colorScheme="red" className="lg:w-full w-4">
+                  <Button
+                    colorScheme="red"
+                    className="lg:w-full w-4"
+                    onClick={() =>
+                      handleConfirmationDeleteProduct(product.idproduct)
+                    }
+                  >
                     <div className="block lg:hidden">
                       <svg
                         fill="none"
@@ -161,7 +208,17 @@ function DetailProduct() {
                     <p>Price</p>
                   </div>
                   <div className="flex flex-col gap-4 text-right lg:text-left">
-                    <p>{product.category_name}</p>
+                    <div className="flex gap-2">
+                      {(product.categories || []).length > 0
+                        ? (product.categories || []).map((category) => {
+                            return (
+                              <p key={category.idcategory}>
+                                {category.name || "-"}
+                              </p>
+                            );
+                          })
+                        : "-"}
+                    </div>
                     <p>{currency(product.price)}</p>
                   </div>
                 </div>
@@ -178,9 +235,10 @@ function DetailProduct() {
                   {product.stock === 0 ? (
                     <p className="text-red-600 font-bold">Out of stock</p>
                   ) : (
-                    <p>
-                      {product.stock} {product.unit_product}
-                    </p>
+                    <div className="flex gap-2">
+                      <p>{product.stock}</p>
+                      <p>{product.unit_product}</p>
+                    </div>
                   )}
                 </div>
                 <div className="flex flex-wrap gap-4 mt-6">
@@ -254,6 +312,11 @@ function DetailProduct() {
             </ModalFooter>
           </ModalContent>
         </Modal>
+        <EditProductModal
+          product={product}
+          isOpen={modalEditProductOpen}
+          onClose={() => setModalEditProductOpen(false)}
+        />
       </div>
     </>
   );

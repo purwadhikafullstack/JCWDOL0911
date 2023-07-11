@@ -485,6 +485,25 @@ export const completeSendOrder = (transaction) => {
     }
   };
 };
+export const adminCancelOrder = (idTransaction,email) => {
+  return async (dispatch) => {
+    const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
+    Swal.fire({
+      title: 'Loading',
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
+    const response = await Axios.patch(
+      `${process.env.REACT_APP_API_BE}/order/cancel-order/${idadmin}`,
+      {idTransaction,email}
+    );
+    Swal.fire(`${response.data.message}`, '', 'success');
+    window.location.reload();
+  };
+};
+
 
 export const {
   setTransaction,

@@ -8,7 +8,8 @@ import PrescriptionImageModal from "./PrescriptionImageModal";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { prescriptionCart, prescriptionTotalPrice } from "../../features/cart/cartSlice";
-import { setPrescriptionCheckOut } from "../../features/product/prescriptionSlice";
+import { rejectPresciption, setPrescriptionCheckOut } from "../../features/product/prescriptionSlice";
+import Swal from "sweetalert2";
 
 function PrescriptionOrderCard() {
   //function to close the modal
@@ -21,9 +22,21 @@ function PrescriptionOrderCard() {
     navigate(`/admin/prescription/${prescription.idprescription}`)
   };
 
-  const onClickRejectHandler = (prescription) => {
-    console.log(prescription);
-  };
+  const onClickRejectHandler = async(prescription) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Reject it!",
+      showLoaderOnConfirm: true,
+    });
+    if (result.isConfirmed) {
+      dispatch(rejectPresciption(prescription.idprescription,prescription.email,navigate))
+    }
+  }
   const checkoutHandler = (prescriptions) => {
     dispatch(setPrescriptionCheckOut(prescriptions))
     navigate('/prescription/checkout')

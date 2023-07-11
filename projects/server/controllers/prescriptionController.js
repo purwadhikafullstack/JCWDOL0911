@@ -1,5 +1,7 @@
 const { db, query } = require("../database");
 const { format } = require("date-fns");
+const nodemailer = require("../helpers/nodemailer");
+
 
 module.exports = {
   uploadPrescription: async (req, res) => {
@@ -91,5 +93,22 @@ module.exports = {
       )} );`)
     await query(`UPDATE prescription SET status = 'DONE' WHERE idprescription = ${db.escape(orderProduct.idprescription)}`)
     res.status(200).send({ message:"Order Has Been Create, Please Make a Payment"})
+  },
+  rejectPrescription: async (req, res) => {
+    const idPrescription = parseInt(req.params.idPrescription)
+    const {email} = req.body
+    await query(`UPDATE prescription SET status = 'REJECTED' WHERE idprescription = ${db.escape(idPrescription)}`)
+    let mail = {
+      from: `Admin <${process.env.NODEMAILER_USER}>`,
+      to: `${email}`,
+      subject: `Notification Of rejection`,
+      html: `
+      <div>
+      <p>Sorry,Your Prescription with Transaction ID ${idPrescription} Has Been Rejected By Admin Please Make Another Request</p>
+      </div>`,
+    };
+
+    await nodemailer.sendMail(mail);
+    res.status(200).send({message:'Prescription Rejected And Notification Has Been Sent to User'})
   }
 };

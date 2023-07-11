@@ -11,6 +11,7 @@ import PaymentImageModal from "./PaymentImageModal";
 import {
   acceptOnProcessOrder,
   acceptPaymentReview,
+  adminCancelOrder,
   confirmPaymentReview,
   rejectPaymentReview,
 } from "../../features/order/orderSlice";
@@ -36,6 +37,22 @@ function OnProcessOrderCard({ changePageInfo }) {
       changePageInfo(pageStatus);
     }
   };
+  const cancelHandler = async (transaction) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Reject it!",
+      showLoaderOnConfirm: true,
+    });
+    if (result.isConfirmed) {
+      dispatch(adminCancelOrder(transaction.idtransaction,transaction.email))
+    }
+  }
+  
 
   return (
     <>
@@ -101,6 +118,13 @@ function OnProcessOrderCard({ changePageInfo }) {
             </div>
             <div className="flex sm:flex-row-reverse flex-col mt-4 justify-between items-center">
               <div className="flex sm:w-[50%] w-full flex-row gap-4">
+                <button
+                  hidden={localStorage.getItem("user") ? true : false}
+                  onClick={() => cancelHandler(transaction)}
+                  className=" w-full  p-2 font-bold mx-auto rounded hover:bg-red-800 text-white bg-red-600"
+                >
+                  Cancel
+                </button>
                 <button
                   hidden={localStorage.getItem("user") ? true : false}
                   onClick={() => onClickSubmitHandler(transaction)}

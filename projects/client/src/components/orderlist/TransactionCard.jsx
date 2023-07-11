@@ -5,8 +5,9 @@ import { useSelector } from "react-redux";
 import ProductCard from "./ProductCard";
 import dots_comment from "../../assets/dots_comment.png";
 import PaymentModal from "../payment/PaymentModal";
-import { setSelectedTransaction } from "../../features/order/orderSlice";
+import { adminCancelOrder, setSelectedTransaction } from "../../features/order/orderSlice";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 
 function TransactionCard({ changePageInfo }) {
   const dispatch = useDispatch();
@@ -21,6 +22,21 @@ function TransactionCard({ changePageInfo }) {
   const onClickClosePaymentHandler = () => {
     setIsPaymentModal((prev) => !prev);
   };
+  const cancelHandlerAdmin = async (transaction) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Reject it!",
+      showLoaderOnConfirm: true,
+    });
+    if (result.isConfirmed) {
+      dispatch(adminCancelOrder(transaction.idtransaction,transaction.email))
+    }
+  }
 
   return (
     <>
@@ -70,6 +86,13 @@ function TransactionCard({ changePageInfo }) {
                 <button
                   hidden={localStorage.getItem("admin") ? true : false}
                   className=" w-full p-2 font-bold mx-auto rounded hover:bg-red-800 text-white bg-red-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  hidden={localStorage.getItem("admin") ? false : true}
+                  className=" w-full p-2 font-bold mx-auto rounded hover:bg-red-800 text-white bg-red-600"
+                  onClick={()=>cancelHandlerAdmin(transaction)}
                 >
                   Cancel
                 </button>

@@ -39,9 +39,8 @@ function OrderProductCart() {
     (state) => state.address.addressList.allAddress
   );
   // return state.address.primaryAddress[0] || userAddresses[0];
-  const userPrimaryAddress = useSelector(
-    (state) => state.address.primaryAddress[0]
-  );
+  const userPrimaryAddress =
+    useSelector((state) => state.address.primaryAddress[0]) || {};
 
   useEffect(() => {
     dispatch(fetchAddresses(0));
@@ -115,9 +114,13 @@ function OrderProductCart() {
                         ></label>
                       </div>
                       <img
-                        src={item.product_image || medicine}
+                        src={
+                          item.product_image
+                            ? `${process.env.REACT_APP_API_BE}/uploads/${item.product_image}`
+                            : "./assets/icon-medicine.png"
+                        }
                         className=" object-contain w-[200px] h-full"
-                        alt="testing"
+                        alt="product"
                       />
                     </div>
                     <div className="flex sm:flex-row sm:gap-4 ml-10 flex-col w-full mt-10 mb-3 justify-between">

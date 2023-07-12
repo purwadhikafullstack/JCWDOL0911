@@ -157,49 +157,66 @@ function Productlist() {
         <hr className="mt-6" />
       </div>
 
-      <div className="flex flex-col mx-6">
-        <div className="flex flex-wrap gap-4 mt-6">
-          {productlist.map((product) => (
-            <CardProduct product={product} />
-          ))}
-        </div>
-        <div className="flex p-3 mt-3 justify-center">
-          <Button
-            size={"xs"}
-            className="button-primary"
-            onClick={() =>
-              setQuery({
-                ...query,
-                page: query.page === 1 ? 1 : query.page - 1,
-              })
-            }
-          >
-            {"<"}
-          </Button>
-          <div className="flex flex-row mx-3">
-            {tempArray.map((value) => (
-              <p
-                className="mx-2 cursor-pointer"
-                onClick={() => setQuery({ ...query, page: value })}
-              >
-                {value === query.page ? <b>{value}</b> : value}
-              </p>
+      {productlist.length > 0 ? (
+        <div className="flex flex-col mx-6 my-11">
+          <div className="flex flex-wrap gap-4 mt-6">
+            {productlist.map((product) => (
+              <CardProduct product={product} />
             ))}
           </div>
-          <Button
-            size={"xs"}
-            className="button-primary"
-            onClick={() =>
-              setQuery({
-                ...query,
-                page: query.page === totalPage ? totalPage : query.page + 1,
-              })
-            }
-          >
-            {">"}
-          </Button>
+
+          <div className="flex p-3 mt-3 justify-center">
+            <Button
+              size={"xs"}
+              className="button-primary"
+              onClick={() =>
+                setQuery({
+                  ...query,
+                  page: query.page === 1 ? 1 : query.page - 1,
+                })
+              }
+            >
+              {"<"}
+            </Button>
+            <div className="flex flex-row mx-3">
+              {tempArray.map((value) => (
+                <p
+                  className="mx-2 cursor-pointer"
+                  onClick={() => setQuery({ ...query, page: value })}
+                >
+                  {value === query.page ? <b>{value}</b> : value}
+                </p>
+              ))}
+            </div>
+            <Button
+              size={"xs"}
+              className="button-primary"
+              onClick={() =>
+                setQuery({
+                  ...query,
+                  page: query.page === totalPage ? totalPage : query.page + 1,
+                })
+              }
+            >
+              {">"}
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="w-full my-11">
+          <div className="flex flex-col items-center">
+            <p className="text-xl mb-11 font-bold text-slate-400">
+              No product found
+            </p>
+            <img
+              src={"./assets/image-no-data-user.svg"}
+              alt=""
+              width="200px"
+              className=""
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

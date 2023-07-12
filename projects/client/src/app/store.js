@@ -14,6 +14,7 @@ import orderReducer from "../features/order/orderSlice";
 import prescriptionReducer from "../features/product/prescriptionSlice";
 import unitConversionReducer from "../features/unit/unitConversion";
 import promoProductReducer from "../features/promo/promoProductSlice";
+import productStockReducer from "../features/history/productStock";
 
 //Global state
 
@@ -34,5 +35,6 @@ export default configureStore({
     prescriptions: prescriptionReducer,
     units: unitConversionReducer,
     promos: promoProductReducer,
+    history: productStockReducer,
   },
 });

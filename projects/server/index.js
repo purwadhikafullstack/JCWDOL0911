@@ -18,6 +18,7 @@ const {
   paymentRouter,
   unitConversionOnAdminRoute,
   promoProductRoute,
+  historyProductRoute,
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -56,6 +57,7 @@ app.use("/api/order", orderRouter);
 app.use("/api/admin/products", productOnAdminRoute);
 app.use("/api/admin/unit-conversion", unitConversionOnAdminRoute);
 app.use("/api/admin/promo", promoProductRoute);
+app.use("/api/admin/history", historyProductRoute);
 
 app.use("/api/products", productRoutes);
 app.use("/api/transactions", transactionRoutes);

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import Axios from "axios";
 import Swal from "sweetalert2";
 import { AUTH_TOKEN } from "../../helpers/constant";
+import TableHistoryStockByIdProduct from "../../components/admin/products/TableHistoryStockByIdProduct";
 
 export const productsSlice = createSlice({
   name: "products",
@@ -71,8 +72,6 @@ export function fetchDetailProduct(idproduct) {
         `${process.env.REACT_APP_API_BE}/admin/products/${idproduct}`,
         { headers: { authorization: `Bearer ${token}` } }
       );
-
-      console.log({ AAA: response.data });
       dispatch(setProduct(response.data.product));
     } catch (error) {
       Swal.fire({
@@ -85,7 +84,6 @@ export function fetchDetailProduct(idproduct) {
 }
 
 export function updateStock(id, stock, setEdit, updatedStock, unit) {
-  console.log({ id, stock, setEdit, updatedStock, unit });
   if (updatedStock == "0") {
     Swal.fire({
       icon: "error",

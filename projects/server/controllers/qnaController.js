@@ -54,7 +54,6 @@ module.exports = {
     res.status(200).send({ message: "question created" });
   },
   deleteQuestion: async (req, res) => {
-    console.log("delete");
     const questionId = parseInt(req.params.id);
     await query(
       `DELETE FROM question WHERE idquestion= ${db.escape(questionId)}`
@@ -122,7 +121,6 @@ module.exports = {
       const getDetailQuestion = await query(getDetailQuestionQuery);
       res.status(200).send(getDetailQuestion);
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ message: error });
     }
   },

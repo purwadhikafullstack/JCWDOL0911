@@ -139,9 +139,13 @@ function ProductCart() {
                           ></label>
                         </div>
                         <img
-                          src={item.product_image || medicine}
+                          src={
+                            item.product_image
+                              ? `${process.env.REACT_APP_API_BE}/uploads/${item.product_image}`
+                              : "./assets/icon-medicine.png"
+                          }
                           className=" object-contain w-1/5 lg:w-[100px] h-full"
-                          alt="testing"
+                          alt="product"
                         />
                         <div className="flex flex-col w-full mt-10 mb-3 justify-between">
                           <div className="flex sm:flex-row flex-col justify-between gap-4">

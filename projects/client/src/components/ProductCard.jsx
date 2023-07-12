@@ -12,7 +12,6 @@ function ProductCard() {
   //   const myCartLength = myCart.length;
 
   //   useEffect(() => {
-  //     console.log(myCartLength);
   //     dispatch(getRelatedProduct(myCart));
   //   }, [myCartLength]);
 

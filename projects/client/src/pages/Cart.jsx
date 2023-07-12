@@ -10,12 +10,23 @@ import ProductCard from "../components/ProductCard";
 import { getRelatedProduct } from "../features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 import CardProduct from "../components/CardProduct";
+import { getAllProductsByFilter } from "../features/product/productSlice";
 
 function Cart() {
   const myCart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products.productList);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(
+      getAllProductsByFilter({
+        order: "DESC",
+        sortBy: "idproduct",
+        page: 1,
+      })
+    );
+  }, []);
 
   return (
     <div>

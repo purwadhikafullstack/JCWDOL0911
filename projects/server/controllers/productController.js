@@ -96,7 +96,6 @@ module.exports = {
         ? `WHERE (product.name LIKE ${db.escape(`%${search}%`)})`
         : ""
     }`);
-    console.log(productQuery);
     res.status(200).send({ productQuery, categoryQuery, countData });
   },
   updateStock: async (req, res) => {
@@ -130,6 +129,7 @@ module.exports = {
   getAllProductOnAdminDashboard: async (req, res) => {
     try {
       const idCategory = req.query.idcategory;
+      const search = req.query.search;
       const sort = req.query.sort;
       const key = req.query.key;
       const limit = req.query.limit || 10;
@@ -137,11 +137,19 @@ module.exports = {
 
       let getAllProductQuery = `SELECT * FROM product`;
 
+      if (search) {
+        getAllProductQuery += ` WHERE name LIKE '%${search}%'`;
+      }
+
       if (idCategory !== undefined) {
         getAllProductQuery = `SELECT p.*, c.name as category_name, c.idcategory as category_id FROM product p
         LEFT JOIN products_categories pc ON p.idproduct = pc.idproduct
         LEFT JOIN category c ON pc.idcategory = c.idcategory
         WHERE c.idcategory=${idCategory}`;
+
+        if (search) {
+          getAllProductQuery += ` AND p.name LIKE '%${search}%'`;
+        }
       }
 
       if (sort) {
@@ -164,7 +172,11 @@ module.exports = {
 
       const results2 = await Promise.all(result);
 
-      let getCountQuery = `SELECT Count(*) as count FROM product;`;
+      let getCountQuery = `SELECT Count(*) as count FROM product`;
+
+      if (search) {
+        getCountQuery += ` WHERE name LIKE '%${search}%'`;
+      }
 
       if (idCategory !== undefined) {
         getCountQuery = `SELECT Count(*) as count FROM (select pc.*, c.name as category_name from products_categories pc
@@ -365,6 +377,9 @@ module.exports = {
       } = req.body;
       const { idProduct } = req.params;
 
+      const getProductsCategoriesQuery = `DELETE FROM products_categories WHERE idproduct=${idProduct};`;
+      const getProductsCategories = await query(getProductsCategoriesQuery);
+
       let updateQuery = "UPDATE product SET ";
 
       if (name) {
@@ -385,9 +400,34 @@ module.exports = {
       if (idunit) {
         updateQuery += `idunit = ${idunit},`;
       }
-
       if (unitProduct) {
         updateQuery += `unit_product = ${db.escape(unitProduct)},`;
+      }
+      if (
+        idcategoryOne &&
+        idcategoryOne !== "undefined" &&
+        idcategoryOne !== "null"
+      ) {
+        const addCategoryProductQueryOne = `INSERT INTO products_categories VALUES (null ,${idProduct}, ${idcategoryOne});`;
+        const addCategoryProduct = await query(addCategoryProductQueryOne);
+      }
+
+      if (
+        idcategoryTwo &&
+        idcategoryTwo !== "undefined" &&
+        idcategoryTwo !== "null"
+      ) {
+        const addCategoryProductQueryTwo = `INSERT INTO products_categories VALUES (null ,${idProduct}, ${idcategoryTwo});`;
+        const addCategoryProduct = await query(addCategoryProductQueryTwo);
+      }
+
+      if (
+        idcategoryThree &&
+        idcategoryThree !== "undefined" &&
+        idcategoryThree !== "null"
+      ) {
+        const addCategoryProductQueryThree = `INSERT INTO products_categories VALUES (null ,${idProduct}, ${idcategoryThree});`;
+        const addCategoryProduct = await query(addCategoryProductQueryThree);
       }
 
       updateQuery =
@@ -441,6 +481,95 @@ module.exports = {
       const getAllPromo = await query(`SELECT * FROM promo;`);
 
       return res.status(200).send(getAllPromo);
+    } catch (error) {
+      return res.status(200).send({ message: error });
+    }
+  },
+  getAllHistoryProductStock: async (req, res) => {
+    try {
+      const startDate = req.query.start;
+      const endDate = req.query.end;
+      const sort = req.query.sort;
+      const key = req.query.key;
+      const limit = req.query.limit || 10;
+      const page = req.query.page || 1;
+
+      let getHistoryProductStockQuery = `SELECT restock.*, product.name AS name, product.product_image AS image, product.idproduct FROM restock
+      LEFT JOIN product ON product.idproduct = restock.idproduct`;
+
+      if (sort) {
+        getHistoryProductStockQuery += ` ORDER BY ${key} ${sort}`;
+      }
+
+      if (startDate && endDate) {
+        getHistoryProductStockQuery += ` WHERE date BETWEEN ${db.escape(
+          startDate
+        )} AND ${db.escape(endDate)}`;
+      }
+
+      getHistoryProductStockQuery += ` LIMIT ${limit} OFFSET ${
+        (page - 1) * limit
+      }`;
+
+      const getHistoryProductStock = await query(getHistoryProductStockQuery);
+
+      let getCountQuery = `SELECT Count(*) as count FROM restock;`;
+
+      if (startDate !== undefined && endDate !== undefined) {
+        getCountQuery = `SELECT Count(*) as count FROM (SELECT * FROM restock
+        WHERE date BETWEEN ${db.escape(startDate)} AND ${db.escape(
+          endDate
+        )}) y;`;
+      }
+
+      const count = await query(getCountQuery);
+
+      return res.status(200).send({ history: getHistoryProductStock, count });
+    } catch (error) {
+      return res.status(200).send({ message: error });
+    }
+  },
+  getHistoryProductStockByIdproduct: async (req, res) => {
+    try {
+      const idproduct = req.query.idproduct;
+      const startDate = req.query.start;
+      const endDate = req.query.end;
+      const sort = req.query.sort;
+      const key = req.query.key;
+      const limit = req.query.limit || 10;
+      const page = req.query.page || 1;
+
+      let getHistoryProductStockQuery = `SELECT restock.*, product.name AS name, product.product_image AS image FROM restock
+      LEFT JOIN product ON product.idproduct = restock.idproduct WHERE restock.idproduct=${idproduct}`;
+
+      if (startDate && endDate) {
+        getHistoryProductStockQuery += ` AND date BETWEEN ${db.escape(
+          startDate
+        )} AND ${db.escape(endDate)}`;
+      }
+
+      if (sort) {
+        getHistoryProductStockQuery += ` ORDER BY ${key} ${sort}`;
+      }
+
+      getHistoryProductStockQuery += ` LIMIT ${limit} OFFSET ${
+        (page - 1) * limit
+      }`;
+
+      const getHistoryProductStock = await query(getHistoryProductStockQuery);
+
+      let getCountQuery = `SELECT Count(*) as count FROM restock WHERE idproduct=${idproduct};`;
+
+      if (startDate !== undefined && endDate !== undefined) {
+        getCountQuery = `SELECT Count(*) as count FROM (SELECT * FROM restock
+        WHERE date BETWEEN ${db.escape(startDate)} AND ${db.escape(
+          endDate
+        )}) y WHERE idproduct=${idproduct};`;
+      }
+
+      const count = await query(getCountQuery);
+
+      return res.status(200).send({ history: getHistoryProductStock, count });
     } catch (error) {
       return res.status(200).send({ message: error });
     }

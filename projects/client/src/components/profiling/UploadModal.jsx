@@ -12,7 +12,6 @@ function UploadModal() {
     setFile(e.target.files[0]);
     let preview = document.getElementById("image-preview");
     preview.src = URL.createObjectURL(e.target.files[0]);
-    console.log(file);
   };
   const saveHandler = async (image) => {
     const result = await Swal.fire({

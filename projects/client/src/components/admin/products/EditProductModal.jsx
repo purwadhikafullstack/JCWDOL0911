@@ -113,7 +113,6 @@ function EditProductModal({ isOpen, onClose }) {
         { headers: { authorization: `Bearer ${token}` } }
       );
 
-      console.log("response", response);
       setIsLoading(false);
       onClose();
       dispatch(fetchDetailProduct(params.idproduct));

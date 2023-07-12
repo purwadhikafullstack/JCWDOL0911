@@ -24,6 +24,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import EditProductModal from "../../components/admin/products/EditProductModal";
+import TableHistoryStockByIdProduct from "../../components/admin/products/TableHistoryStockByIdProduct";
 
 function DetailProduct() {
   const navigate = useNavigate();
@@ -84,7 +85,6 @@ function DetailProduct() {
       );
       navigate("/admin/products");
     } catch (error) {
-      console.log(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -263,11 +263,15 @@ function DetailProduct() {
           <div />
           <Divider orientation="horizontal" />
           <div>
-            <div className="text-2xl font-semibold">
-              <p>History of Restock Product</p>
+            <div className="text-2xl font-semibold flex flex-wrap lg:flex-nowrap gap-2">
+              <p>History Stock of</p>
+              <p className="text-blue-700">{product.name}</p>
             </div>
             <div>
-              <p>tabel</p>
+              <TableHistoryStockByIdProduct
+                idproduct={params.idproduct}
+                stock={product.stock}
+              />
             </div>
           </div>
         </div>

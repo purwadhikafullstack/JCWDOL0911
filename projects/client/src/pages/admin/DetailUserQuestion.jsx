@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setDetailUserQuestion } from "../../features/admin/answerSlice";
 import Sidebar from "../../components/admin/Sidebar";
 import { Button, Tooltip, Divider } from "@chakra-ui/react";
+import moment from "moment";
 
 function DetailUserQuestion() {
   const params = useParams();
@@ -71,13 +72,6 @@ function DetailUserQuestion() {
     }
   };
 
-  const getDate = (dateTime) => {
-    if (dateTime && dateTime.length > 10) {
-      return dateTime.slice(0, 10);
-    }
-    return dateTime;
-  };
-
   useEffect(() => {
     fetchDetailUserQuestion();
   }, []);
@@ -116,7 +110,7 @@ function DetailUserQuestion() {
             </div>
             <div className="w-3/4">
               <p className="text-black text-md py-1">
-                {getDate(detailQuestion.date)}
+                {moment(detailQuestion.date).format("DD-MM-YYYY")}
               </p>
             </div>
           </div>

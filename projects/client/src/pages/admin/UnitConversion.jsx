@@ -91,34 +91,48 @@ function UnitConversion() {
                 />
               </div>
               <TableContainer>
-                <Table Table variant="simple">
-                  <Thead>
-                    <Tr>
-                      <Th>Name</Th>
-                      <Th>Default Unit</Th>
-                      <Th>Stock</Th>
-                      <Th>Convert Into</Th>
-                      <Th>Converted Stock</Th>
-                      <Th>
-                        <p>Unconverted</p>
-                        Stock
-                      </Th>
-                      <Th>Action</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {products?.map((product) => {
-                      return (
-                        <ProductsConversionRow
-                          product={product}
-                          order={order}
-                          filter={filter}
-                          search={search}
-                        />
-                      );
-                    })}
-                  </Tbody>
-                </Table>
+                {products.length > 0 ? (
+                  <Table Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th>Name</Th>
+                        <Th>Default Unit</Th>
+                        <Th>Stock</Th>
+                        <Th>Convert Into</Th>
+                        <Th>Converted Stock</Th>
+                        <Th>
+                          <p>Unconverted</p>
+                          Stock
+                        </Th>
+                        <Th>Action</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {products?.map((product) => {
+                        return (
+                          <ProductsConversionRow
+                            product={product}
+                            order={order}
+                            filter={filter}
+                            search={search}
+                          />
+                        );
+                      })}
+                    </Tbody>
+                  </Table>
+                ) : (
+                  <div className="w-full flex flex-col items-center my-11">
+                    <p className="text-xl mb-11 font-bold text-slate-400">
+                      No Data
+                    </p>
+                    <img
+                      src={"./assets/image-no-data-admin.svg"}
+                      alt=""
+                      width="200px"
+                      className=""
+                    />
+                  </div>
+                )}
               </TableContainer>
               {offset == 0 ? (
                 <></>

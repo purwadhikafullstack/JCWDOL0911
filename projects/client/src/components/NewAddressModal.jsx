@@ -51,7 +51,6 @@ function NewAddressModal({ modalHandler }) {
 
   const onSubmitHandler = async (newAddressData) => {
     const response = await dispatch(addNewAddress(newAddressData));
-    console.log(response);
     if (response.data.success) {
       Swal.fire(`${response.data.message}`, "", "success");
       modalHandler();

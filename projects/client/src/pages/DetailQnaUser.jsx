@@ -6,6 +6,7 @@ import { AUTH_TOKEN } from "../helpers/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { setDetailQna } from "../features/qna/questionSlice";
 import { Avatar } from "@chakra-ui/react";
+import moment from "moment";
 
 function DetailQnaUser() {
   const params = useParams();
@@ -31,20 +32,6 @@ function DetailQnaUser() {
         text: error.response?.data?.message,
       });
     }
-  };
-
-  const getDate = (dateTime) => {
-    if (dateTime && dateTime.length > 10) {
-      return dateTime.slice(0, 10);
-    }
-    return dateTime;
-  };
-
-  const getTime = (dateTime) => {
-    if (dateTime && dateTime.length > 10) {
-      return dateTime.slice(11, 19);
-    }
-    return dateTime;
   };
 
   useEffect(() => {
@@ -85,8 +72,8 @@ function DetailQnaUser() {
             </p>
           </div>
           <div className="flex flex-col text-sm lg:text-base text-right gap-1 text-slate-500">
-            <p>{getDate(questions.date)}</p>
-            <p>{getTime(questions.date)}</p>
+            <p>{moment(questions.date).format("DD-MM-YYYY")}</p>
+            <p>{moment(questions.date).format("h:mm:ss")}</p>
           </div>
         </div>
         <p>{questions.question}</p>
@@ -100,8 +87,8 @@ function DetailQnaUser() {
               </p>
             </div>
             <div className="flex flex-col text-sm lg:text-base text-right gap-1 text-slate-500">
-              <p>{getDate(questions.answer_date)}</p>
-              <p>{getTime(questions.answer_date)}</p>
+              <p>{moment(questions.answer_date).format("DD-MM-YYYY")}</p>
+              <p>{moment(questions.answer_date).format("h:mm:ss")}</p>
             </div>
           </div>
           <div>

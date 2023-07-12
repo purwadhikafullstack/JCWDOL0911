@@ -30,7 +30,6 @@ function LandingPage() {
   const userId = JSON.parse(localStorage.getItem("user"))?.iduser;
 
   const onClickUploadPrescriptionHandler = async () => {
-    console.log(!userId || userLogin !== "");
     if (!userId) {
       Swal.fire({
         icon: "info",
@@ -45,29 +44,11 @@ function LandingPage() {
     }
   };
 
-  // const getLatestProduct = async () => {
-  //   try {
-  //     let response = await axios.get(
-  //       `${process.env.REACT_APP_API_BE}/products/latest`
-  //     );
-
-  //     setProducts(response.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...",
-  //       text: error.response?.data?.message,
-  //     });
-  //   }
-  // };
-
   const uploadPrescriptionHandler = () => {
     setIsUploadPrescriptionModalHidden((prev) => !prev);
   };
 
   useEffect(() => {
-    // getLatestProduct();
     dispatch(
       getAllProductsByFilter({
         order: "DESC",

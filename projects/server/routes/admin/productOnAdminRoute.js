@@ -17,12 +17,25 @@ router.get(
   isAdmin,
   productController.getDetailProductOnAdminDashboard
 );
-router.post("/", upload.single("file"), productController.createProduct);
+router.post(
+  "/",
+  verifyToken,
+  isAdmin,
+  upload.single("file"),
+  productController.createProduct
+);
 router.put(
   "/:idProduct",
+  verifyToken,
+  isAdmin,
   upload.single("file"),
   productController.updateProduct
 );
-router.delete("/:idProduct", productController.deleteProduct);
+router.delete(
+  "/:idProduct",
+  verifyToken,
+  isAdmin,
+  productController.deleteProduct
+);
 
 module.exports = router;

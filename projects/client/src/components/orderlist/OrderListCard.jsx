@@ -274,7 +274,7 @@ function OrderListCard() {
   }, []);
 
   return (
-    <div className="">
+    <div>
       <div className="flex sm:flex-row flex-col justify-between py-5 items-center">
         <div
           id="prescription"

@@ -4,14 +4,15 @@ import userReducer from "../features/users/userSlice";
 import adminReduces from "../features/admin/adminSlice";
 import questionReducer from "../features/qna/questionSlice";
 import productReducer from "../features/product/productSlice";
-import categoryReducer from "../features/cartegory/categorySlice"
+import categoryReducer from "../features/cartegory/categorySlice";
 import rajaongkirReducer from "../features/rajaongkir/rajaongkirSlice";
 import addressReducer from "../features/users/addressSlice";
 import productsReducer from "../features/cart/productsSlice";
 import answerReducer from "../features/admin/answerSlice";
-import transactionReducer from '../features/transaction/transactionSlice'
+import transactionReducer from "../features/transaction/transactionSlice";
 import orderReducer from "../features/order/orderSlice";
-import prescriptionReducer from '../features/product/prescriptionSlice'
+import prescriptionReducer from "../features/product/prescriptionSlice";
+import reportReducer from "../features/report/reportSlice";
 
 //Global state
 
@@ -29,7 +30,7 @@ export default configureStore({
     transactions: transactionReducer,
     products: productReducer,
     categories: categoryReducer,
-    prescriptions:prescriptionReducer
-  }
-})
-
+    prescriptions: prescriptionReducer,
+    report: reportReducer,
+  },
+});

@@ -1,5 +1,7 @@
 const { db, query } = require("../database");
 const { format } = require("date-fns");
+const nodemailer = require("../helpers/nodemailer");
+
 
 module.exports = {
 uploadOrder: async (req, res) => {
@@ -1058,6 +1060,27 @@ uploadOrder: async (req, res) => {
       return res.status(400).send(error);
     }
   },
+  adminCancelOrder: async (req, res) => {
+    const idAdmin = parseInt(req.params.idadmin)
+    const {idTransaction,email}=req.body
+    await query (`update transaction set status = "COMPLETE", finished_date=${db.escape(
+      format(new Date(), "yyyy-MM-dd HH:mm:ss")
+    )} , idadmin=${db.escape(idAdmin)} where idtransaction = ${idTransaction}`);
+    let mail = {
+      from: `Admin <${process.env.NODEMAILER_USER}>`,
+      to: `${email}`,
+      subject: `Notification Of rejection`,
+      html: `
+      <div>
+      <p>Sorry,Your Transaction with Transaction ID ${idTransaction} Has Been Canceled By Admin, You Still can See Details on Finished Transaction. For Refund Please Contact Customer Service</p>
+      </div>`,
+    };
+
+    await nodemailer.sendMail(mail);
+    res.status(200).send({message:'Transaction Has Been canceled'})
+
+
+  }
 
   // getWaitingProduct: async (req, res) => {
   //   const idtransaction = req.params.idtransaction;

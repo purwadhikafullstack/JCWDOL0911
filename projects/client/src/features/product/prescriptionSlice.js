@@ -69,3 +69,26 @@ export function prescriptionOrder(orderData) {
     Swal.fire(`${response.data.message}`, "", "success");
 }
 }
+export function rejectPresciption(idPrescription,email) {
+  return async (dispatch) => {
+    Swal.fire({
+      title: 'Loading',
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_BE}/prescription/reject-prescriptions/${idPrescription}`,
+        { email }
+      );
+
+      Swal.fire(`${response.data.message}`, '', 'success');
+      window.location.reload();
+    } catch (error) {
+      Swal.fire('Error', error.message, 'error');
+    }
+  };
+}

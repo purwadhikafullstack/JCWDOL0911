@@ -41,6 +41,7 @@ import ProductStockHistory from "./pages/admin/ProductStockHistory";
 import Discount from "./pages/admin/Discount";
 import ProductsDisount from "./pages/admin/ProductsDisount";
 import PromoReport from "./pages/admin/PromoReport";
+import Report from "./pages/admin/Report";
 
 //
 function App() {
@@ -87,6 +88,7 @@ function App() {
               path="/admin/prescription/:idprescription"
               element={<Prescription />}
             />
+            <Route path="/admin/report" element={<Report />} />
             <Route
               path="/admin/products/unit-conversion"
               element={<UnitConversion />}

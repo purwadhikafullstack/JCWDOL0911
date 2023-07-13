@@ -19,7 +19,8 @@ const {
   unitConversionOnAdminRoute,
   promoProductRoute,
   historyProductRoute,
-  promoRoute
+  promoRoute,
+  reportRouter,
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -60,6 +61,7 @@ app.use("/api/admin/unit-conversion", unitConversionOnAdminRoute);
 app.use("/api/admin/promo", promoProductRoute);
 app.use("/api/admin/history", historyProductRoute);
 
+app.use("/api/report", reportRouter);
 app.use("/api/products", productRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/categories", categoryRoutes);

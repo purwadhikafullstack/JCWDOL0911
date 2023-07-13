@@ -19,6 +19,7 @@ const {
   unitConversionOnAdminRoute,
   promoProductRoute,
   historyProductRoute,
+  promoRoute
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -69,6 +70,7 @@ app.use("/api/qna", qnaRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/addresses", addressRoute);
 app.use("/api/transactions", transactionRoute);
+app.use("/api/promos", promoRoute);
 
 // app.get("/api/greetings", (req, res, next) => {
 //   res.status(200).json({

@@ -16,6 +16,7 @@ const paymentRouter = require("./paymentRouter");
 const unitConversionOnAdminRoute = require("./admin/unitConversionOnAdmin");
 const promoProductRoute = require("./admin/promoProductRoute");
 const historyProductRoute = require("./admin/historyProductRoute");
+const promoRoute = require("./admin/promoRoute")
 
 module.exports = {
   authRoutes,
@@ -36,4 +37,5 @@ module.exports = {
   unitConversionOnAdminRoute,
   promoProductRoute,
   historyProductRoute,
+  promoRoute
 };

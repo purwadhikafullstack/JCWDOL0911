@@ -35,7 +35,6 @@ module.exports = {
   convertUnitPrescription: async (req, res) => {
     idProd = parseInt(req.params.idProd)
     const { retail_quantity, quantity, stock, unit, unit_retail } = req.body
-    console.log(req.body);
     const date = new Date();
     const dateTime =
       date.getFullYear() +

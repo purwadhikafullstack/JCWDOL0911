@@ -16,7 +16,7 @@ module.exports = {
             const { order, filter, search, offset } = req.query;
             const queryStr = `
               SELECT * FROM promo
-              ${filter ? `WHERE isDisable = ${Boolean(filter)}` : ''}
+              ${filter ? `WHERE isDisable = ${Number(filter)}` : ''}
               ${search ? `WHERE name LIKE '%${search}%'` : ''} 
               ${order ? `ORDER BY name ${order}` : ''}
               LIMIT 5
@@ -77,7 +77,6 @@ module.exports = {
         const idpromo = parseInt(req.params.idpromo)
         
         const { idproduct } = req.body
-        console.log(idproduct);
         if (idproduct.checked) {
             await query(`UPDATE product SET idpromo = ${db.escape(idpromo)} WHERE idproduct = ${db.escape(idproduct.idproduct)}`)   
         } else {
@@ -91,11 +90,12 @@ module.exports = {
         
     },
     bonusItemData: async (req, res) => {
-        const bonusItemQuery = await query (`SELECT bp.*, p.idpromo,pr.description, pr.name,transaction.waiting_date
+        const bonusItemQuery = await query (`SELECT bp.*, p.idpromo,pr.description, pr.name as promo_name,transaction.waiting_date,p.name as product_name
         FROM bonus_products bp
         JOIN transaction ON bp.idtransaction = transaction.idtransaction
         JOIN product p ON bp.idproduct = p.idproduct
-        JOIN promo pr ON p.idpromo = pr.idpromo;`)
+        JOIN promo pr ON p.idpromo = pr.idpromo
+        ORDER BY transaction.waiting_date LIMIT 5;`)
         const countSamePromo = await query(`SELECT COUNT(*) AS total_count, p.idpromo,pr.name,pr.description,pr.type
         FROM bonus_products bp
         JOIN transaction ON bp.idtransaction = transaction.idtransaction
@@ -105,10 +105,11 @@ module.exports = {
         res.status(200).send({ bonusItemQuery, countSamePromo })
     },
     transactionDiscountData: async (req, res) => {
-        const trasactionDiscount = await query (`SELECT *
+        const trasactionDiscount = await query (`SELECT *,promo.name as promo_name
         FROM transaction
         LEFT JOIN promo ON transaction.idpromo = promo.idpromo
-        WHERE transaction.idpromo IS NOT NULL;`)
+        WHERE transaction.idpromo IS NOT NULL
+        ORDER BY transaction.waiting_date LIMIT 5;`)
         const countSameDiscount = await query(`SELECT  COUNT(*) AS total_count,transaction.idpromo,promo.name,promo.description,promo.type
         FROM transaction
         LEFT JOIN promo ON transaction.idpromo = promo.idpromo
@@ -124,7 +125,7 @@ module.exports = {
         JOIN product p ON pt.idproduct = p.idproduct
         LEFT JOIN promo pr ON p.idpromo = pr.idpromo
         WHERE pr.type = 'Product Discount'
-        ORDER BY p.name;`)
+        ORDER BY t.waiting_date LIMIT 5;`)
         const countSameDiscount = await query (`SELECT SUM(pt.quantity) AS total_count, p.idpromo,pr.name,pr.description,pr.type
         FROM product_transaction pt
         JOIN product p ON pt.idproduct = p.idproduct

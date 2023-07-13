@@ -27,21 +27,21 @@ function DiscountTableRow({ discount, count }) {
       {edit ? (
         <EditRow discount={discount} count={count} setEdit={setEdit} />
       ) : (
-        <Tr className={`${discount.isDisable?'bg-slate-400':''}`}>
-          <Td>{count}</Td>
-          <Td>{discount.name}</Td>
-          <Td>{discount.description}</Td>
-          <Td>
+        <Tr className={`${discount.isDisable?'bg-slate-400 bg-opacity-10':''}`}>
+          <Td className={`${discount.isDisable?'opacity-30':''}`}>{count}</Td>
+          <Td className={`${discount.isDisable?'opacity-30':''}`}>{discount.name}</Td>
+          <Td className={`${discount.isDisable?'opacity-30':''}`}>{discount.description}</Td>
+          <Td className={`${discount.isDisable?'opacity-30':''}`}>
             {discount.type === 'Bonus Item'
               ? `${discount.condition} item`
               : currency(discount.condition)}
           </Td>
-          <Td>
+          <Td className={`${discount.isDisable?'opacity-30':''}`}>
             {discount.type === 'Bonus Item'
               ? `${discount.discount} item`
               : `${discount.discount}%`}
           </Td>
-          <Td>{discount.type}</Td>
+          <Td className={`${discount.isDisable?'opacity-30':''}`}>{discount.type}</Td>
             <Td>
               {!discount.isDisable ? (
               

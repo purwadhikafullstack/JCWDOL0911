@@ -16,7 +16,6 @@ uploadOrder: async (req, res) => {
       idpromo,
       bonusItems
     } = req.body;
-    console.log(req.body);
 
     const setTransactionOrderQuery = `insert into transaction values (null, null, null, ${db.escape(
       iduser
@@ -29,7 +28,6 @@ uploadOrder: async (req, res) => {
     )}, ${db.escape(serviceData.description)}, ${db.escape(
       serviceData.cost[0].value
     )} );`;
-    console.log(setTransactionOrderQuery);
 
       const setTransactionOrder = await query(setTransactionOrderQuery);
       const { insertId } = setTransactionOrder;
@@ -111,7 +109,6 @@ uploadOrder: async (req, res) => {
       )} offset ${db.escape(offset)};`;
 
       const fetchWaitingOrder = await query(fetchWaitingOrderQuery);
-      // console.log(fetchWaitingOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchWaitingOrder.length === 0) {
@@ -408,7 +405,6 @@ uploadOrder: async (req, res) => {
         limit
       )} offset ${db.escape(offset)};`;
       const fetchSendOrder = await query(fetchSendOrderQuery);
-      console.log(fetchSendOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchSendOrder.length === 0) {
@@ -480,7 +476,6 @@ uploadOrder: async (req, res) => {
         limit
       )} offset ${db.escape(offset)};`;
       const fetchSendOrder = await query(fetchSendOrderQuery);
-      console.log(fetchSendOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchSendOrder.length === 0) {
@@ -530,7 +525,6 @@ uploadOrder: async (req, res) => {
         search || "" ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
       };`;
 
-      console.log(totalRowsQuery);
       const totalRows = await query(totalRowsQuery);
       const { totalOfRows } = totalRows[0];
       const totalPages = Math.ceil(totalOfRows / limit);
@@ -588,7 +582,6 @@ uploadOrder: async (req, res) => {
       const offset = limit * page;
       const { startDate, endDate } = JSON.parse(req.query.date);
 
-      console.log(idadmin);
       //querying total rows of data transaction from sql
       const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where status = "ON PROCESS" and transaction.onprocess_date is not null 
       ${
@@ -701,7 +694,6 @@ uploadOrder: async (req, res) => {
         limit
       )} offset ${db.escape(offset)};`;
       const fetchReviewOrder = await query(fetchReviewOrderQuery);
-      // console.log(fetchWaitingOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchReviewOrder.length === 0) {
@@ -773,7 +765,6 @@ uploadOrder: async (req, res) => {
       } order by transaction.review_date ${ascDescend} limit ${db.escape(
         limit
       )} offset ${db.escape(offset)};`;
-      // console.log(fetchReviewOrderQuery);
       const fetchReviewOrder = await query(fetchReviewOrderQuery);
       //if fetchReviewOrder length is 0, we return the result
       if (fetchReviewOrder.length === 0) {
@@ -915,7 +906,6 @@ uploadOrder: async (req, res) => {
 
       const fetchPrescriptionOrder = await query(fetchPrescriptionOrderQuery);
 
-      console.log(fetchPrescriptionOrder);
 
       // if fetchWaitingOrder length is 0, we return the result
       if (fetchPrescriptionOrder.length === 0) {
@@ -969,7 +959,6 @@ uploadOrder: async (req, res) => {
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )} where idtransaction = ${idtransaction}`;
       const acceptIdTransaction = await query(acceptIdTransactionQuery);
-      console.log(acceptIdTransactionQuery);
       if (acceptIdTransaction.affectedRows !== 0) {
         return res
           .status(200)
@@ -994,7 +983,6 @@ uploadOrder: async (req, res) => {
       )}, idadmin=${db.escape(
         idAdmin
       )}, payment_image=null where idtransaction = ${idtransaction}`;
-      // console.log(acceptIdTransactionQuery);
       const rejectIdTransaction = await query(rejectIdTransactionQuery);
 
       if (rejectIdTransaction.affectedRows !== 0) {
@@ -1019,7 +1007,6 @@ uploadOrder: async (req, res) => {
       const submitIdTransactionQuery = `update transaction set status = "ON THE WAY", send_date=${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )}, idadmin=${db.escape(idAdmin)} where idtransaction = ${idtransaction}`;
-      // console.log(acceptIdTransactionQuery);
       const submitIdTransaction = await query(submitIdTransactionQuery);
       if (submitIdTransaction.affectedRows !== 0) {
         return res
@@ -1043,7 +1030,6 @@ uploadOrder: async (req, res) => {
       const completeIdTransactionQuery = `update transaction set status = "COMPLETE", finished_date=${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )} where idtransaction = ${idtransaction}`;
-      // console.log(acceptIdTransactionQuery);
       const completeIdTransaction = await query(completeIdTransactionQuery);
 
       if (completeIdTransaction.affectedRows !== 0) {

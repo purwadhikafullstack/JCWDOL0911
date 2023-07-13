@@ -63,9 +63,7 @@ module.exports = {
           message: cost.data.rajaongkir.status.description,
         });
       }
-      // console.log(cost.data);
-      // console.log(cost.data.rajaongkir.results);
-      // console.log(cost.data.rajaongkir.results[0].costs);
+    
     } catch (error) {
       return res.status(400).send(error);
     }

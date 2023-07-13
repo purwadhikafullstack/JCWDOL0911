@@ -31,6 +31,7 @@ export const orderSlice = createSlice({
 });
 
 export const addUserOrder = (orderData) => {
+  console.log(orderData);
   return async (dispatch) => {
     console.log(orderData);
     const userId = JSON.parse(localStorage.getItem("user")).iduser;

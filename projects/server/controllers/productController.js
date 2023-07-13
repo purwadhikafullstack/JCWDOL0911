@@ -304,7 +304,6 @@ module.exports = {
 
     try {
       const {
-        idunit,
         idcategoryOne,
         idcategoryTwo,
         idcategoryThree,
@@ -316,13 +315,11 @@ module.exports = {
         unitProduct,
       } = req.body;
 
-      const createProductQuery = `INSERT INTO product (idunit, idpromo, name, price, description, stock, product_image, unit_product) VALUES (${db.escape(
-        idunit
-      )},${idpromo},${db.escape(name)},${db.escape(price)},${db.escape(
-        description
-      )},${db.escape(stock)}, ${db.escape(filename)}, ${db.escape(
-        unitProduct
-      )});`;
+      const createProductQuery = `INSERT INTO product (idpromo, name, price, description, stock, product_image, unit_product) VALUES (${idpromo},${db.escape(
+        name
+      )},${db.escape(price)},${db.escape(description)},${db.escape(
+        stock
+      )}, ${db.escape(filename)}, ${db.escape(unitProduct)});`;
 
       const createProduct = await query(createProductQuery);
       const idProduct = createProduct.insertId;
@@ -365,7 +362,6 @@ module.exports = {
 
     try {
       const {
-        idunit,
         idcategoryOne,
         idcategoryTwo,
         idcategoryThree,
@@ -396,9 +392,6 @@ module.exports = {
       }
       if (idpromo) {
         updateQuery += `idpromo = ${idpromo},`;
-      }
-      if (idunit) {
-        updateQuery += `idunit = ${idunit},`;
       }
       if (unitProduct) {
         updateQuery += `unit_product = ${db.escape(unitProduct)},`;

@@ -11,13 +11,12 @@ import productsReducer from "../features/cart/productsSlice";
 import answerReducer from "../features/admin/answerSlice";
 import transactionReducer from "../features/transaction/transactionSlice";
 import orderReducer from "../features/order/orderSlice";
-import prescriptionReducer from "../features/product/prescriptionSlice";
 import unitConversionReducer from "../features/unit/unitConversion";
 import promoProductReducer from "../features/promo/promoProductSlice";
 import productStockReducer from "../features/history/productStock";
-import prescriptionReducer from '../features/product/prescriptionSlice'
-import promoReducer from '../features/promo/promoSlice'
-import promoReportsReducer from '../features/promo/promoReportsSlice'
+import prescriptionReducer from "../features/product/prescriptionSlice";
+import promoReducer from "../features/promo/promoSlice";
+import promoReportsReducer from "../features/promo/promoReportsSlice";
 import reportReducer from "../features/report/reportSlice";
 
 //Global state
@@ -41,7 +40,7 @@ export default configureStore({
     promos: promoProductReducer,
     history: productStockReducer,
     promo: promoReducer,
-    promoReports :promoReportsReducer,
+    promoReports: promoReportsReducer,
     report: reportReducer,
   },
 });

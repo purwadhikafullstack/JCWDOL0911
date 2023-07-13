@@ -66,8 +66,6 @@ function Products() {
           headers: { authorization: `Bearer ${token}` },
         }
       );
-
-      console.log({ response });
       dispatch(setProducts(response.data.products || []));
       setCountData(response.data.count);
     } catch (error) {

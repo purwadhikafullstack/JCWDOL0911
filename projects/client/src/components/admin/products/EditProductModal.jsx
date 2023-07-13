@@ -30,7 +30,6 @@ function EditProductModal({ isOpen, onClose }) {
   const params = useParams();
   const token = localStorage.getItem(AUTH_TOKEN);
   const [formEditProduct, setFormEditProduct] = useState({
-    idunit: "",
     idcategoryOne: "",
     idcategoryTwo: "",
     idcategoryThree: "",
@@ -97,7 +96,6 @@ function EditProductModal({ isOpen, onClose }) {
     formData.append("description", formEditProduct.description);
     formData.append("idpromo", formEditProduct.idpromo || null);
     formData.append("unitProduct", formEditProduct.unitProduct);
-    formData.append("idunit", formEditProduct.idunit);
     if (formEditProduct.idcategoryOne)
       formData.append("idcategoryOne", formEditProduct.idcategoryOne);
     if (formEditProduct.idcategoryTwo)
@@ -144,7 +142,6 @@ function EditProductModal({ isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) {
       setFormEditProduct({
-        idunit: product.idunit,
         idcategoryOne: product?.categories[0]?.idcategory,
         idcategoryTwo: product?.categories[1]?.idcategory,
         idcategoryThree: product?.categories[2]?.idcategory,
@@ -254,28 +251,6 @@ function EditProductModal({ isOpen, onClose }) {
                   onChange={handleEditProductForm}
                   required
                 />
-              </div>
-              <div className="flex justify-between items-center">
-                <p className=" text-slate-500">
-                  Unit Conversion<span className="text-red-600">*</span>
-                </p>
-                <div className="flex w-2/3 border-slate-100 rounded-md">
-                  <Select
-                    placeholder="-"
-                    id="idunit"
-                    name="idunit"
-                    onChange={handleEditProductForm}
-                    value={formEditProduct.idunit}
-                  >
-                    {units.map((unit) => {
-                      return (
-                        <option value={unit.idunit} key={unit.idunit}>
-                          {unit.unitname}
-                        </option>
-                      );
-                    })}
-                  </Select>
-                </div>
               </div>
 
               <div className="flex justify-between items-center">

@@ -25,7 +25,6 @@ function AddNewProductModal({ isOpen, onClose }) {
   const navigate = useNavigate();
   const token = localStorage.getItem(AUTH_TOKEN);
   const [formAddNewProduct, setFormAddNewProduct] = useState({
-    idunit: "",
     idcategoryOne: "",
     idcategoryTwo: "",
     idcategoryThree: "",
@@ -37,7 +36,6 @@ function AddNewProductModal({ isOpen, onClose }) {
     unitProduct: "",
   });
   const [resetFormAddNewProduct, setResetFormAddNewProduct] = useState({
-    idunit: "",
     idcategoryOne: "",
     idcategoryTwo: "",
     idcategoryThree: "",
@@ -88,7 +86,7 @@ function AddNewProductModal({ isOpen, onClose }) {
     formData.append("stock", formAddNewProduct.stock);
     formData.append("idpromo", formAddNewProduct.idpromo || null);
     formData.append("unitProduct", formAddNewProduct.unitProduct);
-    formData.append("idunit", formAddNewProduct.idunit);
+
     if (formAddNewProduct.idcategoryOne)
       formData.append("idcategoryOne", formAddNewProduct.idcategoryOne);
     if (formAddNewProduct.idcategoryTwo)
@@ -116,7 +114,8 @@ function AddNewProductModal({ isOpen, onClose }) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: error.response?.data?.message || "Something went wrong!!",
+        text:
+          error.response?.data?.message?.message || "Something went wrong!!",
       });
       setIsLoading(false);
       navigate("/admin/products");
@@ -129,15 +128,6 @@ function AddNewProductModal({ isOpen, onClose }) {
   };
 
   const handleConfirmationAddProduct = async () => {
-    if (!formAddNewProduct.idunit) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "id unit is required",
-      });
-      return;
-    }
-
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You want to add new product?",
@@ -266,28 +256,6 @@ function AddNewProductModal({ isOpen, onClose }) {
                   onChange={handleAddProductForm}
                   required
                 />
-              </div>
-              <div className="flex justify-between items-center">
-                <p className=" text-slate-500">
-                  Unit Conversion<span className="text-red-600">*</span>
-                </p>
-                <div className="flex w-2/3 border-slate-100 rounded-md">
-                  <Select
-                    placeholder="-"
-                    id="idunit"
-                    name="idunit"
-                    onChange={handleAddProductForm}
-                    value={formAddNewProduct.idunit}
-                  >
-                    {units.map((unit) => {
-                      return (
-                        <option value={unit.idunit} key={unit.idunit}>
-                          {unit.unitname}
-                        </option>
-                      );
-                    })}
-                  </Select>
-                </div>
               </div>
               <div className="flex justify-between items-center">
                 <p className=" text-slate-500">Category (I)</p>

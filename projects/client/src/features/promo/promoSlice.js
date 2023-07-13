@@ -7,7 +7,8 @@ export const promoSlice = createSlice({
   name: "promo",
   initialState : {
     discounts: [],
-    discount:{}
+    discount: {},
+    count : 0
   },  
   reducers: {
     setDiscounts: (state, action) => {
@@ -15,10 +16,13 @@ export const promoSlice = createSlice({
     },
     setDiscount: (state, action) => {
       state.discount=action.payload
+    },
+    setCount: (state, action) => {
+      state.count=action.payload
     }
   },
 });
-export const {setDiscounts,setDiscount} =promoSlice.actions
+export const {setDiscounts,setDiscount,setCount} =promoSlice.actions
 export default promoSlice.reducer
 
 export function createDiscount(discount) {
@@ -30,11 +34,12 @@ export function createDiscount(discount) {
   }
     
 }
-export function fetchDiscounts() {
+export function fetchDiscounts(order,filter,search,offset) {
   return async (dispatch) => {
-    const response = await axios.get(`${process.env.REACT_APP_API_BE}/promos/discounts`)
-    dispatch(setDiscounts(response.data))
-    console.log(response.data);
+    const response = await axios.get(`${process.env.REACT_APP_API_BE}/promos/discounts?order=${order}&filter=${filter}&search=${search}&offset=${offset}`)
+    dispatch(setDiscounts(response.data.allDiscounts))
+    dispatch(setCount(response.data.countData))
+
   }
 }
 export function fetchDiscount(id) {

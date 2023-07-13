@@ -72,7 +72,7 @@ uploadOrder: async (req, res) => {
       //querying total rows of data transaction from sql
       const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where iduser=${db.escape(
         iduser
-      )} and payment_image is null
+      )} and status = "WAITING FOR PAYMENT"
       ${
         !startDate && !endDate
           ? ``
@@ -94,7 +94,7 @@ uploadOrder: async (req, res) => {
       const fetchWaitingOrderQuery = `select  transaction.idtransaction, transaction.idprescription, transaction.idadmin, transaction.iduser, transaction.idpromo, transaction.idaddress, transaction.waiting_date,
       transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date,
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
-      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where transaction.iduser = ${iduser} and payment_image is null
+      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where transaction.iduser = ${iduser} and status = "WAITING FOR PAYMENT"
       ${
         !startDate && !endDate
           ? ``
@@ -146,7 +146,7 @@ uploadOrder: async (req, res) => {
       const { startDate, endDate } = JSON.parse(req.query.date);
 
       //querying total rows of data transaction from sql
-      const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where payment_image is null 
+      const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where status = "WAITING FOR PAYMENT" 
       ${
         !startDate && !endDate
           ? ``
@@ -167,7 +167,7 @@ uploadOrder: async (req, res) => {
       const fetchAllWaitingOrderQuery = `select  transaction.idtransaction, transaction.idprescription, transaction.idadmin, transaction.iduser, transaction.idpromo, transaction.idaddress, transaction.waiting_date,
       transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date,
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
-      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where payment_image is null 
+      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where status = "WAITING FOR PAYMENT" 
       ${
         !startDate && !endDate
           ? ``

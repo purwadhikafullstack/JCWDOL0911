@@ -13,12 +13,23 @@ module.exports = {
     },
     allDiscounts: async (req, res) => {
         try {
-            const allDiscounts = await query (`SELECT * FROM promo`)
-            res.status(200).send(allDiscounts)
+            const { order, filter, search, offset } = req.query;
+            const queryStr = `
+              SELECT * FROM promo
+              ${filter ? `WHERE isDisable = ${Boolean(filter)}` : ''}
+              ${search ? `WHERE name LIKE '%${search}%'` : ''} 
+              ${order ? `ORDER BY name ${order}` : ''}
+              LIMIT 5
+              ${offset ? `OFFSET ${offset}` : ''}
+            `;
+            const allDiscounts = await query(queryStr);
+            const countData = await query(`SELECT COUNT(*) as count FROM promo  ${filter ? `WHERE isDisable = ${Boolean(filter)}` : ''}
+            ${search ? `WHERE name LIKE '%${search}%'` : ''} `)
+            res.status(200).send({allDiscounts,countData});
         } catch (error) {
-            
+            // Handle error
         }
-    },
+    },          
     fetchDiscount: async (req, res) => {
         try {
             const idpromo = parseInt(req.params.idpromo)

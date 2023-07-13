@@ -11,6 +11,7 @@ const transactionController = require("./transactionController");
 const orderController = require("./orderController");
 const categoryController = require("./categoryController");
 const paymentController = require("./paymentController");
+const promoController = require("./admin/promoController")
 
 module.exports = {
   relatedProduct,
@@ -26,5 +27,6 @@ module.exports = {
   orderController,
   categoryController,
   paymentController,
+  promoController
   
 };

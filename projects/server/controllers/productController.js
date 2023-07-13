@@ -13,7 +13,7 @@ module.exports = {
     }
   },
   getAllProductsByFilter: (req, res) => {
-    let filterQuery = `SELECT * FROM product`;
+    let filterQuery = `SELECT product.*,promo.discount,promo.description as promo_description,promo.type FROM product LEFT JOIN promo ON promo.idpromo = product.idpromo`;
     const { order, productName, category, sortBy, page } = req.query;
 
     const limit = 10;

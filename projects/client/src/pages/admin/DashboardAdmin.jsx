@@ -9,7 +9,11 @@ function DashboardAdmin() {
           <Sidebar />
         </div>
         <div className="min-h-screen h-full bg-dashboard-admin p-8 lg:p-28 flex flex-col gap-11 content-width">
-          <p>background: #3e8d9e </p>
+          <p className="text-xl sm:text-4xl">Welcome to Dashboard Admin of</p>
+          <p className="text-xl sm:text-4xl text-color-green font-bold">
+            Pharmacy Web App
+          </p>
+          <img src="../assets/admin-picture.svg" width="70%" alt="" />
         </div>
       </div>
     </>

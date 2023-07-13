@@ -11,7 +11,7 @@ import {
   Button,
   Input,
   Checkbox,
-  Stack,
+  Select,
 } from "@chakra-ui/react";
 import { useDispatch } from 'react-redux';
 import { assignDiscount, editDiscount, fetchDiscount } from '../../features/promo/promoSlice';
@@ -63,7 +63,18 @@ function ProductsDisount() {
   
     setAssignedProducts(updatedProducts);
   };
-  
+  const searchHandler = (e) => {
+    setOffset(0);
+    setSearch(e.target.value);
+  };
+  const filterHandler = (e) => {
+    setOffset(0);
+    setFilter(e.target.value);
+  };
+  const sortHandler = (e) => {
+    setOffset(0);
+    setOrder(e.target.value);
+  };
 
 
   const handleSelectAllChange = (isChecked) => {
@@ -85,7 +96,7 @@ function ProductsDisount() {
   useEffect(() => {
     dispatch(fetchDiscount(idPromo));
     dispatch(fetchProducts(order, filter, search, offset, limit));
-  }, []);
+  }, [search,order]);
 
 
   return (
@@ -98,6 +109,7 @@ function ProductsDisount() {
 
         <div className="bg-white p-4 rounded shadow-md">
           <h2 className="text-lg font-bold">Discount Detail's</h2>
+          
           <TableContainer>
             <Table Table variant="simple">
               <Thead>
@@ -191,7 +203,22 @@ function ProductsDisount() {
 
         {/* Card to show the product list for assigning the discount */}
         <div className="bg-white p-4 rounded shadow-md">
-          <h2 className="text-lg font-bold">Product List Card Title</h2>
+          <h2 className="text-lg font-bold py-3">Assign Promo</h2>
+          <div className="flex flex-col lg:w-[28rem]  gap-4">
+                <Select onChange={(e) => sortHandler(e)}>
+                  <option value="ASC">Sort By : Name (A-Z)</option>
+                  <option value="DESC">Sort By : Name (Z-A)</option>
+                </Select>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Search Products"
+                  className="bg-gray-50 border border-green-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full lg:w-[28rem] h-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
+                  onChange={(e) => searchHandler(e)}
+                  />
+              </div>
+                  </div>
+
           <TableContainer>
             <Table variant="simple">
               <Thead>

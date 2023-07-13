@@ -15,6 +15,9 @@ import prescriptionReducer from "../features/product/prescriptionSlice";
 import unitConversionReducer from "../features/unit/unitConversion";
 import promoProductReducer from "../features/promo/promoProductSlice";
 import productStockReducer from "../features/history/productStock";
+import promoReducer from '../features/promo/promoSlice'
+import promoReportsReducer from '../features/promo/promoReportsSlice'
+import reportReducer from "../features/report/reportSlice";
 
 //Global state
 

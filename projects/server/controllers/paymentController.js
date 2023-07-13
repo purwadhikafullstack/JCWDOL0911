@@ -20,7 +20,6 @@ module.exports = {
       )} , status = "UNDER REVIEW" where idtransaction = ${db.escape(
         idtransaction
       )};`;
-      console.log(uploadPaymentQuery);
       const uploadPayment = await query(uploadPaymentQuery);
       if (uploadPayment.affectedRows === 1) {
         return res

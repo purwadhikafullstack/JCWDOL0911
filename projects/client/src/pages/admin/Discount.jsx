@@ -11,13 +11,15 @@ import {
   Tr,
   Th,
   TableContainer,
-  Select,
+  Select,Button
 } from "@chakra-ui/react";
 import { useSelector } from 'react-redux'
 import DiscountTableRow from '../../components/admin/discounts/DiscountTableRow'
+import {useNavigate}from 'react-router-dom'
 
 function Discount() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [order, setOrder] = useState("ASC");
   const [filter, setFilter] = useState("");
   const [search, setSearch] = useState("");
@@ -64,15 +66,20 @@ function Discount() {
         <Sidebar />
       </div>
       <div className="min-h-screen h-full bg-dashboard-admin p-8 lg:p-28 flex flex-col gap-11 content-width">
-        <h1 className="text-3xl font-bold">Discount's</h1>
-        <DiscountModal/>
+        <h1 className="text-3xl font-bold">Promo's</h1>
+        <div className='flex  gap-5'>
+
+        <DiscountModal />
+        <button           className="bg-green-600 text-white font-bold h-full lg:h-10 py-2 px-2 rounded-md hover:bg-emerald-500 hover:text-white"
+ onClick={()=>navigate('/admin/reports/promos')}>Promo Report</button>
+ </div>
         <div className="bg-white px-6 pb-11 rounded-lg shadow-card-tagline">
             <div className="flex flex-col items-center my-11 gap-4">
               <div className="flex flex-wrap lg:flex-nowrap gap-4">
                 <Select onChange={(e) => filterHandler(e)}>
                   <option value="">Filter : -</option>
-                  <option value="true">Filter : Disable Only</option>
-                  <option value='false'>
+                  <option value='1'>Filter : Disable Only</option>
+                  <option value='0'>
                     Filter : Enable Only
                   </option>
                 </Select>

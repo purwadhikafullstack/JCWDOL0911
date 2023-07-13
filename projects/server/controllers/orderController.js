@@ -2,31 +2,30 @@ const { db, query } = require("../database");
 const { format } = require("date-fns");
 
 module.exports = {
-  uploadOrder: async (req, res) => {
-    console.log("im order");
-    try {
-      const iduser = parseInt(req.params.iduser);
-      const {
-        orderProduct,
-        orderAddress,
-        orderPrice,
-        courierData,
-        serviceData,
-      } = req.body;
-      console.log(req.body);
+uploadOrder: async (req, res) => {
+  try {
+    const iduser = parseInt(req.params.iduser);
+    const {
+      orderProduct,
+      orderAddress,
+      orderPrice,
+      courierData,
+      serviceData,
+      idpromo,
+      bonusItems
+    } = req.body;
 
-      const setTransactionOrderQuery = `insert into transaction values (null, null, null, ${db.escape(
-        iduser
-      )}, null, ${db.escape(orderAddress.idaddress)} ,${db.escape(
-        format(new Date(), "yyyy-MM-dd HH:mm:ss")
-      )},null, null, null, null, null, "WAITING FOR PAYMENT", ${db.escape(
-        orderPrice
-      )}, null, ${db.escape(courierData)}, ${db.escape(
-        serviceData.service
-      )}, ${db.escape(serviceData.description)}, ${db.escape(
-        serviceData.cost[0].value
-      )} );`;
-      console.log(setTransactionOrderQuery);
+    const setTransactionOrderQuery = `insert into transaction values (null, null, null, ${db.escape(
+      iduser
+    )}, ${db.escape(idpromo)}, ${db.escape(orderAddress.idaddress)} ,${db.escape(
+      format(new Date(), "yyyy-MM-dd HH:mm:ss")
+    )},null, null, null, null, null, "WAITING FOR PAYMENT", ${db.escape(
+      orderPrice
+    )}, null, ${db.escape(courierData)}, ${db.escape(
+      serviceData.service
+    )}, ${db.escape(serviceData.description)}, ${db.escape(
+      serviceData.cost[0].value
+    )} );`;
 
       const setTransactionOrder = await query(setTransactionOrderQuery);
       const { insertId } = setTransactionOrder;
@@ -102,7 +101,6 @@ module.exports = {
       )} offset ${db.escape(offset)};`;
 
       const fetchWaitingOrder = await query(fetchWaitingOrderQuery);
-      // console.log(fetchWaitingOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchWaitingOrder.length === 0) {
@@ -399,7 +397,6 @@ module.exports = {
         limit
       )} offset ${db.escape(offset)};`;
       const fetchSendOrder = await query(fetchSendOrderQuery);
-      console.log(fetchSendOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchSendOrder.length === 0) {
@@ -471,7 +468,6 @@ module.exports = {
         limit
       )} offset ${db.escape(offset)};`;
       const fetchSendOrder = await query(fetchSendOrderQuery);
-      console.log(fetchSendOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchSendOrder.length === 0) {
@@ -521,7 +517,6 @@ module.exports = {
         search || "" ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
       };`;
 
-      console.log(totalRowsQuery);
       const totalRows = await query(totalRowsQuery);
       const { totalOfRows } = totalRows[0];
       const totalPages = Math.ceil(totalOfRows / limit);
@@ -579,7 +574,6 @@ module.exports = {
       const offset = limit * page;
       const { startDate, endDate } = JSON.parse(req.query.date);
 
-      console.log(idadmin);
       //querying total rows of data transaction from sql
       const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where status = "ON PROCESS" and transaction.onprocess_date is not null 
       ${
@@ -692,7 +686,6 @@ module.exports = {
         limit
       )} offset ${db.escape(offset)};`;
       const fetchReviewOrder = await query(fetchReviewOrderQuery);
-      // console.log(fetchWaitingOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchReviewOrder.length === 0) {
@@ -764,7 +757,6 @@ module.exports = {
       } order by transaction.review_date ${ascDescend} limit ${db.escape(
         limit
       )} offset ${db.escape(offset)};`;
-      // console.log(fetchReviewOrderQuery);
       const fetchReviewOrder = await query(fetchReviewOrderQuery);
       //if fetchReviewOrder length is 0, we return the result
       if (fetchReviewOrder.length === 0) {
@@ -906,7 +898,6 @@ module.exports = {
 
       const fetchPrescriptionOrder = await query(fetchPrescriptionOrderQuery);
 
-      console.log(fetchPrescriptionOrder);
 
       // if fetchWaitingOrder length is 0, we return the result
       if (fetchPrescriptionOrder.length === 0) {
@@ -960,7 +951,6 @@ module.exports = {
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )} where idtransaction = ${idtransaction}`;
       const acceptIdTransaction = await query(acceptIdTransactionQuery);
-      console.log(acceptIdTransactionQuery);
       if (acceptIdTransaction.affectedRows !== 0) {
         return res
           .status(200)
@@ -985,7 +975,6 @@ module.exports = {
       )}, idadmin=${db.escape(
         idAdmin
       )}, payment_image=null where idtransaction = ${idtransaction}`;
-      // console.log(acceptIdTransactionQuery);
       const rejectIdTransaction = await query(rejectIdTransactionQuery);
 
       if (rejectIdTransaction.affectedRows !== 0) {
@@ -1010,7 +999,6 @@ module.exports = {
       const submitIdTransactionQuery = `update transaction set status = "ON THE WAY", send_date=${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )}, idadmin=${db.escape(idAdmin)} where idtransaction = ${idtransaction}`;
-      // console.log(acceptIdTransactionQuery);
       const submitIdTransaction = await query(submitIdTransactionQuery);
       if (submitIdTransaction.affectedRows !== 0) {
         return res
@@ -1034,7 +1022,6 @@ module.exports = {
       const completeIdTransactionQuery = `update transaction set status = "COMPLETE", finished_date=${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )} where idtransaction = ${idtransaction}`;
-      // console.log(acceptIdTransactionQuery);
       const completeIdTransaction = await query(completeIdTransactionQuery);
 
       if (completeIdTransaction.affectedRows !== 0) {

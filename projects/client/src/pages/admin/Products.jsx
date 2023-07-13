@@ -373,7 +373,7 @@ function Products() {
                             product.stock
                           )}
                         </Td>
-                        <Td>{product.unit ? product.unit : <p>-</p>}</Td>
+                        <Td>{product.unit_product ? product.unit_product : <p>-</p>}</Td>
                         <Td>
                           {(product.categories || []).length > 0
                             ? product.categories.map((category) => (

@@ -38,6 +38,7 @@ function EditProductModal({ isOpen, onClose }) {
     price: "",
     description: "",
     unitProduct: "",
+    weight: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const categories = useSelector((state) => state.categories.categories);
@@ -96,6 +97,7 @@ function EditProductModal({ isOpen, onClose }) {
     formData.append("description", formEditProduct.description);
     formData.append("idpromo", formEditProduct.idpromo || null);
     formData.append("unitProduct", formEditProduct.unitProduct);
+    formData.append("weight", formEditProduct.weight);
     if (formEditProduct.idcategoryOne)
       formData.append("idcategoryOne", formEditProduct.idcategoryOne);
     if (formEditProduct.idcategoryTwo)
@@ -151,6 +153,7 @@ function EditProductModal({ isOpen, onClose }) {
         description: product.description,
         unitProduct: product.unit_product,
         productImage: product.product_image,
+        weight: product.weight,
       });
     }
   }, [isOpen]);
@@ -252,7 +255,19 @@ function EditProductModal({ isOpen, onClose }) {
                   required
                 />
               </div>
-
+              <div className="flex justify-between items-center">
+                <p className=" text-slate-500">Weight (gram)</p>
+                <input
+                  id="weight"
+                  name="weight"
+                  type="text"
+                  placeholder="-"
+                  className="w-2/3 border-2 border-slate-100 px-2 py-1 rounded-md"
+                  value={formEditProduct.weight}
+                  onChange={handleEditProductForm}
+                  required
+                />
+              </div>
               <div className="flex justify-between items-center">
                 <p className=" text-slate-500">Category (I)</p>
                 <div className="flex w-2/3 border-slate-100 rounded-md">

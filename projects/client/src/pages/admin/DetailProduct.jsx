@@ -200,12 +200,13 @@ function DetailProduct() {
               </div>
               <div>
                 <div className="text-xl lg:text-2xl mt-11 mb-4 font-semibold">
-                  <p>Category and Price</p>
+                  <p>Detail Product</p>
                 </div>
                 <div className="flex">
                   <div className="flex flex-col gap-4 w-full lg:w-1/5">
                     <p>Category</p>
                     <p>Price</p>
+                    <p>Weight</p>
                   </div>
                   <div className="flex flex-col gap-4 text-right lg:text-left">
                     <div className="flex gap-2">
@@ -220,6 +221,7 @@ function DetailProduct() {
                         : "-"}
                     </div>
                     <p>{currency(product.price)}</p>
+                    <p>{product.weight || "-"} gram</p>
                   </div>
                 </div>
               </div>

@@ -313,13 +313,16 @@ module.exports = {
         description,
         stock,
         unitProduct,
+        weight,
       } = req.body;
 
-      const createProductQuery = `INSERT INTO product (idpromo, name, price, description, stock, product_image, unit_product) VALUES (${idpromo},${db.escape(
+      const createProductQuery = `INSERT INTO product (idpromo, name, price, description, stock, product_image, unit_product, weight) VALUES (${idpromo},${db.escape(
         name
       )},${db.escape(price)},${db.escape(description)},${db.escape(
         stock
-      )}, ${db.escape(filename)}, ${db.escape(unitProduct)});`;
+      )}, ${db.escape(filename)}, ${db.escape(unitProduct)}, ${db.escape(
+        weight
+      )});`;
 
       const createProduct = await query(createProductQuery);
       const idProduct = createProduct.insertId;
@@ -370,6 +373,7 @@ module.exports = {
         price,
         description,
         unitProduct,
+        weight,
       } = req.body;
       const { idProduct } = req.params;
 
@@ -395,6 +399,9 @@ module.exports = {
       }
       if (unitProduct) {
         updateQuery += `unit_product = ${db.escape(unitProduct)},`;
+      }
+      if (weight) {
+        updateQuery += `weight = ${db.escape(weight)},`;
       }
       if (
         idcategoryOne &&

@@ -34,6 +34,7 @@ function AddNewProductModal({ isOpen, onClose }) {
     description: "",
     stock: "",
     unitProduct: "",
+    weight: "",
   });
   const [resetFormAddNewProduct, setResetFormAddNewProduct] = useState({
     idcategoryOne: "",
@@ -45,6 +46,7 @@ function AddNewProductModal({ isOpen, onClose }) {
     description: "",
     stock: "",
     unitProduct: "",
+    weight: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const categories = useSelector((state) => state.categories.categories);
@@ -86,7 +88,7 @@ function AddNewProductModal({ isOpen, onClose }) {
     formData.append("stock", formAddNewProduct.stock);
     formData.append("idpromo", formAddNewProduct.idpromo || null);
     formData.append("unitProduct", formAddNewProduct.unitProduct);
-
+    formData.append("weight", formAddNewProduct.weight);
     if (formAddNewProduct.idcategoryOne)
       formData.append("idcategoryOne", formAddNewProduct.idcategoryOne);
     if (formAddNewProduct.idcategoryTwo)
@@ -254,7 +256,18 @@ function AddNewProductModal({ isOpen, onClose }) {
                   className="w-2/3 border-2 border-slate-100 px-2 py-1 rounded-md"
                   value={formAddNewProduct.unitProduct}
                   onChange={handleAddProductForm}
-                  required
+                />
+              </div>
+              <div className="flex justify-between items-center">
+                <p className=" text-slate-500">Weight (gram)</p>
+                <input
+                  id="weight"
+                  name="weight"
+                  type="text"
+                  placeholder="-"
+                  className="w-2/3 border-2 border-slate-100 px-2 py-1 rounded-md"
+                  value={formAddNewProduct.weight}
+                  onChange={handleAddProductForm}
                 />
               </div>
               <div className="flex justify-between items-center">

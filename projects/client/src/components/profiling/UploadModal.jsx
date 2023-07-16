@@ -43,7 +43,7 @@ function UploadModal() {
               Upload Your Picture
             </h1>
             <div className="flex justify-center mb-4">
-              <img id="image-preview" className="max-w-sm" />
+              <img id="image-preview" className="max-w-sm max-h-32" />
             </div>
             <input
               type="file"

@@ -48,6 +48,7 @@ export const {
 export default questionSlice.reducer;
 
 export function fetchMyQuestion(offset, search, sort) {
+  console.log(' im my question');
   const userId = JSON.parse(localStorage.getItem("user")).iduser;
   return async (dispatch) => {
     let response = await axios.get(

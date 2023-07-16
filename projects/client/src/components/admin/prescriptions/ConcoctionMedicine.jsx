@@ -44,8 +44,7 @@ function ConcoctionMedicine({ prescription }) {
 
     useEffect(() => {
         dispatch(fetchProducts(order,filter,search,offset,limit))
-
-    },[search])
+    },[search,unit,selectedProduct])
   return (
     <div className='flex flex-col gap-3 justify-center items-center'> 
       <div className='flex flex-col gap-2'>

@@ -119,8 +119,16 @@ uploadOrder: async (req, res) => {
       }
 
       const oldTemp = fetchWaitingOrder.map(async (order, index) => {
-        const fetchWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
-        const fetchWaitingProduct = await query(fetchWaitingProductQuery);
+        const fetchWaitingProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
+              const fetchWaitingProduct = await query(fetchWaitingProductQuery);
         return { ...order, orderProduct: fetchWaitingProduct };
       });
       const waitingOrder = await Promise.all(oldTemp);
@@ -191,7 +199,15 @@ uploadOrder: async (req, res) => {
       }
 
       const oldTemp = fetchAllWaitingOrder.map(async (order, index) => {
-        const fetchAllWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction} order by transaction.waiting_date asc;`;
+        const fetchAllWaitingProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchAllWaitingProduct = await query(fetchAllWaitingProductQuery);
 
         return { ...order, orderProduct: fetchAllWaitingProduct };
@@ -271,7 +287,15 @@ uploadOrder: async (req, res) => {
       }
 
       const oldTemp = fetchFinishedOrder.map(async (order, index) => {
-        const fetchFinishedProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchFinishedProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchFinishedProduct = await query(fetchFinishedProductQuery);
         return { ...order, orderProduct: fetchFinishedProduct };
       });
@@ -342,7 +366,15 @@ uploadOrder: async (req, res) => {
       }
 
       const oldTemp = fetchFinishedOrder.map(async (order, index) => {
-        const fetchFinishedProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchFinishedProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchFinishedProduct = await query(fetchFinishedProductQuery);
         return { ...order, orderProduct: fetchFinishedProduct };
       });
@@ -415,7 +447,15 @@ uploadOrder: async (req, res) => {
       }
 
       const oldTemp = fetchSendOrder.map(async (order, index) => {
-        const fetchSendProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchSendProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchSendProduct = await query(fetchSendProductQuery);
         return { ...order, orderProduct: fetchSendProduct };
       });
@@ -486,7 +526,15 @@ uploadOrder: async (req, res) => {
       }
 
       const oldTemp = fetchSendOrder.map(async (order, index) => {
-        const fetchSendProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchSendProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchSendProduct = await query(fetchSendProductQuery);
         return { ...order, orderProduct: fetchSendProduct };
       });
@@ -559,7 +607,15 @@ uploadOrder: async (req, res) => {
       }
 
       const oldTemp = fetchOnProcessOrder.map(async (order, index) => {
-        const fetchOnProcessProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchOnProcessProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchOnProcessProduct = await query(fetchOnProcessProductQuery);
         return { ...order, orderProduct: fetchOnProcessProduct };
       });
@@ -630,7 +686,15 @@ uploadOrder: async (req, res) => {
       }
 
       const oldTemp = fetchOnProcessOrder.map(async (order, index) => {
-        const fetchOnProcessProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchOnProcessProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchOnProcessProduct = await query(fetchOnProcessProductQuery);
         return { ...order, orderProduct: fetchOnProcessProduct };
       });
@@ -704,7 +768,15 @@ uploadOrder: async (req, res) => {
       }
 
       const oldTemp = fetchReviewOrder.map(async (order, index) => {
-        const fetchWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchWaitingProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchWaitingProduct = await query(fetchWaitingProductQuery);
 
         return { ...order, orderProduct: fetchWaitingProduct };
@@ -776,7 +848,15 @@ uploadOrder: async (req, res) => {
       }
 
       const oldTemp = fetchReviewOrder.map(async (order, index) => {
-        const fetchWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchWaitingProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchWaitingProduct = await query(fetchWaitingProductQuery);
 
         return { ...order, orderProduct: fetchWaitingProduct };

@@ -75,6 +75,7 @@ module.exports = {
             : ""
         }
         ORDER BY idquestion ${sort} LIMIT 4 OFFSET ${db.escape(offset)}`);
+    console.log(questionQuery);
     const countData =
       await query(`SELECT COUNT(*) as count FROM question WHERE iduser = ${db.escape(
         userId

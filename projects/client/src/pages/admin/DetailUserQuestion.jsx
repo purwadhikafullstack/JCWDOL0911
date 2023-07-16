@@ -6,7 +6,7 @@ import { AUTH_TOKEN } from "../../helpers/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { setDetailUserQuestion } from "../../features/admin/answerSlice";
 import Sidebar from "../../components/admin/Sidebar";
-import { Button, Tooltip, Divider } from "@chakra-ui/react";
+import { Button, Divider } from "@chakra-ui/react";
 import moment from "moment";
 
 function DetailUserQuestion() {

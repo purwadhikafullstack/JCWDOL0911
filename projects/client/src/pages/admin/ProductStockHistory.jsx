@@ -8,8 +8,6 @@ import {
   Th,
   Td,
   TableContainer,
-  Button,
-  Tooltip,
   Menu,
   MenuButton,
   MenuList,
@@ -19,14 +17,12 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { AUTH_TOKEN } from "../../helpers/constant";
-import { useNavigate } from "react-router-dom";
 import { setproductStocks } from "../../features/history/productStock";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 
 function ProductStockHistory() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const token = localStorage.getItem(AUTH_TOKEN);
   const stocks = useSelector((state) => state.history.productStocks);
   const [selectedDateStart, setSelectedDateStart] = useState(undefined);

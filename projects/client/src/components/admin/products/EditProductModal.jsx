@@ -7,7 +7,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Input,
   Button,
   Select,
 } from "@chakra-ui/react";
@@ -18,10 +17,7 @@ import { getAllCategory } from "../../../features/cartegory/categorySlice";
 import { AUTH_TOKEN } from "../../../helpers/constant";
 import axios from "axios";
 import { getAllUnitConversion } from "../../../features/unit/unitConversion";
-import {
-  fetchDetailProduct,
-  fetchProducts,
-} from "../../../features/cart/productsSlice";
+import { fetchDetailProduct } from "../../../features/cart/productsSlice";
 import { getAllPromo } from "../../../features/promo/promoProductSlice";
 
 function EditProductModal({ isOpen, onClose }) {
@@ -73,7 +69,6 @@ function EditProductModal({ isOpen, onClose }) {
   };
 
   const handleConfirmationEditProduct = async (onClose) => {
-    // onClose();
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You want to edit this product?",
@@ -84,7 +79,6 @@ function EditProductModal({ isOpen, onClose }) {
       confirmButtonText: "Edit product",
     });
     if (result.isConfirmed) {
-      // editProduct(params.idproduct);
       onClickSubmitEditHandler(params.idproduct);
     }
   };
@@ -170,20 +164,30 @@ function EditProductModal({ isOpen, onClose }) {
               <div className="flex justify-between items-center">
                 <p className=" text-slate-500">Upload picture</p>
                 <div className="flex flex-col w-2/3">
-                  <div className="w-2/3">
-                    <img
-                      id="productPhoto"
-                      src={`${process.env.REACT_APP_API_BE}/uploads/${formEditProduct.productImage}`}
-                      alt=""
+                  <div>
+                    {!isAccept ? (
+                      <div className="mt-7 text-red-600 text-center">
+                        *File must be in .jpeg or .png and size must not bigger
+                        than 1MB
+                      </div>
+                    ) : null}
+                  </div>
+                  <div>
+                    <div className="w-2/3">
+                      <img
+                        id="productPhoto"
+                        src={`${process.env.REACT_APP_API_BE}/uploads/${formEditProduct.productImage}`}
+                        alt=""
+                      />
+                    </div>
+                    <input
+                      className="w-2/3 border-2 border-slate-100 px-2 py-1 rounded-md"
+                      onChange={onImageUploadHandler}
+                      type="file"
+                      id="profile_image"
+                      name="file"
                     />
                   </div>
-                  <input
-                    className="w-2/3 border-2 border-slate-100 px-2 py-1 rounded-md"
-                    onChange={onImageUploadHandler}
-                    type="file"
-                    id="profile_image"
-                    name="file"
-                  />
                 </div>
               </div>
               <div className="flex justify-between items-center">

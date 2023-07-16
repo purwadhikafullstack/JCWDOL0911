@@ -14,7 +14,6 @@ import { addToCartFromLocal } from "../features/cart/cartSlice";
 function LandingPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const [products, setProducts] = useState([]);
   const [isChangeAddressModalHidden, setIsChangeAddressModalHidden] =
     useState(false);
   const [isNewAddressModalHidden, setIsNewAddressModalHidden] = useState(false);
@@ -114,7 +113,7 @@ function LandingPage() {
             </h4>
           </div>
           {/*  */}
-          <div className="flex gap-4 justify-between mt-6 overflow-auto">
+          <div className="flex gap-4 mt-6 overflow-auto">
             {products.map((product, index) => (
               <CardProduct key={index} product={product} />
             ))}

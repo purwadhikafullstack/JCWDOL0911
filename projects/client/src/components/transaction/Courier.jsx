@@ -18,7 +18,6 @@ function Courier({
   );
 
   useEffect(() => {
-    console.log("There is an update on address");
     document.getElementById("courier").selectedIndex = 0;
     resetFreightPrice();
     dispatch(resetServices());

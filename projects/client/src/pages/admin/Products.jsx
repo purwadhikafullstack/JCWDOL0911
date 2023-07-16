@@ -1,5 +1,6 @@
 import CardProduct from "../../components/CardProduct";
 import {
+  fetchAllProductOnAdmin,
   fetchProduct,
   fetchProducts,
   setProducts,
@@ -18,9 +19,7 @@ import {
   Td,
   TableContainer,
   Button,
-  Tooltip,
 } from "@chakra-ui/react";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { AUTH_TOKEN } from "../../helpers/constant";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +31,6 @@ import debounce from "lodash.debounce";
 
 function Products() {
   const LIMIT = 5;
-  const token = localStorage.getItem(AUTH_TOKEN);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedFilter, setSelectedFilter] = useState({
@@ -43,39 +41,12 @@ function Products() {
     sort: undefined,
     key: undefined,
   });
-  const [countData, setCountData] = useState(0);
+  const countData = useSelector((state) => state.product.countProduct) || 0;
   const [page, setPage] = useState(1);
   const [modalAddNewProductOpen, setModalAddNewProductOpen] = useState(false);
-  const products = useSelector((state) => state.product.products);
-  const categories = useSelector((state) => state.categories.categories);
+  const products = useSelector((state) => state.product.products) || [];
+  const categories = useSelector((state) => state.categories.categories) || [];
   const [searchTerm, setSearchTerm] = useState("");
-
-  const fetchAllProduct = async () => {
-    try {
-      let response = await axios.get(
-        `${process.env.REACT_APP_API_BE}/admin/products/all`,
-        {
-          params: {
-            idcategory: selectedFilter.idcategory,
-            sort: selectedSortBy.sort,
-            key: selectedSortBy.key,
-            limit: LIMIT,
-            page,
-            search: searchTerm,
-          },
-          headers: { authorization: `Bearer ${token}` },
-        }
-      );
-      dispatch(setProducts(response.data.products || []));
-      setCountData(response.data.count);
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: error.response?.data?.message,
-      });
-    }
-  };
 
   const handleDetailProductPage = (idproduct) => {
     try {
@@ -113,7 +84,7 @@ function Products() {
 
   const renderPagination = () => {
     const pages = Array(Math.ceil(countData / LIMIT)).fill(undefined);
-    return pages.map((el, i) => (
+    return (pages || []).map((el, i) => (
       <div
         key={i}
         onClick={() => setPage(i + 1)}
@@ -127,7 +98,6 @@ function Products() {
   };
 
   const searchHandler = (value) => {
-    console.log({ value });
     setSearchTerm(value);
   };
 
@@ -141,7 +111,15 @@ function Products() {
   }, []);
 
   useEffect(() => {
-    fetchAllProduct();
+    dispatch(
+      fetchAllProductOnAdmin(
+        selectedFilter.idcategory,
+        selectedSortBy.sort,
+        selectedSortBy.key,
+        page,
+        searchTerm
+      )
+    );
   }, [selectedFilter.idcategory, selectedSortBy.sort, page, searchTerm]);
 
   return (

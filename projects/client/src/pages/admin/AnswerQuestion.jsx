@@ -136,7 +136,6 @@ function AnswerQuestion() {
   };
 
   const searchHandler = (value) => {
-    console.log({ value });
     setSearchTerm(value);
   };
 

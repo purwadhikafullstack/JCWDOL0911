@@ -35,15 +35,12 @@ function PrescriptionModal({ modalHandler }) {
   };
 
   const onClickSubmitHandler = () => {
-    console.log("Submit button is clicked");
     const formData = new FormData();
     formData.append("file", file);
     dispatch(addUserPrescription(formData, modalHandler, navigate));
   };
 
-  useEffect(() => {
-    console.log(file);
-  }, [file]);
+  useEffect(() => {}, [file]);
 
   return (
     <div className="w-full h-full absolute top-0 left-0 bg-opacity-25 backdrop-blur-sm">

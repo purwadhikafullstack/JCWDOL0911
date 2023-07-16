@@ -7,8 +7,14 @@ import { setSelectedTransaction } from "../../features/order/orderSlice";
 import PrescriptionImageModal from "./PrescriptionImageModal";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { prescriptionCart, prescriptionTotalPrice } from "../../features/cart/cartSlice";
-import { rejectPresciption, setPrescriptionCheckOut } from "../../features/product/prescriptionSlice";
+import {
+  prescriptionCart,
+  prescriptionTotalPrice,
+} from "../../features/cart/cartSlice";
+import {
+  rejectPresciption,
+  setPrescriptionCheckOut,
+} from "../../features/product/prescriptionSlice";
 import Swal from "sweetalert2";
 
 function PrescriptionOrderCard() {
@@ -21,7 +27,7 @@ function PrescriptionOrderCard() {
     navigate(`/admin/prescription/${prescription.idprescription}`);
   };
 
-  const onClickRejectHandler = async(prescription) => {
+  const onClickRejectHandler = async (prescription) => {
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -33,9 +39,15 @@ function PrescriptionOrderCard() {
       showLoaderOnConfirm: true,
     });
     if (result.isConfirmed) {
-      dispatch(rejectPresciption(prescription.idprescription,prescription.email,navigate))
+      dispatch(
+        rejectPresciption(
+          prescription.idprescription,
+          prescription.email,
+          navigate
+        )
+      );
     }
-  }
+  };
   const checkoutHandler = (prescriptions) => {
     dispatch(setPrescriptionCheckOut(prescriptions));
     navigate("/prescription/checkout");
@@ -80,7 +92,6 @@ function PrescriptionOrderCard() {
                   onClick={(e) => {
                     const modal = document.getElementById(prescriptionIndex);
                     modal.style.display = "block";
-                    console.log(modal.style.display);
                   }}
                   className="font-bold text-green-600 cursor-pointer hover:text-green-700"
                 >

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
   Button,
   Tooltip,
@@ -20,7 +21,7 @@ import { useDispatch } from "react-redux";
 import { addProductToCart } from "../features/cart/cartSlice";
 
 function CardProduct({ product }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const myCart = useSelector((state) => state.cart.cart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -30,6 +31,11 @@ function CardProduct({ product }) {
     }
     return name;
   };
+
+  useEffect(() => {
+    localStorage.setItem("myCart", JSON.stringify(myCart));
+  }, [myCart]);
+
   return (
     <div className="max-w-xs flex flex-col items-center p-2 shadow-card-tagline border-y-2 rounded-md">
       <Card maxW="xs">

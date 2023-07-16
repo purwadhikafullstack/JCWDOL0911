@@ -105,6 +105,9 @@ export const cartSlice = createSlice({
       state.cart = [];
       state.totalPrice = 0;
     },
+    addToCartFromLocal: (state, action) => {
+      state.cart = action.payload;
+    },
   },
 });
 
@@ -133,6 +136,7 @@ export const {
   removeCheckedProduct,
   setEachTotalPrice,
   resetCart,
+  addToCartFromLocal,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

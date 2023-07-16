@@ -6,6 +6,7 @@ import { Avatar } from "@chakra-ui/react";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { setResetUser } from "../features/users/userSlice";
 import Swal from "sweetalert2";
+import { resetCart } from "../features/cart/cartSlice";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.clear();
+    dispatch(resetCart());
     dispatch(
       setResetUser({
         iduser: 0,

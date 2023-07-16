@@ -113,7 +113,10 @@ export const cartSlice = createSlice({
       if (existingIndex === -1) {
         state.bonusItem.push(action.payload);
       }
-    }
+    },
+    addToCartFromLocal: (state, action) => {
+      state.cart = action.payload;
+    },
   },
 });
 
@@ -154,7 +157,8 @@ export const {
   addCheckedProduct,
   removeCheckedProduct,
   setEachTotalPrice,
-  resetCart,setBonusItem
+  resetCart,setBonusItem,
+  addToCartFromLocal,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

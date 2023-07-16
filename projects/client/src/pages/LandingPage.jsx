@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import NewAddressModal from "../components/NewAddressModal";
 import PrescriptionModal from "../components/prescriptionn/PrescriptionModal";
 import { getAllProductsByFilter } from "../features/product/productSlice";
+import { addToCartFromLocal } from "../features/cart/cartSlice";
 
 function LandingPage() {
   const navigate = useNavigate();

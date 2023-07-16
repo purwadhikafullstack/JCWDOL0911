@@ -34,7 +34,7 @@ export function createDiscount(discount) {
   }
     
 }
-export function fetchDiscounts(order,filter,search,offset) {
+export function fetchDiscounts(order, filter, search, offset) {
   return async (dispatch) => {
     const response = await axios.get(`${process.env.REACT_APP_API_BE}/promos/discounts?order=${order}&filter=${filter}&search=${search}&offset=${offset}`)
     dispatch(setDiscounts(response.data.allDiscounts))
@@ -57,10 +57,10 @@ export function editDiscount(id, editData) {
     Swal.fire(`${response.data.message}`, "", "success");
   }  
 }
-export function disableDiscount(id) {
+export function disableDiscount(id,order,filter,search,offset) {
   return async (dispatch) => {
     const response = await axios.put(`${process.env.REACT_APP_API_BE}/promos/disable-discount/${id}`)
-    dispatch(fetchDiscounts())
+    dispatch(fetchDiscounts(order,filter,search,offset))
     Swal.fire(`${response.data.message}`, "", "success");
 
 

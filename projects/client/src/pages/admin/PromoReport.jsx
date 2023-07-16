@@ -12,13 +12,16 @@ function PromoReport() {
   const promosCount = useSelector(state => state.promoReports.promosData);
   const [promosData, setPromosData] = useState(null);
   const [activeButton, setActiveButton] = useState('Transaction Discount');
+  const [order, setOrder] = useState("ASC");
+  const [search, setSearch] = useState("");
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     if (shouldLog.current) {
       dispatch(fetchCount());
       shouldLog.current = false;
     }
-  }, []);
+  }, [order,search,offset]);
 
   useEffect(() => {
     if (promosCount) {
@@ -79,7 +82,7 @@ function PromoReport() {
               Bonus Item
             </button>
           </div>
-            <PromoTable activeButton={activeButton}/>
+          <PromoTable activeButton={activeButton} order={order } setOrder={setOrder} search={search} setSearch={setSearch} offset={offset} setOffset={setOffset} />
         </div>
       </div>
     </div>

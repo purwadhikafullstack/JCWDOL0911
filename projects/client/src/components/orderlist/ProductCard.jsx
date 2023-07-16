@@ -9,7 +9,7 @@ function ProductCard({ product }) {
         className="lg:w-[15%] md:w-[30%] w-[50%] mx-auto object-contain"
         src={
           product.product_image
-            ? `http://localhost:8000/product${product.product_image}`
+            ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
             : medicine
         }
         alt="gambar"

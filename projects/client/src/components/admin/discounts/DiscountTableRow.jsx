@@ -3,16 +3,29 @@ import { currency } from '../../../helpers/currency';
 import { Tr, Td, Button } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { deleteDiscount, disableDiscount, enableDiscount } from '../../../features/promo/promoSlice';
+import {  disableDiscount, enableDiscount } from '../../../features/promo/promoSlice';
 import EditRow from './EditRow';
+import Swal from 'sweetalert2';
 
-function DiscountTableRow({ discount, count }) {
+function DiscountTableRow({ discount, count,order,filter,search,offset }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
 
-  const handleDisable = () => {
-    dispatch(disableDiscount(discount.idpromo));
+  const handleDisable = async(order,filter,search,offset) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: `You want to Disable ${discount.name} ${discount.description} ?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Disable it!'
+    })
+  if (result.isConfirmed) {
+    
+    dispatch(disableDiscount(discount.idpromo,order,filter,search,offset));
+  }  
   };
   const handleEnable = () => {
     dispatch(enableDiscount(discount.idpromo));
@@ -47,7 +60,7 @@ function DiscountTableRow({ discount, count }) {
               
                 discount.type === 'Transaction Discount'  ? (
                   <div className="flex gap-3">
-                <Button colorScheme="red" size="sm" onClick={handleDisable}>
+                <Button colorScheme="red" size="sm" onClick={()=>handleDisable(order,filter,search,offset)}>
                   Disable
                 </Button>
                 <Button colorScheme="teal" size="sm" onClick={handleEdit}>

@@ -139,8 +139,13 @@ function OrderProductCart() {
                     <div className="flex sm:flex-row sm:gap-4 ml-10 flex-col w-full mt-10 mb-3 justify-between">
                       <div className="flex sm:flex-row flex-col justify-between gap-4 w-full ml-4">
                         <div>
+                          
                           <p>{item.name}</p>
                           <p className="text-xs">1 {item.unit }</p>
+                      <p className=" ">
+                          {item.type ==='Bonus Item'&&item.quantity>=item.discount?`Bonus Item ${item.discount} `:''} 
+                        </p>
+                      
                         </div>
                         <p className="font-bold whitespace-nowrap">
                           {currency(item.price)}
@@ -151,7 +156,7 @@ function OrderProductCart() {
                           Quantity :
                         </div>
                         <span className="sm:absolute sm:bottom-4 sm:right-[75px] text-center w-[50px] h-[25px]">
-                          {item.type ==='Bonus Item'&&item.quantity>=item.discount?bonusItem(item):item.quantity} 
+                        {item.type ==='Bonus Item'&&item.quantity>=item.discount?`${item.quantity} = ${bonusItem(item)} `:item.quantity} 
                         </span>
                       </div>
                     </div>

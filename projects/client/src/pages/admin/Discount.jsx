@@ -54,7 +54,7 @@ function Discount() {
     let count = offset
     return discounts.map((discount) => {
       count += 1
-      return <DiscountTableRow discount={discount} count={count} />
+      return <DiscountTableRow discount={discount} count={count} order={order} filter={filter} search={search} offset={offset} />
     })
   }
   useEffect(() => {

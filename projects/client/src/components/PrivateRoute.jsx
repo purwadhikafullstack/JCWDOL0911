@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { AUTH_TOKEN, USER } from "../helpers/constant";
 import Swal from "sweetalert2";
-
 import { useDispatch } from "react-redux";
 import { fetchAddresses } from "../features/users/addressSlice";
 import { fetchPrimaryAddress } from "../features/users/addressSlice";

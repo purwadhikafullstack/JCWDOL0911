@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import Sidebar from '../../components/admin/Sidebar';
+import React, { useState, useEffect } from "react";
+import Sidebar from "../../components/admin/Sidebar";
 import {
   Table,
   Thead,
@@ -13,46 +13,51 @@ import {
   Checkbox,
   Select,
 } from "@chakra-ui/react";
-import { useDispatch } from 'react-redux';
-import { assignDiscount, editDiscount, fetchDiscount } from '../../features/promo/promoSlice';
-import { useSelector } from 'react-redux';
-import { fetchProducts } from '../../features/cart/productsSlice';
-import ProductsDiscountRow from '../../components/admin/discounts/ProductsDiscountRow';
-import { useParams } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import {
+  assignDiscount,
+  editDiscount,
+  fetchDiscount,
+} from "../../features/promo/promoSlice";
+import { useSelector } from "react-redux";
+import { fetchProducts } from "../../features/cart/productsSlice";
+import ProductsDiscountRow from "../../components/admin/discounts/ProductsDiscountRow";
+import { useParams } from "react-router-dom";
 
 function ProductsDisount() {
   const dispatch = useDispatch();
   const { idPromo } = useParams();
-  const discountData = useSelector(state => state.promo.discount);
+  const discountData = useSelector((state) => state.promo.discount);
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState(discountData.name);
   const [description, setDescription] = useState(discountData.description);
   const [condition, setCondition] = useState(discountData.condition);
   const [discount, setDiscount] = useState(discountData.discount);
-  const [filter, setFilter] = useState('')
-  const [search, setSearch] = useState('')
-  const [offset, setOffset] = useState(0)
-  const [order, setOrder] = useState('ASC')
-  const limit = 0
-  const products = useSelector(state => state.product.products);
+  const [filter, setFilter] = useState("");
+  const [search, setSearch] = useState("");
+  const [offset, setOffset] = useState(0);
+  const [order, setOrder] = useState("ASC");
+  const limit = 0;
+  const products = useSelector((state) => state.product.products);
   const [assignedProducts, setAssignedProducts] = useState([]); // Array to store assigned product IDs
   const [selectAll, setSelectAll] = useState(false); // State to track the "Select All" checkbox
 
-
   const handleEditSave = () => {
-      const editedData = {
-          name: name,
-          description: description,
-          condition: 0,
-          discount:discount
-      }
-      dispatch(editDiscount(discountData.idpromo,editedData))
+    const editedData = {
+      name: name,
+      description: description,
+      condition: 0,
+      discount: discount,
+    };
+    dispatch(editDiscount(discountData.idpromo, editedData));
     setEdit(false); // Set edit back to false after saving
   };
   const handleProductCheck = (productId, isChecked) => {
     const updatedProducts = [...assignedProducts];
-    const existingProductIndex = updatedProducts.findIndex(item => item.idproduct === productId);
-  
+    const existingProductIndex = updatedProducts.findIndex(
+      (item) => item.idproduct === productId
+    );
+
     if (existingProductIndex !== -1) {
       // Update the existing product's checked value
       updatedProducts[existingProductIndex].checked = isChecked;
@@ -60,7 +65,7 @@ function ProductsDisount() {
       // Add a new product to the array
       updatedProducts.push({ idproduct: productId, checked: isChecked });
     }
-  
+
     setAssignedProducts(updatedProducts);
   };
   const searchHandler = (e) => {
@@ -76,28 +81,24 @@ function ProductsDisount() {
     setOrder(e.target.value);
   };
 
-
   const handleSelectAllChange = (isChecked) => {
     setSelectAll(isChecked);
     if (isChecked) {
-      const selectedProducts = products.map(product => product.idproduct);
+      const selectedProducts = products.map((product) => product.idproduct);
       setAssignedProducts(selectedProducts);
-    } 
+    }
   };
   const handleSave = () => {
     assignedProducts.map((idproduct) => {
-     dispatch(assignDiscount(discountData.idpromo,idproduct)) 
-    })
-    console.log('Assigned Products:', assignedProducts);
-    setAssignedProducts([])
+      dispatch(assignDiscount(discountData.idpromo, idproduct));
+    });
+    setAssignedProducts([]);
   };
-
 
   useEffect(() => {
     dispatch(fetchDiscount(idPromo));
     dispatch(fetchProducts(order, filter, search, offset, limit));
-  }, [search,order]);
-
+  }, [search, order]);
 
   return (
     <div className="w-screen h-full flex justify-between bg-slate-50">
@@ -109,7 +110,7 @@ function ProductsDisount() {
 
         <div className="bg-white p-4 rounded shadow-md">
           <h2 className="text-lg font-bold">Discount Detail's</h2>
-          
+
           <TableContainer>
             <Table Table variant="simple">
               <Thead>
@@ -130,7 +131,7 @@ function ProductsDisount() {
                         onChange={(e) => setName(e.target.value)}
                       />
                     ) : (
-                      discountData.name 
+                      discountData.name
                     )}
                   </Td>
                   <Td>
@@ -144,28 +145,27 @@ function ProductsDisount() {
                     )}
                   </Td>
                   <Td>
-  {edit ? (
-    <Input
-      value={condition}
-      onChange={(e) => setCondition(e.target.value)}
-    />
-  ) : (
-    discountData.condition
-  )}
-    {discountData.type === 'Bonus Item' && ' Item'}
-
-</Td>
-<Td>
-  {edit ? (
-    <Input
-      value={discount}
-      onChange={(e) => setDiscount(e.target.value)}
-    />
-  ) : (
-    discountData.discount
-  )}
-  {discountData.type === 'Bonus Item' && ' Item'}
-</Td>
+                    {edit ? (
+                      <Input
+                        value={condition}
+                        onChange={(e) => setCondition(e.target.value)}
+                      />
+                    ) : (
+                      discountData.condition
+                    )}
+                    {discountData.type === "Bonus Item" && " Item"}
+                  </Td>
+                  <Td>
+                    {edit ? (
+                      <Input
+                        value={discount}
+                        onChange={(e) => setDiscount(e.target.value)}
+                      />
+                    ) : (
+                      discountData.discount
+                    )}
+                    {discountData.type === "Bonus Item" && " Item"}
+                  </Td>
 
                   <Td className="flex gap-3">
                     {edit ? (
@@ -173,7 +173,7 @@ function ProductsDisount() {
                         <Button
                           colorScheme="teal"
                           size="sm"
-                          onClick={()=>handleEditSave()}
+                          onClick={() => handleEditSave()}
                         >
                           Save
                         </Button>
@@ -205,19 +205,19 @@ function ProductsDisount() {
         <div className="bg-white p-4 rounded shadow-md">
           <h2 className="text-lg font-bold py-3">Assign Promo</h2>
           <div className="flex flex-col lg:w-[28rem]  gap-4">
-                <Select onChange={(e) => sortHandler(e)}>
-                  <option value="ASC">Sort By : Name (A-Z)</option>
-                  <option value="DESC">Sort By : Name (Z-A)</option>
-                </Select>
-              <div>
-                <input
-                  type="text"
-                  placeholder="Search Products"
-                  className="bg-gray-50 border border-green-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full lg:w-[28rem] h-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
-                  onChange={(e) => searchHandler(e)}
-                  />
-              </div>
-                  </div>
+            <Select onChange={(e) => sortHandler(e)}>
+              <option value="ASC">Sort By : Name (A-Z)</option>
+              <option value="DESC">Sort By : Name (Z-A)</option>
+            </Select>
+            <div>
+              <input
+                type="text"
+                placeholder="Search Products"
+                className="bg-gray-50 border border-green-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full lg:w-[28rem] h-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
+                onChange={(e) => searchHandler(e)}
+              />
+            </div>
+          </div>
 
           <TableContainer>
             <Table variant="simple">

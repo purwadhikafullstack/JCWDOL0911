@@ -7,7 +7,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Input,
   Button,
   Select,
 } from "@chakra-ui/react";
@@ -105,7 +104,7 @@ function AddNewProductModal({ isOpen, onClose }) {
       );
       setIsLoading(false);
       onClose();
-      navigate("/admin/products");
+      window.location.reload();
       setFormAddNewProduct(resetFormAddNewProduct);
       Swal.fire({
         icon: "success",
@@ -140,7 +139,6 @@ function AddNewProductModal({ isOpen, onClose }) {
       confirmButtonText: "Add product",
     });
     if (result.isConfirmed) {
-      //   addNewProduct();
       onClickSubmitHandler();
     }
   };
@@ -166,6 +164,14 @@ function AddNewProductModal({ isOpen, onClose }) {
               <div className="flex justify-between items-center">
                 <p className=" text-slate-500">Upload picture</p>
                 <div className="flex flex-col w-2/3">
+                  <div>
+                    {!isAccept ? (
+                      <div className="mt-7 text-red-600 text-center">
+                        *File must be in .jpeg or .png and size must not bigger
+                        than 1MB
+                      </div>
+                    ) : null}
+                  </div>
                   <div className="w-2/3">
                     <img id="productPhoto" src="" alt="" />
                   </div>
@@ -280,12 +286,9 @@ function AddNewProductModal({ isOpen, onClose }) {
                     onChange={handleAddProductForm}
                     value={formAddNewProduct.idcategoryOne}
                   >
-                    {categories.map((category) => {
+                    {categories.map((category, index) => {
                       return (
-                        <option
-                          value={category.idcategory}
-                          key={category.idcategory}
-                        >
+                        <option value={category.idcategory} key={index}>
                           {category.name}
                         </option>
                       );

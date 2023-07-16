@@ -85,6 +85,12 @@ module.exports = {
       )};`;
       const isUserExist = await query(isUserExistQuery);
 
+      if (isUserExist[0].is_verified === 0) {
+        return res
+          .status(400)
+          .send({ message: "Please verified your account!" });
+      }
+
       if (isUserExist.length === 0) {
         return res
           .status(400)

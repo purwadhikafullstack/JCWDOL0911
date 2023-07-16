@@ -9,7 +9,6 @@ import { Button, Tooltip, Divider } from "@chakra-ui/react";
 import {
   fetchDetailProduct,
   fetchProducts,
-  setProduct,
 } from "../../features/cart/productsSlice";
 import { currency } from "../../helpers/currency";
 import { updateStock } from "../../features/cart/productsSlice";

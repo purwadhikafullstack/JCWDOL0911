@@ -22,7 +22,7 @@ function ProductsCard({ product }) {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, changen it!",
+      confirmButtonText: "Yes, change it!",
     });
     if (result.isConfirmed) {
       dispatch(updateStock(id, stock, setEdit, updatedStock, unit));
@@ -39,7 +39,7 @@ function ProductsCard({ product }) {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, changen it!",
+      confirmButtonText: "Yes, change it!",
     });
     if (result.isConfirmed) {
       setStock(0);

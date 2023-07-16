@@ -38,7 +38,6 @@ function OnProcessOrderCard({
       cancelButtonText: "No",
     });
     if (swalAccept.isConfirmed) {
-      console.log("deliver the medicine");
       const { pageStatus } = await dispatch(
         acceptOnProcessOrder(
           transaction,
@@ -65,10 +64,9 @@ function OnProcessOrderCard({
       showLoaderOnConfirm: true,
     });
     if (result.isConfirmed) {
-      dispatch(adminCancelOrder(transaction.idtransaction,transaction.email))
+      dispatch(adminCancelOrder(transaction.idtransaction, transaction.email));
     }
-  }
-  
+  };
 
   return (
     <>

@@ -17,7 +17,6 @@ import {
 import { currency } from "../helpers/currency";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-
 import { addProductToCart } from "../features/cart/cartSlice";
 
 function CardProduct({ product }) {
@@ -33,11 +32,9 @@ function CardProduct({ product }) {
   };
 
   const calculateDiscountedPrice = (price, discount) => {
-      
-      return price - (price * discount) / 100;
-
+    return price - (price * discount) / 100;
   };
- 
+
   useEffect(() => {
     localStorage.setItem("myCart", JSON.stringify(myCart));
   }, [myCart]);
@@ -55,7 +52,9 @@ function CardProduct({ product }) {
           px="2"
           rounded="md"
         >
-          {product.type==='Bonus Item'?product.promo_description:`${product.discount} %off`}
+          {product.type === "Bonus Item"
+            ? product.promo_description
+            : `${product.discount} %off`}
         </Badge>
         <CardBody>
           <div className="w">
@@ -102,7 +101,9 @@ function CardProduct({ product }) {
             <Button
               size={"sm"}
               className="border-button"
-              onClick={() => dispatch(addProductToCart(product,calculateDiscountedPrice))}
+              onClick={() =>
+                dispatch(addProductToCart(product, calculateDiscountedPrice))
+              }
             >
               Add to Cart
             </Button>

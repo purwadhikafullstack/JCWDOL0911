@@ -30,9 +30,7 @@ module.exports = {
     try {
       const presId = parseInt(req.params.presId);
       const prescriptionQuery = await query(
-        `SELECT * FROM prescription WHERE idprescription = ${db.escape(
-          presId
-        )}`
+        `SELECT * FROM prescription WHERE idprescription = ${db.escape(presId)}`
       );
       res.status(200).send(prescriptionQuery);
     } catch (error) {
@@ -42,7 +40,14 @@ module.exports = {
   convertUnitPrescription: async (req, res) => {
     try {
       const idProd = parseInt(req.params.idProd);
-      const { retail_quantity, quantity, stock, unit, unit_retail,productQuantity } = req.body;
+      const {
+        retail_quantity,
+        quantity,
+        stock,
+        unit,
+        unit_retail,
+        productQuantity,
+      } = req.body;
       const date = new Date();
       const dateTime =
         date.getFullYear() +
@@ -51,21 +56,23 @@ module.exports = {
         "/" +
         ("00" + date.getDate()).slice(-2);
       await query(
-        `UPDATE product SET stock = ${db.escape(stock)} , retail_remain = ${db.escape(
+        `UPDATE product SET stock = ${db.escape(
+          stock
+        )} , retail_remain = ${db.escape(
           retail_quantity
         )} WHERE idproduct = ${db.escape(idProd)}`
       );
       await query(
-        `INSERT INTO restock VALUES (null,${db.escape(
-          idProd
-        )},${db.escape(unit)},${db.escape(dateTime)},${db.escape(
+        `INSERT INTO restock VALUES (null,${db.escape(idProd)},${db.escape(
+          unit
+        )},${db.escape(dateTime)},${db.escape(
           quantity
         )},'Unit Conversion','Pengurangan')`
       );
       await query(
-        `INSERT INTO restock VALUES (null,${db.escape(
-          idProd
-        )},${db.escape(unit_retail)},${db.escape(dateTime)},${db.escape(
+        `INSERT INTO restock VALUES (null,${db.escape(idProd)},${db.escape(
+          unit_retail
+        )},${db.escape(dateTime)},${db.escape(
           productQuantity
         )},'Unit Conversion','Penambahan')`
       );
@@ -111,7 +118,9 @@ module.exports = {
           patient
         )} WHERE idprescription = ${db.escape(medicine.idprescription)}`
       );
-      res.status(200).send({ message: "Prescription has been sent to the user" });
+      res
+        .status(200)
+        .send({ message: "Prescription has been sent to the user" });
     } catch (error) {
       return res.status(400).send(error);
     }
@@ -131,7 +140,9 @@ module.exports = {
           orderProduct.idprescription
         )}, null, ${db.escape(iduser)}, null, ${db.escape(
           orderAddress.idaddress
-        )} ,${db.escape(format(new Date(), "yyyy-MM-dd HH:mm:ss"))},null, null, null, null, null, "WAITING FOR PAYMENT", ${db.escape(
+        )} ,${db.escape(
+          format(new Date(), "yyyy-MM-dd HH:mm:ss")
+        )},null, null, null, null, null, "WAITING FOR PAYMENT", ${db.escape(
           orderPrice
         )}, null, ${db.escape(courierData)}, ${db.escape(
           serviceData.service
@@ -144,7 +155,9 @@ module.exports = {
           orderProduct.idprescription
         )}`
       );
-      res.status(200).send({ message: "Order has been created. Please make a payment" });
+      res
+        .status(200)
+        .send({ message: "Order has been created. Please make a payment" });
     } catch (error) {
       return res.status(400).send(error);
     }
@@ -153,7 +166,6 @@ module.exports = {
     try {
       const idPrescription = parseInt(req.params.idPrescription);
       const { email } = req.body;
-      console.log(req.body);
       await query(
         `UPDATE prescription SET status = 'REJECTED' WHERE idprescription = ${db.escape(
           idPrescription
@@ -169,9 +181,14 @@ module.exports = {
         </div>`,
       };
       await nodemailer.sendMail(mail);
-      res.status(200).send({ message: "Prescription rejected and notification has been sent to the user" });
+      res
+        .status(200)
+        .send({
+          message:
+            "Prescription rejected and notification has been sent to the user",
+        });
     } catch (error) {
       return res.status(400).send(error);
     }
-  }
+  },
 };

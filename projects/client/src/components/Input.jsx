@@ -9,10 +9,7 @@ function InputComponent({
   return (
     <>
       <InputGroup>
-        <InputLeftElement pointerEvents="none">
-          {/* <PhoneIcon color="gray.300" /> */}
-          {props.icon}
-        </InputLeftElement>
+        <InputLeftElement pointerEvents="none">{props.icon}</InputLeftElement>
         <Input type="text" {...field} {...props} />
       </InputGroup>
     </>

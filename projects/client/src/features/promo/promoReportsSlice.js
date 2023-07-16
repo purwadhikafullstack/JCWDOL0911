@@ -51,25 +51,25 @@ export function fetchCount() {
     };
 }
   
-export function fetchBonusItem() {
+export function fetchBonusItem(offset,search,order) {
   return async (dispatch) => {
-    const response = await axios.get(`${process.env.REACT_APP_API_BE}/promos/reports/bonus-items`);
+    const response = await axios.get(`${process.env.REACT_APP_API_BE}/promos/reports/bonus-items?offset=${offset}&search=${search}&order=${order}`);
     dispatch(setPromos(response.data.bonusItemQuery))
   }
   
 }
-export function fetchTransactionDiscounts() {
+export function fetchTransactionDiscounts(offset,search,order) {
   console.log('im called');
   return async (dispatch) => {
-    const response = await axios.get(`${process.env.REACT_APP_API_BE}/promos/reports/transaction-discounts`);
+    const response = await axios.get(`${process.env.REACT_APP_API_BE}/promos/reports/transaction-discounts?offset=${offset}&search=${search}&order=${order}`);
     console.log(response.data);
     dispatch(setPromos(response.data.trasactionDiscount))
   }
   
 }
-export function fetchProductDiscount() {
+export function fetchProductDiscounts(offset,search,order) {
   return async (dispatch) => {
-    const response = await axios.get(`${process.env.REACT_APP_API_BE}/promos/reports/product-discounts`);
+    const response = await axios.get(`${process.env.REACT_APP_API_BE}/promos/reports/product-discounts?offset=${offset}&search=${search}&order=${order}`);
     dispatch(setPromos(response.data.productDiscount))
   }
   

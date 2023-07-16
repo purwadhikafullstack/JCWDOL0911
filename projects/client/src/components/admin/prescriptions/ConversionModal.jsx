@@ -12,7 +12,9 @@ function ConversionModal({ product, order, filter, search, offset,open,setOpen }
     const saveHandler = (quantity) => {
         let retail_quantity = product.retail_remain? (quantity * product.quantity) + product.retail_remain: quantity * product.quantity
         let stock = product.stock - quantity
-        dispatch(convertPrescription(product.idproduct,order,filter,search,offset,retail_quantity,quantity,stock,product.unit,product.unitname))
+        let productQuantity = quantity*product.quantity
+        console.log(productQuantity);
+        dispatch(convertPrescription(product.idproduct,order,filter,search,offset,retail_quantity,quantity,stock,product.unit_product,product.unitname,productQuantity))
         setOpen(false)
     }
 
@@ -38,7 +40,7 @@ function ConversionModal({ product, order, filter, search, offset,open,setOpen }
                     placeholder='quantity'
                     onChange={(e) => setQuantity(e.target.value)}
                   />
-                  <p>{product.unit}</p>
+                  <p>{product.unit_product}</p>
                   <p>=</p>
                   <p>{`${quantity * product.quantity} ${product.unitname}`}</p>
                 </div>

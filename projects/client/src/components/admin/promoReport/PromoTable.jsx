@@ -9,7 +9,7 @@ import {
     Select,
   } from "@chakra-ui/react";
 import { useDispatch } from 'react-redux';
-import { fetchBonusItem, fetchProductDiscount, fetchTransactionDiscounts } from '../../../features/promo/promoReportsSlice';
+import { fetchBonusItem, fetchProductDiscounts, fetchTransactionDiscounts } from '../../../features/promo/promoReportsSlice';
 import { useSelector } from 'react-redux';
 import ReportPromoRow from './ReportPromoRow';
 
@@ -17,17 +17,12 @@ function PromoTable({ activeButton }) {
     const dispatch = useDispatch()
     const promos = useSelector(state=>state.promoReports.promos)
     const [order, setOrder] = useState("ASC");
-    const [filter, setFilter] = useState("");
     const [search, setSearch] = useState("");
     const [offset, setOffset] = useState(0);
     
     const searchHandler = (e) => {
       setOffset(0);
       setSearch(e.target.value);
-    };
-    const filterHandler = (e) => {
-      setOffset(0);
-      setFilter(e.target.value);
     };
     const sortHandler = (e) => {
       setOffset(0);
@@ -46,33 +41,25 @@ function PromoTable({ activeButton }) {
   
     useEffect(() => {
         if (activeButton === "Transaction Discount") {
-            dispatch(fetchTransactionDiscounts())  
+            dispatch(fetchTransactionDiscounts(offset,search,order))  
         } else if (activeButton === "Bonus Item") {
-            dispatch(fetchBonusItem())
+            dispatch(fetchBonusItem(offset,search,order))
         } else {
-            dispatch(fetchProductDiscount())
+            dispatch(fetchProductDiscounts(offset,search,order))
         }
         
-    },[activeButton])
+    },[activeButton,offset,search,order])
   return (
     <div>
-                    <div className="flex flex-wrap lg:flex-nowrap gap-4">
-                <Select onChange={(e) => filterHandler(e)}>
-                  <option value="">Filter : -</option>
-                  <option value='1'>Filter : Disable Only</option>
-                  <option value='0'>
-                    Filter : Enable Only
-                  </option>
-                </Select>
+               
                 <Select onChange={(e) => sortHandler(e)}>
-                  <option value="ASC">Sort By : Name (A-Z)</option>
-                  <option value="DESC">Sort By : Name (Z-A)</option>
+                  <option value="DESC">Sort By : Date (latest-oldest)</option>
+                  <option value="ASC">Sort By : Date (oldest-latest)</option>
                 </Select>
-              </div>
               <div className='flex justify-center items-center py-3'>
                 <input
                   type="text"
-                  placeholder="Search Products"
+                  placeholder="Search Promo"
                   className="bg-gray-50 border border-green-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full lg:w-[28rem] h-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
                   onChange={(e) => searchHandler(e)}
                 />

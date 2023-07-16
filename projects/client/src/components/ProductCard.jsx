@@ -19,7 +19,7 @@ function ProductCard() {
     <div className=" bg-white border-none shadow-allxl ">
       <img
         className="w-[150px] h-[150px] mx-auto"
-        src={myCart.product_image || medicine}
+        src={`${process.env.REACT_APP_API_BE}/uploads/${myCart.product_image}` || medicine}
         alt="medicine"
       />
       <div className="px-4">

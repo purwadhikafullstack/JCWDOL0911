@@ -46,10 +46,10 @@ export function fetchUserPrescription(id) {
     }
     
 }
-export function convertPrescription(id, order, filter, search, offset, retail_quantity, quantity, stock, unit, unit_retail) {
+export function convertPrescription(id, order, filter, search, offset, retail_quantity, quantity, stock, unit, unit_retail,productQuantity) {
     const limit = 0
     return async (dispatch) => {
-        const response = await axios.post(`${process.env.REACT_APP_API_BE}/prescription/convert-prescription/${id}`,{retail_quantity,quantity,stock,unit,unit_retail})
+        const response = await axios.post(`${process.env.REACT_APP_API_BE}/prescription/convert-prescription/${id}`,{retail_quantity,quantity,stock,unit,unit_retail,productQuantity})
         dispatch(fetchProducts(order, filter, search, offset,limit))
         Swal.fire(`${response.data.message}`, "", "success");
 

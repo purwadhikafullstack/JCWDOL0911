@@ -19,7 +19,7 @@ export const questionSlice = createSlice({
     removeMyQuestion: (state, action) => {
       const deleteQuestion = action.payload;
       state.myQuestion = state.myQuestion.filter(
-        (question) => question.idquestion != deleteQuestion
+        (question) => question.idquestion !== deleteQuestion
       );
     },
     setAllQuestion: (state, action) => {
@@ -48,7 +48,6 @@ export const {
 export default questionSlice.reducer;
 
 export function fetchMyQuestion(offset, search, sort) {
-  console.log(' im my question');
   const userId = JSON.parse(localStorage.getItem("user")).iduser;
   return async (dispatch) => {
     let response = await axios.get(

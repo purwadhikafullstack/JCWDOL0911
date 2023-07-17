@@ -106,7 +106,7 @@ function ProductsConversionRow({ product,order,filter,search }) {
                        {rules.map((rule) => {
                            if (rule.unit_set == product.unit_product ||rule.unitname == product.unit_product) {
                                
-                               return <option value={rule.idunit}>{`1 ${rule.unit_set} = ${rule.quantity} ${rule.unitname}`}</option>
+                               return <option key={rule.idunit} value={rule.idunit}>{`1 ${rule.unit_set} = ${rule.quantity} ${rule.unitname}`}</option>
                             }
                         })}
                    </Select>

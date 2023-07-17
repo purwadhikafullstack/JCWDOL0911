@@ -244,7 +244,7 @@ module.exports = {
       //querying total rows of data transaction from sql
       const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where iduser=${db.escape(
         iduser
-      )} and status = "COMPLETE" and transaction.finished_date is not null 
+      )} and (status = "COMPLETE" or status = "CANCELED") and transaction.finished_date is not null 
       ${
         !startDate && !endDate
           ? ``
@@ -265,7 +265,7 @@ module.exports = {
       const fetchFinishedOrderQuery = `select  transaction.idtransaction, transaction.idprescription, transaction.idadmin, transaction.iduser, transaction.idpromo, transaction.idaddress, transaction.waiting_date,
       transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date,
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
-      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where transaction.iduser = ${iduser} and status = "COMPLETE" and transaction.finished_date is not null 
+      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where transaction.iduser = ${iduser} and (status = "COMPLETE" or status = "CANCELED") and transaction.finished_date is not null 
       ${
         !startDate && !endDate
           ? ``
@@ -324,7 +324,7 @@ module.exports = {
       const { startDate, endDate } = JSON.parse(req.query.date);
 
       //querying total rows of data transaction from sql
-      const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where status = "COMPLETE" and transaction.finished_date is not null 
+      const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where (status = "COMPLETE" or status = "CANCELED") and transaction.finished_date is not null 
       ${
         !startDate && !endDate
           ? ``
@@ -345,7 +345,7 @@ module.exports = {
       const fetchFinishedOrderQuery = `select  transaction.idtransaction, transaction.idprescription, transaction.idadmin, transaction.iduser, transaction.idpromo, transaction.idaddress, transaction.waiting_date,
       transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date,
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
-      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where status = "COMPLETE" and transaction.finished_date is not null 
+      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where (status = "COMPLETE" or status = "CANCELED") and transaction.finished_date is not null 
       ${
         !startDate && !endDate
           ? ``
@@ -1141,13 +1141,11 @@ module.exports = {
     }
   },
   adminCancelOrder: async (req, res) => {
-    const idAdmin = parseInt(req.params.idadmin);
-    const { idTransaction, email } = req.body;
-    await query(
-      `update transaction set status = "COMPLETE", finished_date=${db.escape(
-        format(new Date(), "yyyy-MM-dd HH:mm:ss")
-      )} , idadmin=${db.escape(idAdmin)} where idtransaction = ${idTransaction}`
-    );
+    const idAdmin = parseInt(req.params.idadmin)
+    const {idTransaction,email}=req.body
+    await query (`update transaction set status = "CANCELED", finished_date=${db.escape(
+      format(new Date(), "yyyy-MM-dd HH:mm:ss")
+    )} , idadmin=${db.escape(idAdmin)} where idtransaction = ${idTransaction}`);
     let mail = {
       from: `Admin <${process.env.NODEMAILER_USER}>`,
       to: `${email}`,
@@ -1166,7 +1164,7 @@ module.exports = {
     const iduser = parseInt(req.params.iduser);
     const { idTransaction, email } = req.body;
     await query(
-      `update transaction set status = "CANCEL", finished_date=${db.escape(
+      `update transaction set status = "CANCELED", finished_date=${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )} where idtransaction = ${idTransaction}`
     );

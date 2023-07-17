@@ -30,6 +30,7 @@ function EditProfile({ user, setEdit }) {
       setEdit(false);
     }
   };
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -97,13 +98,27 @@ function EditProfile({ user, setEdit }) {
           </div>
         </div>
       </div>
+      <div className="flex flex-col lg:flex-row lg:gap-36 lg:border-b lg:pt-2">
+        <div className="border-b pb-4 mb-4 lg:border-b-0">
+          <div>
+            <h1 className="font-bold text-xl mb-2">Email</h1>
+            <input
+              type="text"
+              value={email}
+              onChange={handleEmailChange}
+              onBlur={handleEmailBlur}
+              className="bg-gray-50 border-green-300 rounded-md border-2 h-10"
+            />
+            {emailError && <p className="text-red-500">{emailError}</p>}
+          </div>
+        </div>
+      </div>
       <div className="flex gap-3 items-center justify-center py-3">
         <button
           className="border-2 border-green-300  font-bold py-2 px-4 rounded-md hover:bg-emerald-500 hover:text-white text-emerald-500"
           onClick={() => saveEdit(username, fullname, email, gender, startDate)}
         >
-          {" "}
-          Save{" "}
+          Save
         </button>
         <button
           className="border-2 border-green-300  font-bold py-2 px-4 rounded-md hover:bg-emerald-500 hover:text-white text-emerald-500"

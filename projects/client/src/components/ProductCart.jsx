@@ -97,7 +97,9 @@ function ProductCart() {
   }, [total]);
 
   useEffect(() => {
-    localStorage.setItem("myCart", JSON.stringify(myCart));
+    if (myCart.length > 0) {
+      localStorage.setItem("myCart", JSON.stringify(myCart));
+    }
   }, [myCart]);
 
   return (

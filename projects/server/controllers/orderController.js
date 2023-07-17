@@ -1050,6 +1050,14 @@ module.exports = {
         )} where idproduct = ${product.idproduct}`;
 
         await query(updateProductQuery);
+
+        const updateRestockReportQuery = `insert into restock values (null, ${db.escape(
+          product.idproduct
+        )}, ${db.escape(format(new Date(), "yyyy-MM-dd"))}, ${db.escape(
+          product.quantity
+        )}, 'penjualan', 'pengurangan')`;
+
+        await query(updateRestockReportQuery);
       });
 
       const acceptIdTransaction = await query(acceptIdTransactionQuery);

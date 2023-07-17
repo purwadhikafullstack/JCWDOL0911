@@ -25,5 +25,6 @@ router.patch("/complete/:iduser", orderController.completePayment);
 router.patch("/reject/:idadmin", orderController.rejectPayment);
 router.patch("/submit/:idadmin", orderController.submitPayment);
 router.patch("/cancel-order/:idadmin", orderController.adminCancelOrder);
+router.patch("/cancelorder/:iduser", orderController.userCancelOrder);
 
 module.exports = router;

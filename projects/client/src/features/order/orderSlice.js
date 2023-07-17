@@ -31,9 +31,7 @@ export const orderSlice = createSlice({
 });
 
 export const addUserOrder = (orderData) => {
-  console.log(orderData);
   return async (dispatch) => {
-    console.log(orderData);
     const userId = JSON.parse(localStorage.getItem("user")).iduser;
     let response = await Axios.post(
       `${process.env.REACT_APP_API_BE}/order/setorder/${userId}`,
@@ -158,7 +156,6 @@ export const fetchPrescriptionTransaction = (
   dateRange
 ) => {
   return async (dispatch) => {
-    console.log(dateRange);
     const userId = JSON.parse(localStorage.getItem("user")).iduser;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
@@ -342,7 +339,6 @@ export const fetchAdminSendTransaction = (
   dateRange
 ) => {
   return async (dispatch) => {
-    console.log(sort);
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
     //backend limits this fetch to 3 with offset for pagination purposes
     const response = await Axios.get(
@@ -585,7 +581,6 @@ export const rejectPaymentReview = (
       const pageStatus = await dispatch(
         fetchAdminReviewTransaction(keyword, page, limit, order, dateRange)
       );
-      console.log(pageStatus);
       // return {
       //   pageStatus,
       // };
@@ -602,6 +597,7 @@ export const acceptOnProcessOrder = (
   dateRange
 ) => {
   return async (dispatch) => {
+    console.log(transaction);
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
     const response = await Axios.patch(
       `${process.env.REACT_APP_API_BE}/order/submit/${idadmin}`,
@@ -642,11 +638,11 @@ export const completeSendOrder = (
     }
   };
 };
-export const adminCancelOrder = (idTransaction,email) => {
+export const adminCancelOrder = (idTransaction, email) => {
   return async (dispatch) => {
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
     Swal.fire({
-      title: 'Loading',
+      title: "Loading",
       allowOutsideClick: false,
       onBeforeOpen: () => {
         Swal.showLoading();
@@ -654,13 +650,31 @@ export const adminCancelOrder = (idTransaction,email) => {
     });
     const response = await Axios.patch(
       `${process.env.REACT_APP_API_BE}/order/cancel-order/${idadmin}`,
-      {idTransaction,email}
+      { idTransaction, email }
     );
-    Swal.fire(`${response.data.message}`, '', 'success');
+    Swal.fire(`${response.data.message}`, "", "success");
     window.location.reload();
   };
 };
 
+export const userCancelOrder = (idTransaction, email) => {
+  return async (dispatch) => {
+    const iduser = JSON.parse(localStorage.getItem("user")).iduser;
+    Swal.fire({
+      title: "Loading",
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
+    const response = await Axios.patch(
+      `${process.env.REACT_APP_API_BE}/order/cancelorder/${iduser}`,
+      { idTransaction, email }
+    );
+    Swal.fire(`${response.data.message}`, "", "success");
+    window.location.reload();
+  };
+};
 
 export const {
   setTransaction,

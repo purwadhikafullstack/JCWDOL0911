@@ -71,6 +71,7 @@ function OrderTotalPriceCart() {
         text: `Please proceed with the payment`,
       });
       dispatch(resetCart());
+      localStorage.removeItem("myCart");
       navigate("/orderlist");
     }
   };

@@ -17,10 +17,12 @@ function LayoutWithNavbar() {
 
   useEffect(() => {
     if (userId) {
-      dispatch(addToCartFromLocal(JSON.parse(localStorage.getItem("myCart"))));
+      dispatch(
+        addToCartFromLocal(JSON.parse(localStorage.getItem("myCart")) || [])
+      );
       dispatch(fetchTransaction());
       dispatch(fetchUser());
-      dispatch(fetchAddresses());
+      dispatch(fetchAddresses(0));
       dispatch(fetchPrimaryAddress(userId));
     }
   }, []);

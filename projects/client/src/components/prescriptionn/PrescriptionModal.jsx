@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import defaultImage from "../../assets/default_img.png";
 import logo from "../../assets/logo-pharmacy.png";
@@ -35,15 +34,10 @@ function PrescriptionModal({ modalHandler }) {
   };
 
   const onClickSubmitHandler = () => {
-    console.log("Submit button is clicked");
     const formData = new FormData();
     formData.append("file", file);
     dispatch(addUserPrescription(formData, modalHandler, navigate));
   };
-
-  useEffect(() => {
-    console.log(file);
-  }, [file]);
 
   return (
     <div className="w-full h-full absolute top-0 left-0 bg-opacity-25 backdrop-blur-sm">

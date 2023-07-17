@@ -18,10 +18,16 @@ function ProductCard({ product }) {
         <div className="flex md:flex-row flex-col justify-between">
           <div className="flex flex-col justify-between">
             <div>{product.name}</div>
-            <div>1 {product.unit}</div>
+            <div className="flex sm:flex-row flex-col sm:gap-10 gap-0 w-full">
+              <div>1 {product.unit_product}</div>
+              <div>@ {currency(product.price)}</div>
+            </div>
+          </div>
+          <div>
+            Qty : {product.quantity} {product.unit_product}
           </div>
           <div className="font-bold">
-            {currency(product.price * product.quantity)}
+            = {currency(product.price * product.quantity)}
           </div>
         </div>
         <div className="mt-4 text-green-600">Show Detail</div>

@@ -127,7 +127,6 @@ export const addNewAddress = (newAddress) => {
       `${process.env.REACT_APP_API_BE}/addresses/new`,
       { ...newAddress, userId }
     );
-    console.log(response);
     if (response.data.success) {
       dispatch(fetchAddresses(0));
       dispatch(fetchPrimaryAddress());

@@ -21,7 +21,6 @@ import {
 import trash from "../assets/trash.png";
 import plus from "../assets/plus.svg";
 import minus from "../assets/minus.svg";
-import medicine from "../assets/medicine.svg";
 
 function ProductCart() {
   const [total, setTotal] = useState(0);
@@ -120,11 +119,8 @@ function ProductCart() {
             </div>
             {myCart.map((item, index) => {
               return (
-                <>
-                  <div
-                    key={item.idproduct}
-                    className=" w-[100%] h-auto lg:h-[200px] py-4 border-b-black lg:px-6"
-                  >
+                <React.Fragment key={index}>
+                  <div className=" w-[100%] h-auto lg:h-[200px] py-4 border-b-black lg:px-6">
                     <div className="flex flex-col h-full relative">
                       <div className="flex items-center">
                         <div className="flex items-center mb-4 pl-3">
@@ -201,7 +197,7 @@ function ProductCart() {
                     </div>
                   </div>
                   <hr className="mt-4" />
-                </>
+                </React.Fragment>
               );
             })}
           </div>

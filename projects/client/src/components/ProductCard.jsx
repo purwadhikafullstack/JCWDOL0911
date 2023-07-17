@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 //import assets
 import medicine from "../assets/medicine.png";
@@ -19,7 +19,10 @@ function ProductCard() {
     <div className=" bg-white border-none shadow-allxl ">
       <img
         className="w-[150px] h-[150px] mx-auto"
-        src={`${process.env.REACT_APP_API_BE}/uploads/${myCart.product_image}` || medicine}
+        src={
+          `${process.env.REACT_APP_API_BE}/uploads/${myCart.product_image}` ||
+          medicine
+        }
         alt="medicine"
       />
       <div className="px-4">

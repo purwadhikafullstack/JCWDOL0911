@@ -165,28 +165,13 @@ module.exports = {
   rejectPrescription: async (req, res) => {
     try {
       const idPrescription = parseInt(req.params.idPrescription);
-      const { email } = req.body;
       await query(
         `UPDATE prescription SET status = 'REJECTED' WHERE idprescription = ${db.escape(
           idPrescription
         )}`
       );
-      let mail = {
-        from: `Admin <${process.env.NODEMAILER_USER}>`,
-        to: `${email}`,
-        subject: `Notification Of Rejection`,
-        html: `
-        <div>
-        <p>Sorry, your prescription with Transaction ID ${idPrescription} has been rejected by the admin. Please make another request.</p>
-        </div>`,
-      };
-      await nodemailer.sendMail(mail);
-      res
-        .status(200)
-        .send({
-          message:
-            "Prescription rejected and notification has been sent to the user",
-        });
+      res.status(200).send({message:'Prescription has been canceled'})
+    
     } catch (error) {
       return res.status(400).send(error);
     }

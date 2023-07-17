@@ -39,13 +39,10 @@ function ChangeAddressModal({ modalHandler, uploadModalHandler }) {
               Address List
             </div>
             <hr className=" mt-4" />
-            {userAddresses.map((address) => {
+            {userAddresses.map((address, index) => {
               return (
-                <>
-                  <div
-                    key={address.idaddress}
-                    className="sm:w-[90%] w-[90%] mx-auto pt-10 flex flex-row justify-between pb-10 items-center gap-10"
-                  >
+                <React.Fragment key={index}>
+                  <div className="sm:w-[90%] w-[90%] mx-auto pt-10 flex flex-row justify-between pb-10 items-center gap-10">
                     <div className="text-[20px] sm:w-[70%]">
                       <div className="font-bold">
                         {userProfile.full_name || userProfile.username}
@@ -117,7 +114,7 @@ function ChangeAddressModal({ modalHandler, uploadModalHandler }) {
                     </div>
                   </div>
                   <hr />
-                </>
+                </React.Fragment>
               );
             })}
           </div>

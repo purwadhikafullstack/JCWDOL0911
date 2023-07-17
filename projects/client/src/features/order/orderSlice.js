@@ -582,9 +582,9 @@ export const rejectPaymentReview = (
         fetchAdminReviewTransaction(keyword, page, limit, order, dateRange)
       );
 
-      // return {
-      //   pageStatus,
-      // };
+      return {
+        pageStatus,
+      };
     }
   };
 };
@@ -598,6 +598,7 @@ export const acceptOnProcessOrder = (
   dateRange
 ) => {
   return async (dispatch) => {
+    console.log(transaction);
     const idadmin = JSON.parse(localStorage.getItem("admin")).idadmin;
     const response = await Axios.patch(
       `${process.env.REACT_APP_API_BE}/order/submit/${idadmin}`,
@@ -650,6 +651,25 @@ export const adminCancelOrder = (idTransaction, email) => {
     });
     const response = await Axios.patch(
       `${process.env.REACT_APP_API_BE}/order/cancel-order/${idadmin}`,
+      { idTransaction, email }
+    );
+    Swal.fire(`${response.data.message}`, "", "success");
+    window.location.reload();
+  };
+};
+
+export const userCancelOrder = (idTransaction, email) => {
+  return async (dispatch) => {
+    const iduser = JSON.parse(localStorage.getItem("user")).iduser;
+    Swal.fire({
+      title: "Loading",
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
+    const response = await Axios.patch(
+      `${process.env.REACT_APP_API_BE}/order/cancelorder/${iduser}`,
       { idTransaction, email }
     );
     Swal.fire(`${response.data.message}`, "", "success");

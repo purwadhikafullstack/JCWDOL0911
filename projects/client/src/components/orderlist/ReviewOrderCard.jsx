@@ -13,6 +13,7 @@ import {
   acceptPaymentReview,
   confirmPaymentReview,
   rejectPaymentReview,
+  userCancelOrder,
 } from "../../features/order/orderSlice";
 
 function ReviewOrderCard({
@@ -68,6 +69,10 @@ function ReviewOrderCard({
     }
   };
 
+  const onClickUserCancelHandler = async (transaction, email) => {
+    dispatch(userCancelOrder(transaction, email));
+  };
+
   const onClickRejectHandler = async (transaction) => {
     const swalAccept = await Swal.fire({
       title: "Reject Payment?",
@@ -90,7 +95,7 @@ function ReviewOrderCard({
       {transactions.map((transaction, transactionIndex) => {
         return (
           <div
-            key={transaction.idtransaction}
+            key={transactionIndex}
             className="w-full rounded even:bg-green-50 odd:bg-gray-50 shadow-xl px-6 pb-4 pt-1 mb-10"
           >
             <div className="flex flex-col my-4 justify-between items-center md:flex-row gap-4">
@@ -118,12 +123,18 @@ function ReviewOrderCard({
                   {transaction.status}
                 </div>
               </div>
+              <div className="font-bold text-green-700 sm:mb-2 my-4">
+                Address : {transaction.full_name || transaction.username}'s{" "}
+                {transaction.address_type}, {transaction.street}, ,{" "}
+                {transaction.city_name}, {transaction.province},{" "}
+                {transaction.postal_code}
+              </div>
               <hr className="my-2" />
-              {transactions[transactionIndex].orderProduct.map((product) => {
-                return (
-                  <ProductCard key={product.idproduct} product={product} />
-                );
-              })}
+              {transactions[transactionIndex].orderProduct.map(
+                (product, index) => {
+                  return <ProductCard key={index} product={product} />;
+                }
+              )}
               <hr className="mt-4" />
             </div>
             <hr />
@@ -141,9 +152,14 @@ function ReviewOrderCard({
                 </span>
               </div>
               <div className="flex flex-row gap-4 items-center">
-                <div className="font-bold text-green-700">Sub Total: </div>
-                <div className="font-bold text-green-700">
-                  {currency(transaction.total)}
+                <div className="flex flex-col gap-2">
+                  <div className="font-bold text-green-700">
+                    Freight Cost : {currency(transaction.freightCost)}
+                  </div>
+                  <div className="font-bold text-green-700">
+                    {" "}
+                    Total Cost : {currency(transaction.total)}
+                  </div>
                 </div>
               </div>
             </div>
@@ -152,7 +168,12 @@ function ReviewOrderCard({
               localStorage.getItem("user") ? (
                 <div className="flex sm:w-[50%] w-full flex-row gap-4">
                   <button
-                    onClick={() => console.log(transaction)}
+                    onClick={() =>
+                      onClickUserCancelHandler(
+                        transaction.idtransaction,
+                        transaction.email
+                      )
+                    }
                     className=" w-full p-2 font-bold mx-auto rounded hover:bg-red-800 text-white bg-red-600"
                   >
                     Cancel

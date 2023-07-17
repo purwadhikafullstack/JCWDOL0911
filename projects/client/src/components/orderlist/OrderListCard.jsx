@@ -5,7 +5,7 @@ import SendOrderCard from "./SendOrderCard";
 import OnProcessOrderCard from "./OnProcessOrderCard";
 import FinishedOrderCard from "./FinishedOrderCard";
 import ReviewOrderCard from "./ReviewOrderCard";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   fetchAdminFinishedTransaction,
   fetchAdminOnProcessTransaction,
@@ -33,7 +33,6 @@ function OrderListCard() {
   });
 
   //pagination state
-  const [filterBy, setFilterBy] = useState("date");
   const [order, setOrder] = useState("desc");
   const [orderState, setOrderState] = useState("");
   const [page, setPage] = useState(0);

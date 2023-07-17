@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { currency } from "../helpers/currency";
-import { getProvince } from "../features/rajaongkir/rajaongkirSlice";
 import { setTotalPrice } from "../features/cart/cartSlice";
 import { removeCheckedProduct } from "../features/cart/cartSlice";
 import NewAddressModal from "./NewAddressModal";

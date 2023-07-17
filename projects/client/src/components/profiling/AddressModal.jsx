@@ -21,14 +21,18 @@ function AddressModal() {
   const cities = useSelector((state) => state.rajaongkir.city);
 
   const renderProvince = () => {
-    return provinces.map((province) => {
-      return <option value={province.province_id}>{province.province}</option>;
+    return provinces.map((province, index) => {
+      return (
+        <option key={index} value={province.province_id}>
+          {province.province}
+        </option>
+      );
     });
   };
   const renderCity = () => {
-    return cities.map((city) => {
+    return cities.map((city, index) => {
       return (
-        <option value={JSON.stringify(city)}>
+        <option key={index} value={JSON.stringify(city)}>
           {city.type} {city.city_name}
         </option>
       );

@@ -69,9 +69,12 @@ function UserGraph({ chartSalesReport, dateRange }) {
         </div>
       </div>
       <div className="flex flex-col">
-        {salesReport.map((report) => {
+        {salesReport.map((report, index) => {
           return (
-            <div className="flex odd:bg-green-100 even:bg-gray-100 sm:flex-row flex-col shadow-xl justify-between bg-red-200 px-4 py-2">
+            <div
+              key={index}
+              className="flex odd:bg-green-100 even:bg-gray-100 sm:flex-row flex-col shadow-xl justify-between bg-red-200 px-4 py-2"
+            >
               <div className="font-bold">ID user : {report.iduser}</div>
               <div className="flex sm:flex-row flex-col sm:gap-10 gap-2">
                 <div>

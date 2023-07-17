@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -41,6 +41,7 @@ function EditProfile({ user, setEdit }) {
       setEmailError("");
     }
   };
+
   return (
     <div>
       <div className="flex flex-col lg:flex-row lg:gap-20 lg:border-b">

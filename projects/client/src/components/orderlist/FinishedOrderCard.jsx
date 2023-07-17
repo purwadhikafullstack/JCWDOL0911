@@ -13,7 +13,7 @@ function FinishedOrderCard() {
       {transactions.map((transaction, transactionIndex) => {
         return (
           <div
-            key={transaction.idtransaction}
+            key={transactionIndex}
             className="w-full rounded even:bg-green-50 odd:bg-gray-50 shadow-xl px-6 pb-4 pt-1 mb-10"
           >
             <div className="flex flex-col my-4 justify-between items-center md:flex-row gap-4">
@@ -42,11 +42,11 @@ function FinishedOrderCard() {
                 </div>
               </div>
               <hr className="my-2" />
-              {transactions[transactionIndex].orderProduct.map((product) => {
-                return (
-                  <ProductCard key={product.idproduct} product={product} />
-                );
-              })}
+              {transactions[transactionIndex].orderProduct.map(
+                (product, index) => {
+                  return <ProductCard key={index} product={product} />;
+                }
+              )}
               <hr className="mt-4" />
             </div>
             <hr />

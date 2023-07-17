@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import OrderListCard from "../components/orderlist/OrderListCard";
 import ProfileOrderCard from "../components/orderlist/ProfileOrderCard";
-import trash from "../assets/trash.png";
 
 function OrderList() {
   const [isOrderOpen, setIsOrderOpen] = useState(false);

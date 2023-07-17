@@ -37,23 +37,21 @@ function OrderProductCart() {
   const myCart = useSelector((state) => state.cart.cart);
   const userData = useSelector((state) => state.user.user);
   const userAddresses = useSelector(
-    (state) => state.address.addressList.allAddress
+    (state) => state.address.addressList.allAddress || []
   );
   // return state.address.primaryAddress[0] || userAddresses[0];
   const userPrimaryAddress = useSelector(
-    (state) => state.address.primaryAddress[0]
+    (state) => state.address.primaryAddress[0] || []
   );
   const bonusItem = (item) => {
-    const totalQuantity = item.quantity + item.discount
+    const totalQuantity = item.quantity + item.discount;
     const bonus = {
-      id:item.idproduct,
+      id: item.idproduct,
       quantity: item.quantity,
-      
-    }
-    dispatch(setBonusItem(bonus))
-    return totalQuantity
-  }
-  
+    };
+    dispatch(setBonusItem(bonus));
+    return totalQuantity;
+  };
 
   useEffect(() => {
     dispatch(fetchAddresses(0));
@@ -139,13 +137,14 @@ function OrderProductCart() {
                     <div className="flex sm:flex-row sm:gap-4 ml-10 flex-col w-full mt-10 mb-3 justify-between">
                       <div className="flex sm:flex-row flex-col justify-between gap-4 w-full ml-4">
                         <div>
-                          
                           <p>{item.name}</p>
-                          <p className="text-xs">1 {item.unit }</p>
-                      <p className=" ">
-                          {item.type ==='Bonus Item'&&item.quantity>=item.discount?`Bonus Item ${item.discount} `:''} 
-                        </p>
-                      
+                          <p className="text-xs">1 {item.unit}</p>
+                          <p className=" ">
+                            {item.type === "Bonus Item" &&
+                            item.quantity >= item.discount
+                              ? `Bonus Item ${item.discount} `
+                              : ""}
+                          </p>
                         </div>
                         <p className="font-bold whitespace-nowrap">
                           {currency(item.price)}
@@ -156,7 +155,10 @@ function OrderProductCart() {
                           Quantity :
                         </div>
                         <span className="sm:absolute sm:bottom-4 sm:right-[75px] text-center w-[50px] h-[25px]">
-                        {item.type ==='Bonus Item'&&item.quantity>=item.discount?`${item.quantity} = ${bonusItem(item)} `:item.quantity} 
+                          {item.type === "Bonus Item" &&
+                          item.quantity >= item.discount
+                            ? `${item.quantity} = ${bonusItem(item)} `
+                            : item.quantity}
                         </span>
                       </div>
                     </div>

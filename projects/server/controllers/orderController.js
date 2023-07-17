@@ -2,49 +2,54 @@ const { db, query } = require("../database");
 const { format } = require("date-fns");
 const nodemailer = require("../helpers/nodemailer");
 
-
 module.exports = {
-uploadOrder: async (req, res) => {
-  try {
-    const iduser = parseInt(req.params.iduser);
-    const {
-      orderProduct,
-      orderAddress,
-      orderPrice,
-      courierData,
-      serviceData,
-      idpromo,
-      bonusItems
-    } = req.body;
+  uploadOrder: async (req, res) => {
+    try {
+      const iduser = parseInt(req.params.iduser);
+      const {
+        orderProduct,
+        orderAddress,
+        orderPrice,
+        courierData,
+        serviceData,
+        idpromo,
+        bonusItems,
+      } = req.body;
 
-    const setTransactionOrderQuery = `insert into transaction values (null, null, null, ${db.escape(
-      iduser
-    )}, ${db.escape(idpromo)}, ${db.escape(orderAddress.idaddress)} ,${db.escape(
-      format(new Date(), "yyyy-MM-dd HH:mm:ss")
-    )},null, null, null, null, null, "WAITING FOR PAYMENT", ${db.escape(
-      orderPrice
-    )}, null, ${db.escape(courierData)}, ${db.escape(
-      serviceData.service
-    )}, ${db.escape(serviceData.description)}, ${db.escape(
-      serviceData.cost[0].value
-    )} );`;
+      const setTransactionOrderQuery = `insert into transaction values (null, null, null, ${db.escape(
+        iduser
+      )}, ${db.escape(idpromo)}, ${db.escape(
+        orderAddress.idaddress
+      )} ,${db.escape(
+        format(new Date(), "yyyy-MM-dd HH:mm:ss")
+      )},null, null, null, null, null, "WAITING FOR PAYMENT", ${db.escape(
+        orderPrice
+      )}, null, ${db.escape(courierData)}, ${db.escape(
+        serviceData.service
+      )}, ${db.escape(serviceData.description)}, ${db.escape(
+        serviceData.cost[0].value
+      )} );`;
 
       const setTransactionOrder = await query(setTransactionOrderQuery);
       const { insertId } = setTransactionOrder;
 
-    // Create an array to store the promises
-    const productPromises = orderProduct.map(async (product) => {
-      let setProductTransactionQuery = `insert into product_transaction values (null, ${db.escape(
-        product.idproduct
-      )}, ${db.escape(insertId)}, ${db.escape(product.quantity)})`;
-      await query(setProductTransactionQuery);
-    });
-    if (bonusItems) {
-      const bonusPromises = bonusItems.map(async(item) => {
-        await query(`INSERT INTO bonus_products VALUES (null,${db.escape(insertId)},${db.escape(item.id)},${db.escape(item.quantity)})`)
-      })
-     await Promise.all(bonusPromises) 
-    }
+      // Create an array to store the promises
+      const productPromises = orderProduct.map(async (product) => {
+        let setProductTransactionQuery = `insert into product_transaction values (null, ${db.escape(
+          product.idproduct
+        )}, ${db.escape(insertId)}, ${db.escape(product.quantity)})`;
+        await query(setProductTransactionQuery);
+      });
+      if (bonusItems) {
+        const bonusPromises = bonusItems.map(async (item) => {
+          await query(
+            `INSERT INTO bonus_products VALUES (null,${db.escape(
+              insertId
+            )},${db.escape(item.id)},${db.escape(item.quantity)})`
+          );
+        });
+        await Promise.all(bonusPromises);
+      }
 
       // Wait for all the promises to resolve
       await Promise.all(productPromises);
@@ -769,7 +774,7 @@ uploadOrder: async (req, res) => {
 
       const oldTemp = fetchReviewOrder.map(async (order, index) => {
         const fetchWaitingProductQuery = `
-        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity,product.idproduct, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
         FROM transaction
         LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
         LEFT JOIN product ON product_transaction.idproduct = product.idproduct
@@ -849,7 +854,7 @@ uploadOrder: async (req, res) => {
 
       const oldTemp = fetchReviewOrder.map(async (order, index) => {
         const fetchWaitingProductQuery = `
-        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity,product.idproduct, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
         FROM transaction
         LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
         LEFT JOIN product ON product_transaction.idproduct = product.idproduct
@@ -987,7 +992,6 @@ uploadOrder: async (req, res) => {
 
       const fetchPrescriptionOrder = await query(fetchPrescriptionOrderQuery);
 
-
       // if fetchWaitingOrder length is 0, we return the result
       if (fetchPrescriptionOrder.length === 0) {
         return res.status(200).send({
@@ -1035,10 +1039,19 @@ uploadOrder: async (req, res) => {
   confirmPayment: async (req, res) => {
     try {
       const iduser = req.params.iduser;
-      const { idtransaction } = req.body;
+      const { idtransaction, orderProduct } = req.body;
       const acceptIdTransactionQuery = `update transaction set status = "ON PROCESS", onprocess_date = ${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )} where idtransaction = ${idtransaction}`;
+
+      await orderProduct.map(async (product) => {
+        const updateProductQuery = `update product set stock = stock - ${db.escape(
+          product.quantity
+        )} where idproduct = ${product.idproduct}`;
+
+        await query(updateProductQuery);
+      });
+
       const acceptIdTransaction = await query(acceptIdTransactionQuery);
       if (acceptIdTransaction.affectedRows !== 0) {
         return res
@@ -1128,11 +1141,13 @@ uploadOrder: async (req, res) => {
     }
   },
   adminCancelOrder: async (req, res) => {
-    const idAdmin = parseInt(req.params.idadmin)
-    const {idTransaction,email}=req.body
-    await query (`update transaction set status = "COMPLETE", finished_date=${db.escape(
-      format(new Date(), "yyyy-MM-dd HH:mm:ss")
-    )} , idadmin=${db.escape(idAdmin)} where idtransaction = ${idTransaction}`);
+    const idAdmin = parseInt(req.params.idadmin);
+    const { idTransaction, email } = req.body;
+    await query(
+      `update transaction set status = "COMPLETE", finished_date=${db.escape(
+        format(new Date(), "yyyy-MM-dd HH:mm:ss")
+      )} , idadmin=${db.escape(idAdmin)} where idtransaction = ${idTransaction}`
+    );
     let mail = {
       from: `Admin <${process.env.NODEMAILER_USER}>`,
       to: `${email}`,
@@ -1144,10 +1159,30 @@ uploadOrder: async (req, res) => {
     };
 
     await nodemailer.sendMail(mail);
-    res.status(200).send({message:'Transaction Has Been canceled'})
+    res.status(200).send({ message: "Transaction Has Been canceled" });
+  },
 
+  userCancelOrder: async (req, res) => {
+    const iduser = parseInt(req.params.iduser);
+    const { idTransaction, email } = req.body;
+    await query(
+      `update transaction set status = "CANCEL", finished_date=${db.escape(
+        format(new Date(), "yyyy-MM-dd HH:mm:ss")
+      )} where idtransaction = ${idTransaction}`
+    );
+    let mail = {
+      from: `Admin <${process.env.NODEMAILER_USER}>`,
+      to: `${email}`,
+      subject: `Notification Of rejection`,
+      html: `
+      <div>
+      <p>Your Transaction with Transaction ID ${idTransaction} is Cancelled, You Still can See Details on Finished Transaction. For Refund Please Contact Customer Service</p>
+      </div>`,
+    };
 
-  }
+    await nodemailer.sendMail(mail);
+    res.status(200).send({ message: "Transaction Has Been canceled" });
+  },
 
   // getWaitingProduct: async (req, res) => {
   //   const idtransaction = req.params.idtransaction;

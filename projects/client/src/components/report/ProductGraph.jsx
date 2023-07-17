@@ -65,9 +65,12 @@ function ProductGraph({ chartSalesReport, dateRange }) {
         </div>
       </div>
       <div className="flex flex-col">
-        {productReport.map((report) => {
+        {productReport.map((report, index) => {
           return (
-            <div className="flex odd:bg-green-100 even:bg-gray-100 sm:flex-row flex-col shadow-xl justify-between bg-red-200 px-4 py-2">
+            <div
+              key={index}
+              className="flex odd:bg-green-100 even:bg-gray-100 sm:flex-row flex-col shadow-xl justify-between bg-red-200 px-4 py-2"
+            >
               <div className="font-bold">Product Name : {report.name}</div>
               <div className="flex sm:flex-row flex-col sm:gap-10 gap-2">
                 <div>Gross Income : {currency(report.purchase)}</div>

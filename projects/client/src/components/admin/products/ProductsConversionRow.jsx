@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
-    Table,
-    Thead,
-    Tbody,
-    Tfoot,
     Tr,
     Td,
-    TableCaption,
-    TableContainer,
 } from '@chakra-ui/react'
 import { Button,Select } from '@chakra-ui/react'
 import { useDispatch } from 'react-redux'

@@ -3,12 +3,9 @@ import Sidebar from "../../components/admin/Sidebar";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
-  fetchConverted,
   fetchProducts,
 } from "../../features/cart/productsSlice";
 import { useSelector } from "react-redux";
-import ProductsCard from "../../components/admin/products/ProductsCard";
-import ConvertedUnitCard from "../../components/admin/products/ConvertedUnitCard";
 import { useState } from "react";
 import ConvertUnitModal from "../../components/admin/products/ConvertUnitModal";
 import {
@@ -135,7 +132,7 @@ function UnitConversion() {
                   </div>
                 )}
               </TableContainer>
-              {offset == 0 ? (
+              {offset === 0 ? (
                 <></>
               ) : (
                 <button
@@ -160,7 +157,7 @@ function UnitConversion() {
                   </div>
                 </button>
               )}
-              {offset / 5 == pages ? (
+              {offset / 5 === pages ? (
                 <></>
               ) : (
                 <button

@@ -11,7 +11,7 @@ import {
   Tr,
   Th,
   TableContainer,
-  Select,Button
+  Select,
 } from "@chakra-ui/react";
 import { useSelector } from 'react-redux'
 import DiscountTableRow from '../../components/admin/discounts/DiscountTableRow'

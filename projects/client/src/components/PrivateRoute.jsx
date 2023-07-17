@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { AUTH_TOKEN, USER } from "../helpers/constant";
 import Swal from "sweetalert2";

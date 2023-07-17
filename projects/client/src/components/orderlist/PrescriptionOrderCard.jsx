@@ -11,7 +11,11 @@ import {
   prescriptionCart,
   prescriptionTotalPrice,
 } from "../../features/cart/cartSlice";
-import { setPrescriptionCheckOut } from "../../features/product/prescriptionSlice";
+import {
+  rejectPresciption,
+  setPrescriptionCheckOut,
+} from "../../features/product/prescriptionSlice";
+import Swal from "sweetalert2";
 
 function PrescriptionOrderCard() {
   //function to close the modal
@@ -23,8 +27,24 @@ function PrescriptionOrderCard() {
     navigate(`/admin/prescription/${prescription.idprescription}`);
   };
 
-  const onClickRejectHandler = (prescription) => {
-    console.log(prescription);
+  const onClickRejectHandler = async (prescription) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Reject it!",
+      showLoaderOnConfirm: true,
+    });
+    if (result.isConfirmed) {
+      dispatch(
+        rejectPresciption(
+          prescription.idprescription,
+        )
+      );
+    }
   };
   const checkoutHandler = (prescriptions) => {
     dispatch(setPrescriptionCheckOut(prescriptions));
@@ -70,7 +90,6 @@ function PrescriptionOrderCard() {
                   onClick={(e) => {
                     const modal = document.getElementById(prescriptionIndex);
                     modal.style.display = "block";
-                    console.log(modal.style.display);
                   }}
                   className="font-bold text-green-600 cursor-pointer hover:text-green-700"
                 >

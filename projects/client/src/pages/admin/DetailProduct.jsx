@@ -9,7 +9,6 @@ import { Button, Tooltip, Divider } from "@chakra-ui/react";
 import {
   fetchDetailProduct,
   fetchProducts,
-  setProduct,
 } from "../../features/cart/productsSlice";
 import { currency } from "../../helpers/currency";
 import { updateStock } from "../../features/cart/productsSlice";
@@ -24,6 +23,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import EditProductModal from "../../components/admin/products/EditProductModal";
+import TableHistoryStockByIdProduct from "../../components/admin/products/TableHistoryStockByIdProduct";
 
 function DetailProduct() {
   const navigate = useNavigate();
@@ -84,7 +84,6 @@ function DetailProduct() {
       );
       navigate("/admin/products");
     } catch (error) {
-      console.log(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -200,12 +199,13 @@ function DetailProduct() {
               </div>
               <div>
                 <div className="text-xl lg:text-2xl mt-11 mb-4 font-semibold">
-                  <p>Category and Price</p>
+                  <p>Detail Product</p>
                 </div>
                 <div className="flex">
                   <div className="flex flex-col gap-4 w-full lg:w-1/5">
                     <p>Category</p>
                     <p>Price</p>
+                    <p>Weight</p>
                   </div>
                   <div className="flex flex-col gap-4 text-right lg:text-left">
                     <div className="flex gap-2">
@@ -220,6 +220,7 @@ function DetailProduct() {
                         : "-"}
                     </div>
                     <p>{currency(product.price)}</p>
+                    <p>{product.weight || "-"} gram</p>
                   </div>
                 </div>
               </div>
@@ -263,11 +264,15 @@ function DetailProduct() {
           <div />
           <Divider orientation="horizontal" />
           <div>
-            <div className="text-2xl font-semibold">
-              <p>History of Restock Product</p>
+            <div className="text-2xl font-semibold flex flex-wrap lg:flex-nowrap gap-2">
+              <p>History Stock of</p>
+              <p className="text-blue-700">{product.name}</p>
             </div>
             <div>
-              <p>tabel</p>
+              <TableHistoryStockByIdProduct
+                idproduct={params.idproduct}
+                stock={product.stock}
+              />
             </div>
           </div>
         </div>

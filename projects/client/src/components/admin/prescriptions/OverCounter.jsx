@@ -34,7 +34,7 @@ function OverCounter({ prescription }) {
             idproduct:selectedProduct.idproduct,
             name: selectedProduct.name,
             quantity: quantity,
-            unit: selectedProduct.unit,
+            unit: selectedProduct.unit_product,
             price: selectedProduct.unit == selectedProduct.unitname ? (selectedProduct.price / selectedProduct.quantity) * quantity : (selectedProduct.price * quantity),
             weight : selectedProduct.unit == selectedProduct.unitname ?(selectedProduct.weight * quantity):(selectedProduct.weight/selectedProduct.quantity)* quantity,
             status:'default'
@@ -77,7 +77,7 @@ function OverCounter({ prescription }) {
             <button onClick={() => setQuantity(quantity + 1)} disabled={stockHabis}>+</button>
             
     </div>
-                      <p>{`Available Stock : ${updateStock} ${selectedProduct.unit}`}</p>
+                      <p>{`Available Stock : ${updateStock} ${selectedProduct.unit_product}`}</p>
                       <div>    
                   <button className=' border-2 border-green-300  font-bold h-10 px-2 rounded-md hover:bg-emerald-500 hover:text-white text-emerald-500 right-0'
                   onClick={() => addMedicineHandler()} >Add Medicine</button>

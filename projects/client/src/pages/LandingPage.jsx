@@ -9,11 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 import NewAddressModal from "../components/NewAddressModal";
 import PrescriptionModal from "../components/prescriptionn/PrescriptionModal";
 import { getAllProductsByFilter } from "../features/product/productSlice";
+import { addToCartFromLocal } from "../features/cart/cartSlice";
 
 function LandingPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const [products, setProducts] = useState([]);
   const [isChangeAddressModalHidden, setIsChangeAddressModalHidden] =
     useState(false);
   const [isNewAddressModalHidden, setIsNewAddressModalHidden] = useState(false);
@@ -30,7 +30,6 @@ function LandingPage() {
   const userId = JSON.parse(localStorage.getItem("user"))?.iduser;
 
   const onClickUploadPrescriptionHandler = async () => {
-    console.log(!userId || userLogin !== "");
     if (!userId) {
       Swal.fire({
         icon: "info",
@@ -45,29 +44,11 @@ function LandingPage() {
     }
   };
 
-  // const getLatestProduct = async () => {
-  //   try {
-  //     let response = await axios.get(
-  //       `${process.env.REACT_APP_API_BE}/products/latest`
-  //     );
-
-  //     setProducts(response.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...",
-  //       text: error.response?.data?.message,
-  //     });
-  //   }
-  // };
-
   const uploadPrescriptionHandler = () => {
     setIsUploadPrescriptionModalHidden((prev) => !prev);
   };
 
   useEffect(() => {
-    // getLatestProduct();
     dispatch(
       getAllProductsByFilter({
         order: "DESC",
@@ -132,7 +113,7 @@ function LandingPage() {
             </h4>
           </div>
           {/*  */}
-          <div className="flex gap-4 justify-between mt-6 overflow-auto">
+          <div className="flex gap-4 mt-6 overflow-auto">
             {products.map((product, index) => (
               <CardProduct key={index} product={product} />
             ))}

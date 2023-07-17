@@ -9,6 +9,7 @@ import {
   fetchPrimaryAddress,
 } from "../features/users/addressSlice";
 import { fetchTransaction } from "../features/transaction/transactionSlice";
+import { addToCartFromLocal } from "../features/cart/cartSlice";
 
 function LayoutWithNavbar() {
   const dispatch = useDispatch();
@@ -16,9 +17,12 @@ function LayoutWithNavbar() {
 
   useEffect(() => {
     if (userId) {
+      dispatch(
+        addToCartFromLocal(JSON.parse(localStorage.getItem("myCart")) || [])
+      );
       dispatch(fetchTransaction());
       dispatch(fetchUser());
-      dispatch(fetchAddresses());
+      dispatch(fetchAddresses(0));
       dispatch(fetchPrimaryAddress(userId));
     }
   }, []);

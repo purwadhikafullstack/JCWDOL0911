@@ -7,7 +7,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Input,
   Button,
   Select,
 } from "@chakra-ui/react";
@@ -25,7 +24,6 @@ function AddNewProductModal({ isOpen, onClose }) {
   const navigate = useNavigate();
   const token = localStorage.getItem(AUTH_TOKEN);
   const [formAddNewProduct, setFormAddNewProduct] = useState({
-    idunit: "",
     idcategoryOne: "",
     idcategoryTwo: "",
     idcategoryThree: "",
@@ -35,9 +33,9 @@ function AddNewProductModal({ isOpen, onClose }) {
     description: "",
     stock: "",
     unitProduct: "",
+    weight: "",
   });
   const [resetFormAddNewProduct, setResetFormAddNewProduct] = useState({
-    idunit: "",
     idcategoryOne: "",
     idcategoryTwo: "",
     idcategoryThree: "",
@@ -47,6 +45,7 @@ function AddNewProductModal({ isOpen, onClose }) {
     description: "",
     stock: "",
     unitProduct: "",
+    weight: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const categories = useSelector((state) => state.categories.categories);
@@ -88,7 +87,7 @@ function AddNewProductModal({ isOpen, onClose }) {
     formData.append("stock", formAddNewProduct.stock);
     formData.append("idpromo", formAddNewProduct.idpromo || null);
     formData.append("unitProduct", formAddNewProduct.unitProduct);
-    formData.append("idunit", formAddNewProduct.idunit);
+    formData.append("weight", formAddNewProduct.weight);
     if (formAddNewProduct.idcategoryOne)
       formData.append("idcategoryOne", formAddNewProduct.idcategoryOne);
     if (formAddNewProduct.idcategoryTwo)
@@ -105,7 +104,7 @@ function AddNewProductModal({ isOpen, onClose }) {
       );
       setIsLoading(false);
       onClose();
-      navigate("/admin/products");
+      window.location.reload();
       setFormAddNewProduct(resetFormAddNewProduct);
       Swal.fire({
         icon: "success",
@@ -116,7 +115,8 @@ function AddNewProductModal({ isOpen, onClose }) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: error.response?.data?.message || "Something went wrong!!",
+        text:
+          error.response?.data?.message?.message || "Something went wrong!!",
       });
       setIsLoading(false);
       navigate("/admin/products");
@@ -129,15 +129,6 @@ function AddNewProductModal({ isOpen, onClose }) {
   };
 
   const handleConfirmationAddProduct = async () => {
-    if (!formAddNewProduct.idunit) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "id unit is required",
-      });
-      return;
-    }
-
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You want to add new product?",
@@ -148,7 +139,6 @@ function AddNewProductModal({ isOpen, onClose }) {
       confirmButtonText: "Add product",
     });
     if (result.isConfirmed) {
-      //   addNewProduct();
       onClickSubmitHandler();
     }
   };
@@ -174,6 +164,14 @@ function AddNewProductModal({ isOpen, onClose }) {
               <div className="flex justify-between items-center">
                 <p className=" text-slate-500">Upload picture</p>
                 <div className="flex flex-col w-2/3">
+                  <div>
+                    {!isAccept ? (
+                      <div className="mt-7 text-red-600 text-center">
+                        *File must be in .jpeg or .png and size must not bigger
+                        than 1MB
+                      </div>
+                    ) : null}
+                  </div>
                   <div className="w-2/3">
                     <img id="productPhoto" src="" alt="" />
                   </div>
@@ -264,30 +262,19 @@ function AddNewProductModal({ isOpen, onClose }) {
                   className="w-2/3 border-2 border-slate-100 px-2 py-1 rounded-md"
                   value={formAddNewProduct.unitProduct}
                   onChange={handleAddProductForm}
-                  required
                 />
               </div>
               <div className="flex justify-between items-center">
-                <p className=" text-slate-500">
-                  Unit Conversion<span className="text-red-600">*</span>
-                </p>
-                <div className="flex w-2/3 border-slate-100 rounded-md">
-                  <Select
-                    placeholder="-"
-                    id="idunit"
-                    name="idunit"
-                    onChange={handleAddProductForm}
-                    value={formAddNewProduct.idunit}
-                  >
-                    {units.map((unit) => {
-                      return (
-                        <option value={unit.idunit} key={unit.idunit}>
-                          {unit.unitname}
-                        </option>
-                      );
-                    })}
-                  </Select>
-                </div>
+                <p className=" text-slate-500">Weight (gram)</p>
+                <input
+                  id="weight"
+                  name="weight"
+                  type="text"
+                  placeholder="-"
+                  className="w-2/3 border-2 border-slate-100 px-2 py-1 rounded-md"
+                  value={formAddNewProduct.weight}
+                  onChange={handleAddProductForm}
+                />
               </div>
               <div className="flex justify-between items-center">
                 <p className=" text-slate-500">Category (I)</p>
@@ -299,12 +286,9 @@ function AddNewProductModal({ isOpen, onClose }) {
                     onChange={handleAddProductForm}
                     value={formAddNewProduct.idcategoryOne}
                   >
-                    {categories.map((category) => {
+                    {categories.map((category, index) => {
                       return (
-                        <option
-                          value={category.idcategory}
-                          key={category.idcategory}
-                        >
+                        <option value={category.idcategory} key={index}>
                           {category.name}
                         </option>
                       );

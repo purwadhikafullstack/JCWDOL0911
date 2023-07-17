@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Sidebar from "../../components/admin/Sidebar";
 import {
   Table,
@@ -18,6 +18,8 @@ import { setAllUserQuestion } from "../../features/admin/answerSlice";
 import { AUTH_TOKEN } from "../../helpers/constant";
 import { useNavigate } from "react-router-dom";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import moment from "moment";
+import debounce from "lodash.debounce";
 
 function AnswerQuestion() {
   const LIMIT = 5;
@@ -34,6 +36,7 @@ function AnswerQuestion() {
   });
   const [countData, setCountData] = useState(0);
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchAllUserQuestion = async () => {
     try {
@@ -46,6 +49,7 @@ function AnswerQuestion() {
             key: selectedSortBy.key,
             limit: LIMIT,
             page,
+            search: searchTerm,
           },
           headers: { authorization: `Bearer ${token}` },
         }
@@ -53,20 +57,12 @@ function AnswerQuestion() {
       dispatch(setAllUserQuestion(response.data?.questions || []));
       setCountData(response.data.count);
     } catch (error) {
-      console.log(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: error.response?.data?.message,
       });
     }
-  };
-
-  const getDate = (dateTime) => {
-    if (dateTime && dateTime.length > 10) {
-      return dateTime.slice(0, 10);
-    }
-    return dateTime;
   };
 
   const getName = (name) => {
@@ -84,11 +80,9 @@ function AnswerQuestion() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(response);
       navigate("/admin/answer-question");
       fetchAllUserQuestion();
     } catch (error) {
-      console.log(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -117,7 +111,6 @@ function AnswerQuestion() {
     try {
       navigate(`/admin/answer-question/${idquestion}`);
     } catch (error) {
-      console.log(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -125,10 +118,6 @@ function AnswerQuestion() {
       });
     }
   };
-
-  useEffect(() => {
-    fetchAllUserQuestion();
-  }, [selectedIsAnswer.isAnswer, selectedSortBy.sort, page]);
 
   const renderPagination = () => {
     // const pages = [...Array(Math.ceil(countData / LIMIT))];
@@ -146,6 +135,15 @@ function AnswerQuestion() {
     ));
   };
 
+  const searchHandler = (value) => {
+    setSearchTerm(value);
+  };
+
+  const debouncedChangeHandler = useMemo(
+    () => debounce(searchHandler, 500),
+    []
+  );
+
   const filter = (idanswer) => {
     if (idanswer == undefined) {
       return "Filter All";
@@ -158,6 +156,19 @@ function AnswerQuestion() {
     }
   };
 
+  const sortBy = (sort) => {
+    if (sort == "ASC") {
+      return "Oldest - Newest";
+    }
+    if (sort == "DESC") {
+      return "Newest - Oldest";
+    }
+  };
+
+  useEffect(() => {
+    fetchAllUserQuestion();
+  }, [selectedIsAnswer.isAnswer, selectedSortBy.sort, page, searchTerm]);
+
   return (
     <>
       <div className="w-screen h-full flex justify-between bg-slate-50">
@@ -167,7 +178,15 @@ function AnswerQuestion() {
         <div className="min-h-screen h-full bg-dashboard-admin p-8 lg:p-28 flex flex-col gap-11 content-width">
           <p className="text-3xl font-bold">Answer Question</p>
           <div className="bg-white px-6 pb-11 rounded-lg shadow-card-tagline">
-            <div className="flex flex-wrap gap-4 my-11">
+            <div className="flex flex-wrap gap-4 my-11 items-end">
+              <div>
+                <p className="font-bold text-sm">Search question</p>
+                <input
+                  placeholder="Search question"
+                  onChange={(e) => debouncedChangeHandler(e.target.value)}
+                  className="w-full bg-gray-50 rounded-md border-2 h-8 px-2"
+                />
+              </div>
               <div>
                 <Menu>
                   <MenuButton>
@@ -232,11 +251,18 @@ function AnswerQuestion() {
                           ></path>
                         </svg>
                       </div>
-                      <p>{selectedSortBy.key}</p>
-                      <p>{selectedSortBy.sort || "No sort"}</p>
+
+                      <p>{sortBy(selectedSortBy.sort) || "No sort"}</p>
                     </div>
                   </MenuButton>
                   <MenuList label={selectedSortBy.sort}>
+                    <MenuItem
+                      onClick={() =>
+                        setSelectedSortBy({ sort: undefined, key: undefined })
+                      }
+                    >
+                      <p className="text-black">No sort</p>
+                    </MenuItem>
                     <MenuItem
                       onClick={() =>
                         setSelectedSortBy({ sort: "DESC", key: "date" })
@@ -256,110 +282,124 @@ function AnswerQuestion() {
               </div>
             </div>
             <TableContainer className="rounded-lg bg-table-list-color">
-              <Table variant="striped" colorScheme="teal">
-                <Thead className="table-list-head">
-                  <Tr>
-                    <Th color="white" fontSize="base">
-                      No
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Title
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Question
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Date
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Status
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Action
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {questions.map((question, index) => (
-                    <Tr key={question.idquestion}>
-                      <Td>{LIMIT * (page - 1) + 1 + index}</Td>
-                      <Td
-                        onClick={() =>
-                          handlePageDetailUserQuestion(question.idquestion)
-                        }
-                        className="cursor-pointer"
-                      >
-                        {question.title}
-                      </Td>
-                      <Td
-                        onClick={() =>
-                          handlePageDetailUserQuestion(question.idquestion)
-                        }
-                        className="cursor-pointer"
-                      >
-                        {getName(question.question)}
-                      </Td>
-                      <Td
-                        onClick={() =>
-                          handlePageDetailUserQuestion(question.idquestion)
-                        }
-                        className="cursor-pointer"
-                      >
-                        {getDate(question.date)}
-                      </Td>
-                      <Td
-                        onClick={() =>
-                          handlePageDetailUserQuestion(question.idquestion)
-                        }
-                        className="cursor-pointer"
-                      >
-                        {question.is_answer ? (
-                          <Tooltip label="You already answer this question">
-                            <Button
-                              colorScheme="gray"
-                              variant="solid"
-                              className="cursor-not-allowed"
-                            >
-                              Answered
-                            </Button>
-                          </Tooltip>
-                        ) : (
-                          <Button className="button-primary" variant="solid">
-                            No Answer
-                          </Button>
-                        )}
-                      </Td>
-
-                      <Td>
-                        <div
-                          className="w-fit"
-                          onClick={() => saveHandler(question.idquestion)}
-                        >
-                          <Tooltip label="delete">
-                            <Button colorScheme="red" variant="ghost">
-                              <svg
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                                aria-hidden="true"
-                                className="w-7"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                                ></path>
-                              </svg>
-                            </Button>
-                          </Tooltip>
-                        </div>
-                      </Td>
+              {questions.length > 0 ? (
+                <Table variant="striped" colorScheme="teal">
+                  <Thead className="table-list-head">
+                    <Tr>
+                      <Th color="white" fontSize="base">
+                        No
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Title
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Question
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Date
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Status
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Action
+                      </Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
+                  </Thead>
+                  <Tbody>
+                    {questions.map((question, index) => (
+                      <Tr key={question.idquestion}>
+                        <Td>{LIMIT * (page - 1) + 1 + index}</Td>
+                        <Td
+                          onClick={() =>
+                            handlePageDetailUserQuestion(question.idquestion)
+                          }
+                          className="cursor-pointer"
+                        >
+                          {question.title}
+                        </Td>
+                        <Td
+                          onClick={() =>
+                            handlePageDetailUserQuestion(question.idquestion)
+                          }
+                          className="cursor-pointer"
+                        >
+                          {getName(question.question)}
+                        </Td>
+                        <Td
+                          onClick={() =>
+                            handlePageDetailUserQuestion(question.idquestion)
+                          }
+                          className="cursor-pointer"
+                        >
+                          {moment(question.date).format("DD-MM-YYYY")}
+                        </Td>
+                        <Td
+                          onClick={() =>
+                            handlePageDetailUserQuestion(question.idquestion)
+                          }
+                          className="cursor-pointer"
+                        >
+                          {question.is_answer ? (
+                            <Tooltip label="You already answer this question">
+                              <Button
+                                colorScheme="gray"
+                                variant="solid"
+                                className="cursor-not-allowed"
+                              >
+                                Answered
+                              </Button>
+                            </Tooltip>
+                          ) : (
+                            <Button className="button-primary" variant="solid">
+                              No Answer
+                            </Button>
+                          )}
+                        </Td>
+
+                        <Td>
+                          <div
+                            className="w-fit"
+                            onClick={() => saveHandler(question.idquestion)}
+                          >
+                            <Tooltip label="delete">
+                              <Button colorScheme="red" variant="ghost">
+                                <svg
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="1.5"
+                                  viewBox="0 0 24 24"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  aria-hidden="true"
+                                  className="w-7"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                                  ></path>
+                                </svg>
+                              </Button>
+                            </Tooltip>
+                          </div>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              ) : (
+                <div className="w-full flex flex-col items-center my-11">
+                  <p className="text-xl mb-11 font-bold text-slate-400">
+                    No Data
+                  </p>
+                  <img
+                    src={"./assets/image-no-data-admin.svg"}
+                    alt=""
+                    width="200px"
+                    className=""
+                  />
+                </div>
+              )}
             </TableContainer>
             <div className="flex flex-wrap sm:flex-nowrap  w-full gap-4 justify-center mt-11">
               {renderPagination()}

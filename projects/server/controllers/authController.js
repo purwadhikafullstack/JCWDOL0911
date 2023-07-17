@@ -20,12 +20,11 @@ module.exports = {
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
 
-      const addUserQuery =
-        `INSERT INTO user VALUES(null, ${db.escape(
-          username
-        )}, null, null, null, ${db.escape(email)} ,${phone_number}, ${db.escape(
-          hashPassword
-        )}, 0, null, null);`
+      const addUserQuery = `INSERT INTO user VALUES(null, ${db.escape(
+        username
+      )}, null, null, null, ${db.escape(email)} ,${phone_number}, ${db.escape(
+        hashPassword
+      )}, 0, null, null);`;
 
       const addUser = await query(addUserQuery);
 
@@ -57,7 +56,6 @@ module.exports = {
         message: "Success register! Please verify your email",
       });
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ message: error });
     }
   },
@@ -86,6 +84,12 @@ module.exports = {
         email
       )};`;
       const isUserExist = await query(isUserExistQuery);
+
+      if (isUserExist[0].is_verified === 0) {
+        return res
+          .status(400)
+          .send({ message: "Please verified your account!" });
+      }
 
       if (isUserExist.length === 0) {
         return res
@@ -125,7 +129,6 @@ module.exports = {
         },
       });
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ message: error });
     }
   },
@@ -133,9 +136,6 @@ module.exports = {
     try {
       const { password, newPassword } = req.body;
       const idUser = req.user.id;
-
-      console.log("req user", req.user);
-      console.log("iduser", req.user.id);
 
       const isUserExistQuery = `SELECT * FROM user WHERE iduser=${idUser};`;
       const isUserExist = await query(isUserExistQuery);
@@ -178,7 +178,6 @@ module.exports = {
 
       return res.status(200).send({ message: "Please login again" });
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ message: error });
     }
   },
@@ -255,7 +254,6 @@ module.exports = {
         },
       });
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ message: error });
     }
   },

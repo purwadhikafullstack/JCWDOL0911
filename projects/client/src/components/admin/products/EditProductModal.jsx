@@ -7,7 +7,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Input,
   Button,
   Select,
 } from "@chakra-ui/react";
@@ -18,10 +17,7 @@ import { getAllCategory } from "../../../features/cartegory/categorySlice";
 import { AUTH_TOKEN } from "../../../helpers/constant";
 import axios from "axios";
 import { getAllUnitConversion } from "../../../features/unit/unitConversion";
-import {
-  fetchDetailProduct,
-  fetchProducts,
-} from "../../../features/cart/productsSlice";
+import { fetchDetailProduct } from "../../../features/cart/productsSlice";
 import { getAllPromo } from "../../../features/promo/promoProductSlice";
 
 function EditProductModal({ isOpen, onClose }) {
@@ -30,7 +26,6 @@ function EditProductModal({ isOpen, onClose }) {
   const params = useParams();
   const token = localStorage.getItem(AUTH_TOKEN);
   const [formEditProduct, setFormEditProduct] = useState({
-    idunit: "",
     idcategoryOne: "",
     idcategoryTwo: "",
     idcategoryThree: "",
@@ -39,6 +34,7 @@ function EditProductModal({ isOpen, onClose }) {
     price: "",
     description: "",
     unitProduct: "",
+    weight: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const categories = useSelector((state) => state.categories.categories);
@@ -73,7 +69,6 @@ function EditProductModal({ isOpen, onClose }) {
   };
 
   const handleConfirmationEditProduct = async (onClose) => {
-    // onClose();
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You want to edit this product?",
@@ -84,7 +79,6 @@ function EditProductModal({ isOpen, onClose }) {
       confirmButtonText: "Edit product",
     });
     if (result.isConfirmed) {
-      // editProduct(params.idproduct);
       onClickSubmitEditHandler(params.idproduct);
     }
   };
@@ -97,7 +91,7 @@ function EditProductModal({ isOpen, onClose }) {
     formData.append("description", formEditProduct.description);
     formData.append("idpromo", formEditProduct.idpromo || null);
     formData.append("unitProduct", formEditProduct.unitProduct);
-    formData.append("idunit", formEditProduct.idunit);
+    formData.append("weight", formEditProduct.weight);
     if (formEditProduct.idcategoryOne)
       formData.append("idcategoryOne", formEditProduct.idcategoryOne);
     if (formEditProduct.idcategoryTwo)
@@ -113,7 +107,6 @@ function EditProductModal({ isOpen, onClose }) {
         { headers: { authorization: `Bearer ${token}` } }
       );
 
-      console.log("response", response);
       setIsLoading(false);
       onClose();
       dispatch(fetchDetailProduct(params.idproduct));
@@ -145,7 +138,6 @@ function EditProductModal({ isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) {
       setFormEditProduct({
-        idunit: product.idunit,
         idcategoryOne: product?.categories[0]?.idcategory,
         idcategoryTwo: product?.categories[1]?.idcategory,
         idcategoryThree: product?.categories[2]?.idcategory,
@@ -155,6 +147,7 @@ function EditProductModal({ isOpen, onClose }) {
         description: product.description,
         unitProduct: product.unit_product,
         productImage: product.product_image,
+        weight: product.weight,
       });
     }
   }, [isOpen]);
@@ -171,20 +164,30 @@ function EditProductModal({ isOpen, onClose }) {
               <div className="flex justify-between items-center">
                 <p className=" text-slate-500">Upload picture</p>
                 <div className="flex flex-col w-2/3">
-                  <div className="w-2/3">
-                    <img
-                      id="productPhoto"
-                      src={`${process.env.REACT_APP_API_BE}/uploads/${formEditProduct.productImage}`}
-                      alt=""
+                  <div>
+                    {!isAccept ? (
+                      <div className="mt-7 text-red-600 text-center">
+                        *File must be in .jpeg or .png and size must not bigger
+                        than 1MB
+                      </div>
+                    ) : null}
+                  </div>
+                  <div>
+                    <div className="w-2/3">
+                      <img
+                        id="productPhoto"
+                        src={`${process.env.REACT_APP_API_BE}/uploads/${formEditProduct.productImage}`}
+                        alt=""
+                      />
+                    </div>
+                    <input
+                      className="w-2/3 border-2 border-slate-100 px-2 py-1 rounded-md"
+                      onChange={onImageUploadHandler}
+                      type="file"
+                      id="profile_image"
+                      name="file"
                     />
                   </div>
-                  <input
-                    className="w-2/3 border-2 border-slate-100 px-2 py-1 rounded-md"
-                    onChange={onImageUploadHandler}
-                    type="file"
-                    id="profile_image"
-                    name="file"
-                  />
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -257,28 +260,18 @@ function EditProductModal({ isOpen, onClose }) {
                 />
               </div>
               <div className="flex justify-between items-center">
-                <p className=" text-slate-500">
-                  Unit Conversion<span className="text-red-600">*</span>
-                </p>
-                <div className="flex w-2/3 border-slate-100 rounded-md">
-                  <Select
-                    placeholder="-"
-                    id="idunit"
-                    name="idunit"
-                    onChange={handleEditProductForm}
-                    value={formEditProduct.idunit}
-                  >
-                    {units.map((unit) => {
-                      return (
-                        <option value={unit.idunit} key={unit.idunit}>
-                          {unit.unitname}
-                        </option>
-                      );
-                    })}
-                  </Select>
-                </div>
+                <p className=" text-slate-500">Weight (gram)</p>
+                <input
+                  id="weight"
+                  name="weight"
+                  type="text"
+                  placeholder="-"
+                  className="w-2/3 border-2 border-slate-100 px-2 py-1 rounded-md"
+                  value={formEditProduct.weight}
+                  onChange={handleEditProductForm}
+                  required
+                />
               </div>
-
               <div className="flex justify-between items-center">
                 <p className=" text-slate-500">Category (I)</p>
                 <div className="flex w-2/3 border-slate-100 rounded-md">

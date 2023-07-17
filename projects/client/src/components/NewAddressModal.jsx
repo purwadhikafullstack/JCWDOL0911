@@ -51,7 +51,6 @@ function NewAddressModal({ modalHandler }) {
 
   const onSubmitHandler = async (newAddressData) => {
     const response = await dispatch(addNewAddress(newAddressData));
-    console.log(response);
     if (response.data.success) {
       Swal.fire(`${response.data.message}`, "", "success");
       modalHandler();
@@ -94,7 +93,7 @@ function NewAddressModal({ modalHandler }) {
               <Form
                 action="#"
                 method="POST"
-                className="w-full h-full absolute top-0 left-0 bg-opacity-25 backdrop-blur-sm"
+                className="w-full h-full absolute top-0 left-0 bg-opacity-25 backdrop-blur-sm z-10"
               >
                 <div className="bg-white border-4 border-gray-600 rounded-xl sm:w-[50%] w-[90%] mx-auto mt-10">
                   <div className="sm:w-[90%] w-[80%] mx-auto whitespace-nowrap text-3xl tracking-wide font-bold font-roboto pt-10">

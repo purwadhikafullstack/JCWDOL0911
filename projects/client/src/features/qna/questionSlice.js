@@ -19,7 +19,7 @@ export const questionSlice = createSlice({
     removeMyQuestion: (state, action) => {
       const deleteQuestion = action.payload;
       state.myQuestion = state.myQuestion.filter(
-        (question) => question.idquestion != deleteQuestion
+        (question) => question.idquestion !== deleteQuestion
       );
     },
     setAllQuestion: (state, action) => {

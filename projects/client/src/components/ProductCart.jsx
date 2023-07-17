@@ -21,7 +21,6 @@ import {
 import trash from "../assets/trash.png";
 import plus from "../assets/plus.svg";
 import minus from "../assets/minus.svg";
-import medicine from "../assets/medicine.svg";
 
 function ProductCart() {
   const [total, setTotal] = useState(0);
@@ -41,33 +40,33 @@ function ProductCart() {
     }
   };
 
-  const addProductButtonHandler = (index, item) => {
+  const addProductButtonHandler = async (index, item) => {
     const checkBox = document.getElementById(item.idproduct);
     if (checkBox.checked) {
       setTotal((prev) => prev + item.price);
-      dispatch(addProductQuantity(index));
+      await dispatch(addProductQuantity(index));
     } else {
-      dispatch(addProductQuantity(index));
+      await dispatch(addProductQuantity(index));
     }
   };
 
-  const decreaseProductButtonHandler = (index, item) => {
+  const decreaseProductButtonHandler = async (index, item) => {
     const checkBox = document.getElementById(item.idproduct);
     if (checkBox.checked) {
       setTotal((prev) => prev - item.price);
-      dispatch(decreaseProductQuantity(index));
+      await dispatch(decreaseProductQuantity(index));
     } else {
-      dispatch(decreaseProductQuantity(index));
+      await dispatch(decreaseProductQuantity(index));
     }
   };
 
-  const removeProductHandler = (index, item) => {
+  const removeProductHandler = async (index, item) => {
     const checkBox = document.getElementById(item.idproduct);
     if (checkBox.checked) {
       setTotal((prev) => prev - item.price * item.quantity);
-      dispatch(removeProduct(index));
+      await dispatch(removeProduct(index));
     } else {
-      dispatch(removeProduct(index));
+      await dispatch(removeProduct(index));
     }
   };
 
@@ -96,6 +95,12 @@ function ProductCart() {
     dispatch(setTotalPrice(total));
   }, [total]);
 
+  useEffect(() => {
+    if (myCart.length > 0) {
+      localStorage.setItem("myCart", JSON.stringify(myCart));
+    }
+  }, [myCart]);
+
   return (
     <>
       {myCart.length !== 0 ? (
@@ -116,11 +121,8 @@ function ProductCart() {
             </div>
             {myCart.map((item, index) => {
               return (
-                <>
-                  <div
-                    key={item.idproduct}
-                    className=" w-[100%] h-auto lg:h-[200px] py-4 border-b-black lg:px-6"
-                  >
+                <React.Fragment key={index}>
+                  <div className=" w-[100%] h-auto lg:h-[200px] py-4 border-b-black lg:px-6">
                     <div className="flex flex-col h-full relative">
                       <div className="flex items-center">
                         <div className="flex items-center mb-4 pl-3">
@@ -139,9 +141,13 @@ function ProductCart() {
                           ></label>
                         </div>
                         <img
-                          src={item.product_image || medicine}
+                          src={
+                            item.product_image
+                              ? `${process.env.REACT_APP_API_BE}/uploads/${item.product_image}`
+                              : "./assets/icon-medicine.png"
+                          }
                           className=" object-contain w-1/5 lg:w-[100px] h-full"
-                          alt="testing"
+                          alt="product"
                         />
                         <div className="flex flex-col w-full mt-10 mb-3 justify-between">
                           <div className="flex sm:flex-row flex-col justify-between gap-4">
@@ -193,7 +199,7 @@ function ProductCart() {
                     </div>
                   </div>
                   <hr className="mt-4" />
-                </>
+                </React.Fragment>
               );
             })}
           </div>

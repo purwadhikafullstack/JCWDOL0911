@@ -1,9 +1,9 @@
 const { db, query } = require("../database");
 const { format } = require("date-fns");
+const nodemailer = require("../helpers/nodemailer");
 
 module.exports = {
   uploadOrder: async (req, res) => {
-    console.log("im order");
     try {
       const iduser = parseInt(req.params.iduser);
       const {
@@ -12,12 +12,15 @@ module.exports = {
         orderPrice,
         courierData,
         serviceData,
+        idpromo,
+        bonusItems,
       } = req.body;
-      console.log(req.body);
 
       const setTransactionOrderQuery = `insert into transaction values (null, null, null, ${db.escape(
         iduser
-      )}, null, ${db.escape(orderAddress.idaddress)} ,${db.escape(
+      )}, ${db.escape(idpromo)}, ${db.escape(
+        orderAddress.idaddress
+      )} ,${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )},null, null, null, null, null, "WAITING FOR PAYMENT", ${db.escape(
         orderPrice
@@ -26,7 +29,6 @@ module.exports = {
       )}, ${db.escape(serviceData.description)}, ${db.escape(
         serviceData.cost[0].value
       )} );`;
-      console.log(setTransactionOrderQuery);
 
       const setTransactionOrder = await query(setTransactionOrderQuery);
       const { insertId } = setTransactionOrder;
@@ -38,6 +40,16 @@ module.exports = {
         )}, ${db.escape(insertId)}, ${db.escape(product.quantity)})`;
         await query(setProductTransactionQuery);
       });
+      if (bonusItems) {
+        const bonusPromises = bonusItems.map(async (item) => {
+          await query(
+            `INSERT INTO bonus_products VALUES (null,${db.escape(
+              insertId
+            )},${db.escape(item.id)},${db.escape(item.quantity)})`
+          );
+        });
+        await Promise.all(bonusPromises);
+      }
 
       // Wait for all the promises to resolve
       await Promise.all(productPromises);
@@ -63,7 +75,7 @@ module.exports = {
       //querying total rows of data transaction from sql
       const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where iduser=${db.escape(
         iduser
-      )} and payment_image is null
+      )} and status = "WAITING FOR PAYMENT"
       ${
         !startDate && !endDate
           ? ``
@@ -85,7 +97,7 @@ module.exports = {
       const fetchWaitingOrderQuery = `select  transaction.idtransaction, transaction.idprescription, transaction.idadmin, transaction.iduser, transaction.idpromo, transaction.idaddress, transaction.waiting_date,
       transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date,
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
-      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where transaction.iduser = ${iduser} and payment_image is null
+      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where transaction.iduser = ${iduser} and status = "WAITING FOR PAYMENT"
       ${
         !startDate && !endDate
           ? ``
@@ -102,7 +114,6 @@ module.exports = {
       )} offset ${db.escape(offset)};`;
 
       const fetchWaitingOrder = await query(fetchWaitingOrderQuery);
-      // console.log(fetchWaitingOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchWaitingOrder.length === 0) {
@@ -113,8 +124,16 @@ module.exports = {
       }
 
       const oldTemp = fetchWaitingOrder.map(async (order, index) => {
-        const fetchWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
-        const fetchWaitingProduct = await query(fetchWaitingProductQuery);
+        const fetchWaitingProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
+              const fetchWaitingProduct = await query(fetchWaitingProductQuery);
         return { ...order, orderProduct: fetchWaitingProduct };
       });
       const waitingOrder = await Promise.all(oldTemp);
@@ -137,7 +156,7 @@ module.exports = {
       const { startDate, endDate } = JSON.parse(req.query.date);
 
       //querying total rows of data transaction from sql
-      const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where payment_image is null 
+      const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where status = "WAITING FOR PAYMENT" 
       ${
         !startDate && !endDate
           ? ``
@@ -158,7 +177,7 @@ module.exports = {
       const fetchAllWaitingOrderQuery = `select  transaction.idtransaction, transaction.idprescription, transaction.idadmin, transaction.iduser, transaction.idpromo, transaction.idaddress, transaction.waiting_date,
       transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date,
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
-      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where payment_image is null 
+      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where status = "WAITING FOR PAYMENT" 
       ${
         !startDate && !endDate
           ? ``
@@ -185,7 +204,15 @@ module.exports = {
       }
 
       const oldTemp = fetchAllWaitingOrder.map(async (order, index) => {
-        const fetchAllWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction} order by transaction.waiting_date asc;`;
+        const fetchAllWaitingProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchAllWaitingProduct = await query(fetchAllWaitingProductQuery);
 
         return { ...order, orderProduct: fetchAllWaitingProduct };
@@ -217,7 +244,7 @@ module.exports = {
       //querying total rows of data transaction from sql
       const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where iduser=${db.escape(
         iduser
-      )} and status = "COMPLETE" and transaction.finished_date is not null 
+      )} and (status = "COMPLETE" or status = "CANCELED") and transaction.finished_date is not null 
       ${
         !startDate && !endDate
           ? ``
@@ -238,7 +265,7 @@ module.exports = {
       const fetchFinishedOrderQuery = `select  transaction.idtransaction, transaction.idprescription, transaction.idadmin, transaction.iduser, transaction.idpromo, transaction.idaddress, transaction.waiting_date,
       transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date,
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
-      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where transaction.iduser = ${iduser} and status = "COMPLETE" and transaction.finished_date is not null 
+      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where transaction.iduser = ${iduser} and (status = "COMPLETE" or status = "CANCELED") and transaction.finished_date is not null 
       ${
         !startDate && !endDate
           ? ``
@@ -265,7 +292,15 @@ module.exports = {
       }
 
       const oldTemp = fetchFinishedOrder.map(async (order, index) => {
-        const fetchFinishedProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchFinishedProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchFinishedProduct = await query(fetchFinishedProductQuery);
         return { ...order, orderProduct: fetchFinishedProduct };
       });
@@ -289,7 +324,7 @@ module.exports = {
       const { startDate, endDate } = JSON.parse(req.query.date);
 
       //querying total rows of data transaction from sql
-      const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where status = "COMPLETE" and transaction.finished_date is not null 
+      const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where (status = "COMPLETE" or status = "CANCELED") and transaction.finished_date is not null 
       ${
         !startDate && !endDate
           ? ``
@@ -310,7 +345,7 @@ module.exports = {
       const fetchFinishedOrderQuery = `select  transaction.idtransaction, transaction.idprescription, transaction.idadmin, transaction.iduser, transaction.idpromo, transaction.idaddress, transaction.waiting_date,
       transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date,
       transaction.status, transaction.total, transaction.payment_image,transaction.courier, transaction.service, transaction.description, transaction.freightCost, address.street, province.province, address.city_name, address.address_type, user.username, user.full_name, user.phone_number, user.email, address.postal_code
-      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where status = "COMPLETE" and transaction.finished_date is not null 
+      from transaction inner join address on transaction.idaddress = address.idaddress inner join user on transaction.iduser = user.iduser inner join province on address.idprovince = province.province_id where (status = "COMPLETE" or status = "CANCELED") and transaction.finished_date is not null 
       ${
         !startDate && !endDate
           ? ``
@@ -336,7 +371,15 @@ module.exports = {
       }
 
       const oldTemp = fetchFinishedOrder.map(async (order, index) => {
-        const fetchFinishedProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchFinishedProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchFinishedProduct = await query(fetchFinishedProductQuery);
         return { ...order, orderProduct: fetchFinishedProduct };
       });
@@ -399,7 +442,6 @@ module.exports = {
         limit
       )} offset ${db.escape(offset)};`;
       const fetchSendOrder = await query(fetchSendOrderQuery);
-      console.log(fetchSendOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchSendOrder.length === 0) {
@@ -410,7 +452,15 @@ module.exports = {
       }
 
       const oldTemp = fetchSendOrder.map(async (order, index) => {
-        const fetchSendProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchSendProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchSendProduct = await query(fetchSendProductQuery);
         return { ...order, orderProduct: fetchSendProduct };
       });
@@ -471,7 +521,6 @@ module.exports = {
         limit
       )} offset ${db.escape(offset)};`;
       const fetchSendOrder = await query(fetchSendOrderQuery);
-      console.log(fetchSendOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchSendOrder.length === 0) {
@@ -482,7 +531,15 @@ module.exports = {
       }
 
       const oldTemp = fetchSendOrder.map(async (order, index) => {
-        const fetchSendProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchSendProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchSendProduct = await query(fetchSendProductQuery);
         return { ...order, orderProduct: fetchSendProduct };
       });
@@ -521,7 +578,6 @@ module.exports = {
         search || "" ? `${db.escape(`%${search}%`)}` : `${db.escape("%%")}`
       };`;
 
-      console.log(totalRowsQuery);
       const totalRows = await query(totalRowsQuery);
       const { totalOfRows } = totalRows[0];
       const totalPages = Math.ceil(totalOfRows / limit);
@@ -556,7 +612,15 @@ module.exports = {
       }
 
       const oldTemp = fetchOnProcessOrder.map(async (order, index) => {
-        const fetchOnProcessProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchOnProcessProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchOnProcessProduct = await query(fetchOnProcessProductQuery);
         return { ...order, orderProduct: fetchOnProcessProduct };
       });
@@ -579,7 +643,6 @@ module.exports = {
       const offset = limit * page;
       const { startDate, endDate } = JSON.parse(req.query.date);
 
-      console.log(idadmin);
       //querying total rows of data transaction from sql
       const totalRowsQuery = `select count(idtransaction) as totalOfRows from transaction where status = "ON PROCESS" and transaction.onprocess_date is not null 
       ${
@@ -628,7 +691,15 @@ module.exports = {
       }
 
       const oldTemp = fetchOnProcessOrder.map(async (order, index) => {
-        const fetchOnProcessProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchOnProcessProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchOnProcessProduct = await query(fetchOnProcessProductQuery);
         return { ...order, orderProduct: fetchOnProcessProduct };
       });
@@ -692,7 +763,6 @@ module.exports = {
         limit
       )} offset ${db.escape(offset)};`;
       const fetchReviewOrder = await query(fetchReviewOrderQuery);
-      // console.log(fetchWaitingOrder);
 
       //if fetchWaitingOrder length is 0, we return the result
       if (fetchReviewOrder.length === 0) {
@@ -703,7 +773,15 @@ module.exports = {
       }
 
       const oldTemp = fetchReviewOrder.map(async (order, index) => {
-        const fetchWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchWaitingProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity,product.idproduct, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchWaitingProduct = await query(fetchWaitingProductQuery);
 
         return { ...order, orderProduct: fetchWaitingProduct };
@@ -764,9 +842,9 @@ module.exports = {
       } order by transaction.review_date ${ascDescend} limit ${db.escape(
         limit
       )} offset ${db.escape(offset)};`;
-      // console.log(fetchReviewOrderQuery);
       const fetchReviewOrder = await query(fetchReviewOrderQuery);
       //if fetchReviewOrder length is 0, we return the result
+
       if (fetchReviewOrder.length === 0) {
         return res.status(200).send({
           success: false,
@@ -775,7 +853,15 @@ module.exports = {
       }
 
       const oldTemp = fetchReviewOrder.map(async (order, index) => {
-        const fetchWaitingProductQuery = `select transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity, product.name, product.price, product.description, product.product_image, product.unit from transaction inner join product_transaction on transaction.idtransaction = product_transaction.idtransaction inner join product on product_transaction.idproduct = product.idproduct where transaction.idtransaction = ${order.idtransaction};`;
+        const fetchWaitingProductQuery = `
+        SELECT transaction.idtransaction, transaction.iduser, transaction.idpromo, transaction.waiting_date, transaction.review_date, transaction.onprocess_date, transaction.send_date, transaction.finished_date, transaction.cancel_date, transaction.status, transaction.total, product_transaction.quantity,product.idproduct, product.name, product.price, product.description, product.product_image, product.unit_product, promo.discount, promo.type, promo.description AS promo_description,prescription.doctor,prescription.patient,prescription.prescription_image,prescription.price as prescription_price
+        FROM transaction
+        LEFT JOIN product_transaction ON transaction.idtransaction = product_transaction.idtransaction
+        LEFT JOIN product ON product_transaction.idproduct = product.idproduct
+        LEFT JOIN promo ON product.idpromo = promo.idpromo
+        LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
+        WHERE transaction.idtransaction = ${order.idtransaction};
+      `;
         const fetchWaitingProduct = await query(fetchWaitingProductQuery);
 
         return { ...order, orderProduct: fetchWaitingProduct };
@@ -887,7 +973,7 @@ module.exports = {
       const { totalOfRows } = totalRows[0];
       const totalPages = Math.ceil(totalOfRows / limit);
 
-      const fetchPrescriptionOrderQuery = `select prescription.idprescription, prescription.idadmin, prescription.iduser, user.username, user.full_name, prescription.prescription_image,
+      const fetchPrescriptionOrderQuery = `select prescription.idprescription, prescription.idadmin, prescription.iduser, user.username, user.full_name,user.email, prescription.prescription_image,
       prescription.status, prescription.date from prescription inner join user on prescription.iduser = user.iduser where (status = "ON QUEUE" OR status = "WAITING TO CHECKOUT") and prescription.date is not null and prescription.prescription_image is not null
       ${
         !startDate && !endDate
@@ -905,8 +991,6 @@ module.exports = {
       )} offset ${db.escape(offset)};`;
 
       const fetchPrescriptionOrder = await query(fetchPrescriptionOrderQuery);
-
-      console.log(fetchPrescriptionOrder);
 
       // if fetchWaitingOrder length is 0, we return the result
       if (fetchPrescriptionOrder.length === 0) {
@@ -955,12 +1039,28 @@ module.exports = {
   confirmPayment: async (req, res) => {
     try {
       const iduser = req.params.iduser;
-      const { idtransaction } = req.body;
+      const { idtransaction, orderProduct } = req.body;
       const acceptIdTransactionQuery = `update transaction set status = "ON PROCESS", onprocess_date = ${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )} where idtransaction = ${idtransaction}`;
+
+      await orderProduct.map(async (product) => {
+        const updateProductQuery = `update product set stock = stock - ${db.escape(
+          product.quantity
+        )} where idproduct = ${product.idproduct}`;
+
+        await query(updateProductQuery);
+
+        const updateRestockReportQuery = `insert into restock values (null, ${db.escape(
+          product.idproduct
+        )}, ${db.escape(format(new Date(), "yyyy-MM-dd"))}, ${db.escape(
+          product.quantity
+        )}, 'penjualan', 'pengurangan')`;
+
+        await query(updateRestockReportQuery);
+      });
+
       const acceptIdTransaction = await query(acceptIdTransactionQuery);
-      console.log(acceptIdTransactionQuery);
       if (acceptIdTransaction.affectedRows !== 0) {
         return res
           .status(200)
@@ -985,7 +1085,6 @@ module.exports = {
       )}, idadmin=${db.escape(
         idAdmin
       )}, payment_image=null where idtransaction = ${idtransaction}`;
-      // console.log(acceptIdTransactionQuery);
       const rejectIdTransaction = await query(rejectIdTransactionQuery);
 
       if (rejectIdTransaction.affectedRows !== 0) {
@@ -1010,7 +1109,6 @@ module.exports = {
       const submitIdTransactionQuery = `update transaction set status = "ON THE WAY", send_date=${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )}, idadmin=${db.escape(idAdmin)} where idtransaction = ${idtransaction}`;
-      // console.log(acceptIdTransactionQuery);
       const submitIdTransaction = await query(submitIdTransactionQuery);
       if (submitIdTransaction.affectedRows !== 0) {
         return res
@@ -1034,7 +1132,6 @@ module.exports = {
       const completeIdTransactionQuery = `update transaction set status = "COMPLETE", finished_date=${db.escape(
         format(new Date(), "yyyy-MM-dd HH:mm:ss")
       )} where idtransaction = ${idtransaction}`;
-      // console.log(acceptIdTransactionQuery);
       const completeIdTransaction = await query(completeIdTransactionQuery);
 
       if (completeIdTransaction.affectedRows !== 0) {
@@ -1050,6 +1147,47 @@ module.exports = {
     } catch (error) {
       return res.status(400).send(error);
     }
+  },
+  adminCancelOrder: async (req, res) => {
+    const idAdmin = parseInt(req.params.idadmin)
+    const {idTransaction,email}=req.body
+    await query (`update transaction set status = "CANCELED", finished_date=${db.escape(
+      format(new Date(), "yyyy-MM-dd HH:mm:ss")
+    )} , idadmin=${db.escape(idAdmin)} where idtransaction = ${idTransaction}`);
+    let mail = {
+      from: `Admin <${process.env.NODEMAILER_USER}>`,
+      to: `${email}`,
+      subject: `Notification Of rejection`,
+      html: `
+      <div>
+      <p>Sorry,Your Transaction with Transaction ID ${idTransaction} Has Been Canceled By Admin, You Still can See Details on Finished Transaction. For Refund Please Contact Customer Service</p>
+      </div>`,
+    };
+
+    await nodemailer.sendMail(mail);
+    res.status(200).send({ message: "Transaction Has Been canceled" });
+  },
+
+  userCancelOrder: async (req, res) => {
+    const iduser = parseInt(req.params.iduser);
+    const { idTransaction, email } = req.body;
+    await query(
+      `update transaction set status = "CANCELED", finished_date=${db.escape(
+        format(new Date(), "yyyy-MM-dd HH:mm:ss")
+      )} where idtransaction = ${idTransaction}`
+    );
+    let mail = {
+      from: `Admin <${process.env.NODEMAILER_USER}>`,
+      to: `${email}`,
+      subject: `Notification Of rejection`,
+      html: `
+      <div>
+      <p>Your Transaction with Transaction ID ${idTransaction} is Cancelled, You Still can See Details on Finished Transaction. For Refund Please Contact Customer Service</p>
+      </div>`,
+    };
+
+    await nodemailer.sendMail(mail);
+    res.status(200).send({ message: "Transaction Has Been canceled" });
   },
 
   // getWaitingProduct: async (req, res) => {

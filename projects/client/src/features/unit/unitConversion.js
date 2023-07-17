@@ -26,7 +26,6 @@ export function getAllUnitConversion() {
         `${process.env.REACT_APP_API_BE}/admin/unit-conversion/all`,
         { headers: { authorization: `Bearer ${token}` } }
       );
-      console.log("response", response.data);
       dispatch(setUnits(response.data));
     } catch (error) {
       Swal.fire({

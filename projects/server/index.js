@@ -18,6 +18,9 @@ const {
   paymentRouter,
   unitConversionOnAdminRoute,
   promoProductRoute,
+  historyProductRoute,
+  promoRoute,
+  reportRouter,
 } = require("./routes");
 const { relatedProductRouter } = require("./routes/index");
 
@@ -56,7 +59,9 @@ app.use("/api/order", orderRouter);
 app.use("/api/admin/products", productOnAdminRoute);
 app.use("/api/admin/unit-conversion", unitConversionOnAdminRoute);
 app.use("/api/admin/promo", promoProductRoute);
+app.use("/api/admin/history", historyProductRoute);
 
+app.use("/api/report", reportRouter);
 app.use("/api/products", productRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/categories", categoryRoutes);
@@ -67,6 +72,7 @@ app.use("/api/qna", qnaRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/addresses", addressRoute);
 app.use("/api/transactions", transactionRoute);
+app.use("/api/promos", promoRoute);
 
 // app.get("/api/greetings", (req, res, next) => {
 //   res.status(200).json({

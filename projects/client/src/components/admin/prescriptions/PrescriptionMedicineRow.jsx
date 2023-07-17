@@ -1,15 +1,10 @@
 import React from 'react'
 import { currency } from '../../../helpers/currency'
 import {
-    Table,
-    Thead,
-    Tbody,
-    Tfoot,
+   
     Tr,
-    Th,
     Td,
-    TableCaption,
-    TableContainer,
+   
 } from '@chakra-ui/react'
 
 function PrescriptionMedicineRow({medicine}) {

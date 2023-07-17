@@ -54,7 +54,7 @@ code {
 }
 
 .hover-text-green:hover {
-  color: #009b90;
+  color: #13b3a8;
 }
 
 .background-color-green {
@@ -195,4 +195,8 @@ code {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+
+.no-data-image-admin {
+  margin-left: auto;
 }

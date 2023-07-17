@@ -11,7 +11,7 @@ function MyQuestionModal() {
   const [offset, setOffset] = useState(0);
   const myQuestion = useSelector(
     (state) => state.questions.myQuestion.questionQuery
-  );
+  )||[];
   const countQuestion = useSelector(
     (state) => state.questions.myQuestion?.countData?.[0]?.count
   );

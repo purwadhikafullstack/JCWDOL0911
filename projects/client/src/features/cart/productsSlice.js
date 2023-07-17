@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import Axios from "axios";
 import Swal from "sweetalert2";
 import { AUTH_TOKEN } from "../../helpers/constant";
+import TableHistoryStockByIdProduct from "../../components/admin/products/TableHistoryStockByIdProduct";
 
 export const productsSlice = createSlice({
   name: "products",
@@ -23,6 +24,7 @@ export const productsSlice = createSlice({
     count: {
       count: "",
     },
+    countProduct: 0,
   },
   reducers: {
     setProduct: (state, action) => {
@@ -40,6 +42,9 @@ export const productsSlice = createSlice({
     setCount: (state, action) => {
       state.count = action.payload;
     },
+    setCountProduct: (state, action) => {
+      state.countProduct = action.payload;
+    },
   },
 });
 
@@ -49,6 +54,7 @@ export const {
   setCategories,
   setConvertedUnit,
   setCount,
+  setCountProduct,
 } = productsSlice.actions;
 export default productsSlice.reducer;
 
@@ -71,8 +77,6 @@ export function fetchDetailProduct(idproduct) {
         `${process.env.REACT_APP_API_BE}/admin/products/${idproduct}`,
         { headers: { authorization: `Bearer ${token}` } }
       );
-
-      console.log({ AAA: response.data });
       dispatch(setProduct(response.data.product));
     } catch (error) {
       Swal.fire({
@@ -85,7 +89,6 @@ export function fetchDetailProduct(idproduct) {
 }
 
 export function updateStock(id, stock, setEdit, updatedStock, unit) {
-  console.log({ id, stock, setEdit, updatedStock, unit });
   if (updatedStock == "0") {
     Swal.fire({
       icon: "error",
@@ -167,5 +170,36 @@ export function removeRuleProduct(idProduct, order, filter, search) {
     );
     dispatch(fetchProducts(order, filter, search, offset, limit));
     Swal.fire(`${response.data.message}`, "", "success");
+  };
+}
+
+export function fetchAllProductOnAdmin(idcategory, sort, key, page, search) {
+  const LIMIT = 5;
+  const token = localStorage.getItem(AUTH_TOKEN);
+  return async (dispatch) => {
+    try {
+      let response = await Axios.get(
+        `${process.env.REACT_APP_API_BE}/admin/products/all`,
+        {
+          params: {
+            idcategory,
+            sort,
+            key,
+            limit: LIMIT,
+            page,
+            search,
+          },
+          headers: { authorization: `Bearer ${token}` },
+        }
+      );
+      dispatch(setProducts(response.data.products || []));
+      dispatch(setCountProduct(response.data.count));
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.message,
+      });
+    }
   };
 }

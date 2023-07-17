@@ -11,15 +11,27 @@ module.exports = {
       const key = req.query.key;
       const limit = req.query.limit || 10;
       const page = req.query.page || 1;
+      const search = req.query.search;
 
       let getAllUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, question.date FROM question
       LEFT JOIN answer ON answer.idquestion = question.idquestion`;
 
       let getCountQuery = `SELECT COUNT(*) as count FROM question`;
 
+      if (search) {
+        getAllUserQuestionQuery += ` WHERE question LIKE '%${search}%'`;
+        getCountQuery += ` WHERE question LIKE '%${search}%'`;
+      }
+
       if (is_answer !== undefined) {
-        getCountQuery += ` WHERE is_answer=${is_answer}`;
-        getAllUserQuestionQuery += ` WHERE is_answer=${is_answer}`;
+        getCountQuery = `SELECT COUNT(*) as count FROM question WHERE is_answer=${is_answer}`;
+        getAllUserQuestionQuery = `SELECT question.*, answer.idanswer, answer.idadmin, answer.answer, question.date FROM question
+             LEFT JOIN answer ON answer.idquestion = question.idquestion WHERE is_answer=${is_answer}`;
+
+        if (search) {
+          getAllProductQuery += ` AND question.question LIKE '%${search}%'`;
+          getCountQuery += ` AND question.question LIKE '%${search}%'`;
+        }
       }
 
       if (sort) {
@@ -36,7 +48,6 @@ module.exports = {
         .status(200)
         .send({ questions: getAllUserQuestion, count: countData[0].count });
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ message: error });
     }
   },
@@ -50,7 +61,6 @@ module.exports = {
 
       res.status(200).send(getDetailUserQuestion);
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ message: error });
     }
   },
@@ -89,7 +99,6 @@ module.exports = {
       const getEmailUser = await query(getEmailUserQuery);
 
       const email = getEmailUser[0].email;
-      console.log("im add answer");
       let mail = {
         from: `Admin <${process.env.NODEMAILER_USER}>`,
         to: `${email}`,
@@ -109,7 +118,6 @@ module.exports = {
         message: "Your answer has been sent!",
       });
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ message: error });
     }
   },
@@ -131,7 +139,6 @@ module.exports = {
       const deleteUserQuestion = await query(deleteUserQuestionQuery);
       res.status(200).send(getAllUserQuestion);
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ message: error });
     }
   },

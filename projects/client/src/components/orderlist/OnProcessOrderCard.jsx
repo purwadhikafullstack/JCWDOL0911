@@ -11,6 +11,7 @@ import PaymentImageModal from "./PaymentImageModal";
 import {
   acceptOnProcessOrder,
   acceptPaymentReview,
+  adminCancelOrder,
   confirmPaymentReview,
   rejectPaymentReview,
 } from "../../features/order/orderSlice";
@@ -37,7 +38,6 @@ function OnProcessOrderCard({
       cancelButtonText: "No",
     });
     if (swalAccept.isConfirmed) {
-      console.log("deliver the medicine");
       const { pageStatus } = await dispatch(
         acceptOnProcessOrder(
           transaction,
@@ -52,13 +52,28 @@ function OnProcessOrderCard({
       changePageInfo(pageStatus);
     }
   };
+  const cancelHandler = async (transaction) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Reject it!",
+      showLoaderOnConfirm: true,
+    });
+    if (result.isConfirmed) {
+      dispatch(adminCancelOrder(transaction.idtransaction, transaction.email));
+    }
+  };
 
   return (
     <>
       {transactions.map((transaction, transactionIndex) => {
         return (
           <div
-            key={transaction.idtransaction}
+            key={transactionIndex}
             className="w-full rounded even:bg-green-50 odd:bg-gray-50 shadow-xl px-6 pb-4 pt-1 mb-10"
           >
             <div className="flex flex-col my-4 justify-between items-center md:flex-row gap-4">
@@ -86,12 +101,18 @@ function OnProcessOrderCard({
                   {transaction.status}
                 </div>
               </div>
+              <div className="font-bold text-green-700 sm:mb-2 my-4">
+                Address : {transaction.full_name || transaction.username}'s{" "}
+                {transaction.address_type}, {transaction.street}, ,{" "}
+                {transaction.city_name}, {transaction.province},{" "}
+                {transaction.postal_code}
+              </div>
               <hr className="my-2" />
-              {transactions[transactionIndex].orderProduct.map((product) => {
-                return (
-                  <ProductCard key={product.idproduct} product={product} />
-                );
-              })}
+              {transactions[transactionIndex].orderProduct.map(
+                (product, index) => {
+                  return <ProductCard key={index} product={product} />;
+                }
+              )}
               <hr className="mt-4" />
             </div>
             <hr />
@@ -117,6 +138,13 @@ function OnProcessOrderCard({
             </div>
             <div className="flex sm:flex-row-reverse flex-col mt-4 justify-between items-center">
               <div className="flex sm:w-[50%] w-full flex-row gap-4">
+                <button
+                  hidden={localStorage.getItem("user") ? true : false}
+                  onClick={() => cancelHandler(transaction)}
+                  className=" w-full  p-2 font-bold mx-auto rounded hover:bg-red-800 text-white bg-red-600"
+                >
+                  Cancel
+                </button>
                 <button
                   hidden={localStorage.getItem("user") ? true : false}
                   onClick={() => onClickSubmitHandler(transaction)}

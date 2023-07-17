@@ -1,5 +1,6 @@
 import CardProduct from "../../components/CardProduct";
 import {
+  fetchAllProductOnAdmin,
   fetchProduct,
   fetchProducts,
   setProducts,
@@ -7,7 +8,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import ProductsCard from "../../components/admin/products/ProductsCard";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Sidebar from "../../components/admin/Sidebar";
 import {
   Table,
@@ -18,9 +19,7 @@ import {
   Td,
   TableContainer,
   Button,
-  Tooltip,
 } from "@chakra-ui/react";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { AUTH_TOKEN } from "../../helpers/constant";
 import { useNavigate } from "react-router-dom";
@@ -28,10 +27,10 @@ import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { currency } from "../../helpers/currency";
 import AddNewProductModal from "../../components/admin/products/AddNewProductModal";
 import { getAllCategory } from "../../features/cartegory/categorySlice";
+import debounce from "lodash.debounce";
 
 function Products() {
   const LIMIT = 5;
-  const token = localStorage.getItem(AUTH_TOKEN);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedFilter, setSelectedFilter] = useState({
@@ -42,45 +41,17 @@ function Products() {
     sort: undefined,
     key: undefined,
   });
-  const [countData, setCountData] = useState(0);
+  const countData = useSelector((state) => state.product.countProduct) || 0;
   const [page, setPage] = useState(1);
   const [modalAddNewProductOpen, setModalAddNewProductOpen] = useState(false);
-  const products = useSelector((state) => state.product.products);
-  const categories = useSelector((state) => state.categories.categories);
-
-  const fetchAllProduct = async () => {
-    try {
-      let response = await axios.get(
-        `${process.env.REACT_APP_API_BE}/admin/products/all`,
-        {
-          params: {
-            idcategory: selectedFilter.idcategory,
-            sort: selectedSortBy.sort,
-            key: selectedSortBy.key,
-            limit: LIMIT,
-            page,
-          },
-          headers: { authorization: `Bearer ${token}` },
-        }
-      );
-      console.log(response.data);
-      dispatch(setProducts(response.data.products || []));
-      setCountData(response.data.count);
-    } catch (error) {
-      console.log(error);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: error.response?.data?.message,
-      });
-    }
-  };
+  const products = useSelector((state) => state.product.products) || [];
+  const categories = useSelector((state) => state.categories.categories) || [];
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleDetailProductPage = (idproduct) => {
     try {
       navigate(`/admin/products/${idproduct}`);
     } catch (error) {
-      console.log(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -96,10 +67,24 @@ function Products() {
     return name;
   };
 
+  const sortBy = (key, sort) => {
+    if (key === "name" && sort == "ASC") {
+      return "A - Z";
+    }
+    if (key === "name" && sort == "DESC") {
+      return "Z - A";
+    }
+    if (key === "price" && sort == "ASC") {
+      return "Low - High";
+    }
+    if (key === "price" && sort == "DESC") {
+      return "High - Low";
+    }
+  };
+
   const renderPagination = () => {
-    // const pages = [...Array(Math.ceil(countData / LIMIT))];
     const pages = Array(Math.ceil(countData / LIMIT)).fill(undefined);
-    return pages.map((el, i) => (
+    return (pages || []).map((el, i) => (
       <div
         key={i}
         onClick={() => setPage(i + 1)}
@@ -112,13 +97,30 @@ function Products() {
     ));
   };
 
+  const searchHandler = (value) => {
+    setSearchTerm(value);
+  };
+
+  const debouncedChangeHandler = useMemo(
+    () => debounce(searchHandler, 500),
+    []
+  );
+
   useEffect(() => {
     dispatch(getAllCategory());
   }, []);
 
   useEffect(() => {
-    fetchAllProduct();
-  }, [selectedFilter.idcategory, selectedSortBy.sort, page]);
+    dispatch(
+      fetchAllProductOnAdmin(
+        selectedFilter.idcategory,
+        selectedSortBy.sort,
+        selectedSortBy.key,
+        page,
+        searchTerm
+      )
+    );
+  }, [selectedFilter.idcategory, selectedSortBy.sort, page, searchTerm]);
 
   return (
     <>
@@ -128,23 +130,31 @@ function Products() {
         </div>
         <div className="min-h-screen h-full bg-dashboard-admin p-8 lg:p-28 flex flex-col gap-11 content-width">
           <p className="text-3xl font-bold">Product List</p>
-          <div className='flex gap-3'>
-          <button
-            className=" bg-green-600 text-white  font-bold h-10 px-2 rounded-md hover:bg-emerald-500 hover:text-white "
-            onClick={() => navigate("/admin/products/unit-conversion")}
-          >
-            Unit's Conversion
-          </button>
-          <button
-            className=" bg-green-600 text-white  font-bold h-10 px-2 rounded-md hover:bg-emerald-500 hover:text-white "
-            onClick={() => navigate("/admin/products/categories")}
-          >
-            Categories
-          </button>
+          <div className="flex gap-3 flex-wrap lg:flex-nowrap">
+            <button
+              className=" bg-green-600 text-white  font-bold h-10 px-2 rounded-md hover:bg-emerald-500 hover:text-white "
+              onClick={() => navigate("/admin/products/unit-conversion")}
+            >
+              Unit Conversion
+            </button>
+            <button
+              className=" bg-green-600 text-white  font-bold h-10 px-2 rounded-md hover:bg-emerald-500 hover:text-white "
+              onClick={() => navigate("/admin/products/categories")}
+            >
+              Categories
+            </button>
           </div>
           <div className="bg-white px-6 pb-11 rounded-lg shadow-card-tagline">
-            <div className="flex flex-wrap items-center my-11 gap-4 justify-between">
-              <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap items-end my-11 gap-4 justify-between">
+              <div className="flex flex-wrap gap-4 items-end">
+                <div>
+                  <p className="font-bold text-sm">Search product</p>
+                  <input
+                    placeholder="Search product"
+                    onChange={(e) => debouncedChangeHandler(e.target.value)}
+                    className="w-full bg-gray-50 rounded-md border-2 h-8 px-2"
+                  />
+                </div>
                 <div>
                   <Menu>
                     <MenuButton>
@@ -191,6 +201,7 @@ function Products() {
                               });
                               setPage(1);
                             }}
+                            key={category.idcategory}
                           >
                             <p className="text-black"> {category.name}</p>
                           </MenuItem>
@@ -219,8 +230,10 @@ function Products() {
                             ></path>
                           </svg>
                         </div>
-                        <p>{selectedSortBy.key}</p>
-                        <p>{selectedSortBy.sort || "No sort"}</p>
+                        <p>
+                          {sortBy(selectedSortBy.key, selectedSortBy.sort) ||
+                            "No sort"}
+                        </p>
                       </div>
                     </MenuButton>
                     <MenuList>
@@ -278,84 +291,106 @@ function Products() {
               className="mx-4 sm:mx-0"
             />
             <TableContainer className="rounded-lg bg-table-list-color">
-              <Table variant="striped" colorScheme="teal">
-                <Thead className="table-list-head">
-                  <Tr>
-                    <Th color="white" fontSize="base">
-                      No
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Image
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Name
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Stock
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Unit
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Category
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Price
-                    </Th>
-                    <Th color="white" fontSize="base">
-                      Action
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody className="">
-                  {products.map((product, index) => (
-                    <Tr key={product.idproduct}>
-                      <Td>{LIMIT * (page - 1) + 1 + index}</Td>
-
-                      <Td>
-                        <img
-                          src={
-                            product.product_image
-                              ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
-                              : "./assets/icon-medicine.png"
-                          }
-                          alt=""
-                          width="44px"
-                        />
-                      </Td>
-
-                      <Td>{getName(product.name)}</Td>
-                      {/* <Td>{product.name}</Td> */}
-                      <Td>
-                        {product.stock === 0 ? (
-                          <p className="text-red-600 font-bold">out of stock</p>
-                        ) : (
-                          product.stock
-                        )}
-                      </Td>
-                      <Td>{product.unit ? product.unit : <p>-</p>}</Td>
-                      <Td>
-                        {(product.categories || []).length > 0
-                          ? product.categories.map((category) => (
-                              <p>{category.name}</p>
-                            ))
-                          : "-"}
-                      </Td>
-                      <Td>{currency(product.price)}</Td>
-                      <Td>
-                        <Button
-                          className="border-button"
-                          onClick={() =>
-                            handleDetailProductPage(product.idproduct)
-                          }
-                        >
-                          See detail
-                        </Button>
-                      </Td>
+              {products.length > 0 ? (
+                <Table variant="striped" colorScheme="teal">
+                  <Thead className="table-list-head">
+                    <Tr>
+                      <Th color="white" fontSize="base">
+                        No
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Image
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Name
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Stock
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Unit
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Category
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Price
+                      </Th>
+                      <Th color="white" fontSize="base">
+                        Action
+                      </Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
+                  </Thead>
+                  <Tbody className="">
+                    {products.map((product, index) => (
+                      <Tr key={product.idproduct}>
+                        <Td>{LIMIT * (page - 1) + 1 + index}</Td>
+
+                        <Td>
+                          <img
+                            src={
+                              product.product_image
+                                ? `${process.env.REACT_APP_API_BE}/uploads/${product.product_image}`
+                                : "./assets/icon-medicine.png"
+                            }
+                            alt=""
+                            width="44px"
+                          />
+                        </Td>
+
+                        <Td>{getName(product.name)}</Td>
+                        {/* <Td>{product.name}</Td> */}
+                        <Td>
+                          {product.stock === 0 ? (
+                            <p className="text-red-600 font-bold">
+                              out of stock
+                            </p>
+                          ) : (
+                            product.stock
+                          )}
+                        </Td>
+                        <Td>
+                          {product.unit_product ? (
+                            product.unit_product
+                          ) : (
+                            <p>-</p>
+                          )}
+                        </Td>
+                        <Td>
+                          {(product.categories || []).length > 0
+                            ? product.categories.map((category) => (
+                                <p key={category.idcategory}>{category.name}</p>
+                              ))
+                            : "-"}
+                        </Td>
+                        <Td>{currency(product.price)}</Td>
+                        <Td>
+                          <Button
+                            className="border-button"
+                            onClick={() =>
+                              handleDetailProductPage(product.idproduct)
+                            }
+                          >
+                            See detail
+                          </Button>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              ) : (
+                <div className="w-full flex flex-col items-center my-11">
+                  <p className="text-xl mb-11 font-bold text-slate-400">
+                    No Data
+                  </p>
+                  <img
+                    src={"./assets/image-no-data-admin.svg"}
+                    alt=""
+                    width="200px"
+                    className=""
+                  />
+                </div>
+              )}
             </TableContainer>
             <div className="flex flex-wrap sm:flex-nowrap w-full gap-4 justify-center mt-11">
               {renderPagination()}

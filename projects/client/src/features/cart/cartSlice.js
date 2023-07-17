@@ -43,6 +43,7 @@ const initialState = {
   ],
   relatedProduct: [],
   totalPrice: 0,
+  bonusItem:[]
 };
 
 export const cartSlice = createSlice({
@@ -105,6 +106,17 @@ export const cartSlice = createSlice({
       state.cart = [];
       state.totalPrice = 0;
     },
+    setBonusItem: (state, action) => {
+      const { id } = action.payload;
+      const existingIndex = state.bonusItem.findIndex((item) => item.id === id);
+    
+      if (existingIndex === -1) {
+        state.bonusItem.push(action.payload);
+      }
+    },
+    addToCartFromLocal: (state, action) => {
+      state.cart = action.payload;
+    },
   },
 });
 
@@ -117,11 +129,24 @@ export const getRelatedProduct = (cartProduct) => {
   };
 };
 
-export const addProductToCart = (productData) => {
+export const addProductToCart = (productData, calculateDiscountedPrice) => {
   return async (dispatch) => {
-    dispatch(addProduct({ ...productData, quantity: 1 }));
+    const { discount, price, type } = productData;
+
+    // Use the actual price if the product type is 'Bonus Item'
+    const productPrice = type === 'Bonus Item' ? price : calculateDiscountedPrice(price, discount);
+
+    // Create a new product object with the updated price
+    const product = {
+      ...productData,
+      price: productPrice,
+      quantity: 1,
+    };
+
+    dispatch(addProduct(product));
   };
 };
+
 
 export const {
   addProduct,
@@ -132,7 +157,8 @@ export const {
   addCheckedProduct,
   removeCheckedProduct,
   setEachTotalPrice,
-  resetCart,
+  resetCart,setBonusItem,
+  addToCartFromLocal,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

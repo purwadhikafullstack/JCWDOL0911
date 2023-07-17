@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
   Button,
   Tooltip,
@@ -11,16 +12,15 @@ import {
   Text,
   Divider,
   ButtonGroup,
+  Badge,
 } from "@chakra-ui/react";
 import { currency } from "../helpers/currency";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-
-//importing cartSlice function here
 import { addProductToCart } from "../features/cart/cartSlice";
 
 function CardProduct({ product }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const myCart = useSelector((state) => state.cart.cart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -30,9 +30,34 @@ function CardProduct({ product }) {
     }
     return name;
   };
+
+  const calculateDiscountedPrice = (price, discount) => {
+    return price - (price * discount) / 100;
+  };
+
+  useEffect(() => {
+    localStorage.setItem("myCart", JSON.stringify(myCart));
+  }, [myCart]);
+
   return (
     <div className="max-w-xs flex flex-col items-center p-2 shadow-card-tagline border-y-2 rounded-md">
       <Card maxW="xs">
+        {product.discount ?
+        <Badge
+        position="absolute"
+        top="1"
+        right="1"
+        colorScheme="teal"
+        fontSize="xs"
+        py="1"
+        px="2"
+        rounded="md"
+        >
+          {product.type === "Bonus Item"
+            ? product.promo_description
+            : `${product.discount} %off`}
+        </Badge>
+          :<></>}
         <CardBody>
           <div className="w">
             <Image
@@ -50,9 +75,26 @@ function CardProduct({ product }) {
               {/* <Heading size="md">{product.name}</Heading> */}
               <Heading size="md">{getName(product.name)}</Heading>
             </Tooltip>
-            <Text color="black" className="text-sm font-medium">
-              {currency(product.price)}
-            </Text>
+            {product.type === "Bonus Item" ? (
+              <Text color="black" className="text-sm font-medium">
+                {currency(product.price)}
+              </Text>
+            ) : product.discount ? (
+              <>
+                <Text color="gray.500" className="text-sm">
+                  <del>{currency(product.price)}</del>
+                </Text>
+                <Text color="black" className="text-sm font-medium">
+                  {currency(
+                    calculateDiscountedPrice(product.price, product.discount)
+                  )}
+                </Text>
+              </>
+            ) : (
+              <Text color="black" className="text-sm font-medium">
+                Price: {currency(product.price)}
+              </Text>
+            )}
           </Stack>
         </CardBody>
         <Divider />
@@ -61,7 +103,9 @@ function CardProduct({ product }) {
             <Button
               size={"sm"}
               className="border-button"
-              onClick={() => dispatch(addProductToCart(product))}
+              onClick={() =>
+                dispatch(addProductToCart(product, calculateDiscountedPrice))
+              }
             >
               Add to Cart
             </Button>

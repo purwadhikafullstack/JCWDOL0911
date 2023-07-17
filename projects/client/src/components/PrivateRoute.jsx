@@ -12,6 +12,10 @@ function PrivateRoute() {
   const userId = JSON.parse(localStorage.getItem(USER))?.iduser;
   const userCart = JSON.parse(localStorage.getItem("myCart")) || [];
 
+  useEffect(() => {
+    dispatch(addToCartFromLocal(JSON.parse(localStorage.getItem("myCart"))));
+  }, []);
+
   if (!localStorage.getItem(AUTH_TOKEN) || !userId) {
     Swal.fire({
       icon: "warning",
@@ -20,7 +24,6 @@ function PrivateRoute() {
 
     return <Navigate to="/login" replace={true} />;
   }
-  dispatch(addToCartFromLocal(JSON.parse(localStorage.getItem("myCart"))));
   return <Outlet />;
 }
 

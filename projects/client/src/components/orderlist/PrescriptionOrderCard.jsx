@@ -42,8 +42,6 @@ function PrescriptionOrderCard() {
       dispatch(
         rejectPresciption(
           prescription.idprescription,
-          prescription.email,
-          navigate
         )
       );
     }

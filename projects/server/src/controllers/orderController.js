@@ -133,7 +133,7 @@ module.exports = {
         LEFT JOIN prescription ON transaction.idprescription = prescription.idprescription
         WHERE transaction.idtransaction = ${order.idtransaction};
       `;
-              const fetchWaitingProduct = await query(fetchWaitingProductQuery);
+        const fetchWaitingProduct = await query(fetchWaitingProductQuery);
         return { ...order, orderProduct: fetchWaitingProduct };
       });
       const waitingOrder = await Promise.all(oldTemp);
@@ -1053,7 +1053,7 @@ module.exports = {
 
         const updateRestockReportQuery = `insert into restock values (null, ${db.escape(
           product.idproduct
-        )}, ${db.escape(format(new Date(), "yyyy-MM-dd"))}, ${db.escape(
+        )},null, ${db.escape(format(new Date(), "yyyy-MM-dd"))}, ${db.escape(
           product.quantity
         )}, 'penjualan', 'pengurangan')`;
 
@@ -1149,11 +1149,13 @@ module.exports = {
     }
   },
   adminCancelOrder: async (req, res) => {
-    const idAdmin = parseInt(req.params.idadmin)
-    const {idTransaction,email}=req.body
-    await query (`update transaction set status = "CANCELED", finished_date=${db.escape(
-      format(new Date(), "yyyy-MM-dd HH:mm:ss")
-    )} , idadmin=${db.escape(idAdmin)} where idtransaction = ${idTransaction}`);
+    const idAdmin = parseInt(req.params.idadmin);
+    const { idTransaction, email } = req.body;
+    await query(
+      `update transaction set status = "CANCELED", finished_date=${db.escape(
+        format(new Date(), "yyyy-MM-dd HH:mm:ss")
+      )} , idadmin=${db.escape(idAdmin)} where idtransaction = ${idTransaction}`
+    );
     let mail = {
       from: `Admin <${process.env.NODEMAILER_USER}>`,
       to: `${email}`,

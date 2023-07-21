@@ -42,22 +42,24 @@ function CardProduct({ product }) {
   return (
     <div className="max-w-xs flex flex-col items-center p-2 shadow-card-tagline border-y-2 rounded-md">
       <Card maxW="xs">
-        {product.discount ?
-        <Badge
-        position="absolute"
-        top="1"
-        right="1"
-        colorScheme="teal"
-        fontSize="xs"
-        py="1"
-        px="2"
-        rounded="md"
-        >
-          {product.type === "Bonus Item"
-            ? product.promo_description
-            : `${product.discount} %off`}
-        </Badge>
-          :<></>}
+        {product.discount ? (
+          <Badge
+            position="absolute"
+            top="1"
+            right="1"
+            colorScheme="teal"
+            fontSize="xs"
+            py="1"
+            px="2"
+            rounded="md"
+          >
+            {product.type === "Bonus Item"
+              ? product.promo_description
+              : `${product.discount} %off`}
+          </Badge>
+        ) : (
+          <></>
+        )}
         <CardBody>
           <div className="w">
             <Image

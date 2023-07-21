@@ -5,7 +5,7 @@ const maxSize = 1 * 1024 * 1024;
 //setup destination and folder
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/prescription");
+    cb(null, "src/public/prescription");
   },
   filename: (req, file, cb) => {
     cb(

@@ -45,7 +45,7 @@ app.use(
 app.use(express.json());
 app.use(express.static(join(__dirname, "public")));
 
-app.use("/api/uploads", express.static(process.cwd() + "/uploads"));
+app.use("/api/uploads", express.static(process.cwd() + "/src/uploads"));
 
 //#region API ROUTES
 app.use("/api/rajaongkir", rajaOngkirRouter);
